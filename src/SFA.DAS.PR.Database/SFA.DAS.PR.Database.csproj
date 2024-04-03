@@ -1,0 +1,17 @@
+﻿<Project Sdk="MSBuild.Sdk.SqlProj/2.7.2">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <DSP>Microsoft.Data.Tools.Schema.Sql.SqlAzureV12DatabaseSchemaProvider</DSP>
+    <SqlServerVersion>SqlAzure</SqlServerVersion>
+    <RunSqlCodeAnalysis>True</RunSqlCodeAnalysis>
+    <!-- For additional properties that can be set here, please refer to https://github.com/rr-wfm/MSBuild.Sdk.SqlProj#model-properties -->
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!-- Refer to https://github.com/rr-wfm/MSBuild.Sdk.SqlProj#publishing-support for supported publishing options -->
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Tables\" />
+  </ItemGroup>
+</Project>
