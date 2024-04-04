@@ -82,7 +82,7 @@ AppSettings.Development.json file
       }
     },
     "ConfigurationStorageConnectionString": "UseDevelopmentStorage=true;",
-    "ConfigNames": "SFA.DAS.Tools.Servicebus.Support,SFA.DAS.AuditApiClient",
+    "ConfigNames": "SFA.DAS.PR.Api",
     "EnvironmentName": "LOCAL",
     "Version": "1.0",
     "APPINSIGHTS_INSTRUMENTATIONKEY": ""
