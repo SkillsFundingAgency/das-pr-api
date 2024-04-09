@@ -6,7 +6,7 @@ namespace SFA.DAS.PR.Api.AppStart;
 [ExcludeFromCodeCoverage]
 public static class LoadConfigurationExtension
 {
-    public static IConfiguration LoadConfiguration(this IConfiguration config, IServiceCollection services)
+    public static IConfiguration LoadConfiguration(this IConfiguration config)
     {
         var configBuilder = new ConfigurationBuilder()
             .AddConfiguration(config)
