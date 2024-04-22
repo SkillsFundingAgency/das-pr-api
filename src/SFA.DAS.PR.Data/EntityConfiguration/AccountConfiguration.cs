@@ -4,10 +4,10 @@ using SFA.DAS.PR.Domain.Entities;
 
 namespace SFA.DAS.PR.Data.EntityConfiguration;
 
-public class ProviderConfiguration : IEntityTypeConfiguration<Provider>
+public class AccountConfiguration : IEntityTypeConfiguration<Account>
 {
-    public void Configure(EntityTypeBuilder<Provider> builder)
+    public void Configure(EntityTypeBuilder<Account> builder)
     {
-        builder.HasKey(p => p.Ukprn);
+        builder.HasKey(p => p.Id);
     }
 }

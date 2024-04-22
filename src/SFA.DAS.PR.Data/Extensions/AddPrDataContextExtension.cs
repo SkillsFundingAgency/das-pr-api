@@ -3,6 +3,8 @@ using Azure.Identity;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using SFA.DAS.PR.Data.Repositories;
+using SFA.DAS.PR.Domain.Interfaces;
 
 namespace SFA.DAS.PR.Data.Extensions;
 public static class AddPrDataContextExtension
@@ -53,6 +55,6 @@ public static class AddPrDataContextExtension
 
     private static void RegisterRepositories(IServiceCollection services)
     {
-        throw new NotImplementedException();
+        services.AddTransient<IAccountProvidersReadRepository, AccountProvidersReadRepository>();
     }
 }

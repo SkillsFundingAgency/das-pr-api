@@ -12,6 +12,12 @@ internal class ProviderRelationshipsDataContext : DbContext, IProviderRelationsh
     public DbSet<AccountProvider> AccountProviders => Set<AccountProvider>();
     public DbSet<AccountProviderLegalEntity> AccountProviderLegalEntities => Set<AccountProviderLegalEntity>();
     public DbSet<Permission> Permissions => Set<Permission>();
+
+    public ProviderRelationshipsDataContext(DbContextOptions<ProviderRelationshipsDataContext> options)
+        : base(options)
+    {
+    }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
