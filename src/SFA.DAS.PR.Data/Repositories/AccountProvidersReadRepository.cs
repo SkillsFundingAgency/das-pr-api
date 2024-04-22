@@ -8,7 +8,7 @@ public class AccountProvidersReadRepository(IProviderRelationshipsDataContext pr
 {
     private readonly IProviderRelationshipsDataContext _providerRelationshipsDataContext = providerRelationshipsDataContext;
 
-    public async Task<List<AccountProvider>> GetAccountProviders(long accountId, CancellationToken cancellationToken) =>
+    public async Task<List<AccountProvider>> GetAccountProviders(long accountId, CancellationToken cancellationToken) => 
         await _providerRelationshipsDataContext.AccountProviders
             .AsNoTracking()
             .Include(x => x.Provider)

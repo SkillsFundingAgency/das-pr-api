@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace SFA.DAS.PR.Api.AppStart;
+namespace SFA.DAS.PR.Api;
 
 [ExcludeFromCodeCoverage]
 public static class ConfigurationExtensions

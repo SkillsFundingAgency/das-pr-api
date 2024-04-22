@@ -3,10 +3,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.OpenApi.Models;
 using SFA.DAS.Api.Common.Infrastructure;
+using SFA.DAS.PR.Api;
 using SFA.DAS.PR.Api.AppStart;
-using SFA.DAS.PR.Data.Extensions;
-using System.Text.Json.Serialization;
 using SFA.DAS.PR.Application.Extensions;
+using SFA.DAS.PR.Data.Extensions;
+using SFA.DAS.PR.Api.Authorization;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -46,6 +48,8 @@ builder.Services
 
 builder.Services.AddPrDataContext(_configuration["ApplicationSettings:DbConnectionString"]!, _configuration["EnvironmentName"]!);
 builder.Services.AddApplicationRegistrations();
+
+builder.Services.AddApiAuthorization(_configuration.IsLocalEnvironment());
 
 var app = builder.Build();
 
