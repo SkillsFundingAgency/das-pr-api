@@ -26,6 +26,6 @@ public class AccountProvidersController(IMediator mediator) : ActionResponseCont
 
         ValidatedResponse<GetAccountProvidersQueryResult> result = await _mediator.Send(query, cancellationToken);
 
-        return GetResponse<GetAccountProvidersQueryResult>(result);
+        return GetResponse(result);
     }
 }
