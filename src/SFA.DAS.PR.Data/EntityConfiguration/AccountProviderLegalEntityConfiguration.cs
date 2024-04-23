@@ -10,22 +10,6 @@ public class AccountProviderLegalEntityConfiguration : IEntityTypeConfiguration<
 {
     public void Configure(EntityTypeBuilder<AccountProviderLegalEntity> builder)
     {
-        builder
-            .HasKey(p => p.Id);
-
-        builder
-            .HasOne(p => p.AccountProvider)
-            .WithMany(a => a.AccountProviderLegalEntities)
-            .HasForeignKey(a => a.AccountProviderId);
-
-        builder
-            .HasOne(p => p.AccountLegalEntity)
-            .WithMany(a => a.AccountProviderLegalEntities)
-            .HasForeignKey(a => a.AccountLegalEntityId);
-
-        builder
-            .HasMany(p => p.Permissions)
-            .WithOne(p => p.AccountProviderLegalEntity)
-            .HasForeignKey(p => p.AccountProviderLegalEntityId);
+        builder.HasKey(p => p.Id);
     }
 }

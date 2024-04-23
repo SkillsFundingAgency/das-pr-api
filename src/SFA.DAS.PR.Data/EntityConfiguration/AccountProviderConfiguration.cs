@@ -10,19 +10,6 @@ public class AccountProviderConfiguration : IEntityTypeConfiguration<AccountProv
 {
     public void Configure(EntityTypeBuilder<AccountProvider> builder)
     {
-        builder
-            .HasOne(ap => ap.Provider)
-            .WithMany(p => p.AccountProviders)
-            .HasForeignKey(ap => ap.ProviderUkprn);
-
-        builder
-            .HasOne(ap => ap.Account)
-            .WithMany(a => a.AccountProviders)
-            .HasForeignKey(a => a.AccountId);
-
-        builder
-            .HasMany(ap => ap.AccountProviderLegalEntities)
-            .WithOne(aple => aple.AccountProvider)
-            .HasForeignKey(a => a.AccountProviderId);
+        builder.HasKey(p => p.Id);
     }
 }
