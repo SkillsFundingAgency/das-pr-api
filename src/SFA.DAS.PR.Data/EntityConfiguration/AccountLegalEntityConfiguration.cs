@@ -13,9 +13,6 @@ public class AccountLegalEntityConfiguration : IEntityTypeConfiguration<AccountL
         builder
             .HasKey(p => p.Id);
 
-        //builder
-        //    .HasQueryFilter(ale => ale.Deleted == null);
-
         builder
             .HasOne(a => a.Account)
             .WithMany(a => a.AccountLegalEntities)
