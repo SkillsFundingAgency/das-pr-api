@@ -5,10 +5,11 @@ using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.OpenApi.Models;
 using SFA.DAS.Api.Common.Infrastructure;
 using SFA.DAS.PR.Api.AppStart;
+using SFA.DAS.PR.Data.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
-IConfiguration configuration = builder.Configuration.LoadConfiguration(builder.Services);
+IConfiguration _configuration = builder.Configuration.LoadConfiguration();
 
 builder.Services
     .AddEndpointsApiExplorer()
@@ -26,7 +27,7 @@ builder.Services
     .AddLogging()
     .AddApplicationInsightsTelemetry()
     .AddServiceRegistrations()
-    .AddAuthentication(configuration)
+    .AddAuthentication(_configuration)
     .AddApiVersioning(opt =>
     {
         opt.ApiVersionReader = new HeaderApiVersionReader("X-Version");
@@ -34,7 +35,7 @@ builder.Services
     })
     .AddControllers(options =>
     {
-        if (!configuration.IsLocalEnvironment())
+        if (!_configuration.IsLocalEnvironment())
             options.Conventions.Add(new AuthorizeControllerModelConvention(new List<string>()));
     })
     .AddJsonOptions(options =>
@@ -42,7 +43,7 @@ builder.Services
         options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
     });
 
-builder.Services.AddHealthChecks();
+builder.Services.AddPrDataContext(_configuration["ApplicationSettings:DbConnectionString"]!, _configuration["EnvironmentName"]!);
 
 var app = builder.Build();
 
