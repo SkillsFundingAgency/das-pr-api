@@ -1,10 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SFA.DAS.PR.Data.EntityConfiguration;
 using SFA.DAS.PR.Domain.Entities;
+using System.Diagnostics.CodeAnalysis;
 
 namespace SFA.DAS.PR.Data;
 
-internal class ProviderRelationshipsDataContext : DbContext, IProviderRelationshipsDataContext
+[ExcludeFromCodeCoverage]
+public class ProviderRelationshipsDataContext : DbContext, IProviderRelationshipsDataContext
 {
     public DbSet<Account> Accounts => Set<Account>();
     public DbSet<AccountLegalEntity> AccountLegalEntities => Set<AccountLegalEntity>();
