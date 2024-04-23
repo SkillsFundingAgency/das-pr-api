@@ -3,8 +3,13 @@ using Azure.Identity;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using SFA.DAS.PR.Data.Repositories;
+using SFA.DAS.PR.Domain.Interfaces;
+using System.Diagnostics.CodeAnalysis;
 
 namespace SFA.DAS.PR.Data.Extensions;
+
+[ExcludeFromCodeCoverage]
 public static class AddPrDataContextExtension
 {
     private static readonly string AzureResource = "https://database.windows.net/";
@@ -53,6 +58,6 @@ public static class AddPrDataContextExtension
 
     private static void RegisterRepositories(IServiceCollection services)
     {
-        throw new NotImplementedException();
+        services.AddTransient<IAccountProvidersReadRepository, AccountProvidersReadRepository>();
     }
 }
