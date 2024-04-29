@@ -85,11 +85,11 @@ public class AccountProvidersControllerGetTests
         var errorResponse = new ValidatedResponse<GetAccountProvidersQueryResult>(errors);
 
         mediatorMock.Setup(m => 
-            m.Send(It.Is<GetAccountProvidersQuery>(q => q.AccountId == accountId),
+            m.Send(It.Is<GetAccountProvidersQuery>(q => q.AccountId == 0),
             cancellationToken)
         ).ReturnsAsync(errorResponse);
 
-        var result = await sut.Get(accountId, cancellationToken);
+        var result = await sut.Get(0, cancellationToken);
         result.As<BadRequestObjectResult>().Should().NotBeNull();
         result.As<BadRequestObjectResult>().Value.As<List<ValidationError>>().Count.Should().Be(errors.Count);
     }
