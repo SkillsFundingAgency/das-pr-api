@@ -1,8 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿namespace SFA.DAS.PR.Domain.Entities;
 
-namespace SFA.DAS.PR.Domain.Entities;
-
-[ExcludeFromCodeCoverage]
 public class Account
 {
     public long Id { get; set; }

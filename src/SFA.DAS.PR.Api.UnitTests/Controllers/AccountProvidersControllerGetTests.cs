@@ -27,7 +27,7 @@ public class AccountProvidersControllerGetTests
 
         mediatorMock.Verify(m => 
             m.Send(It.Is<GetAccountProvidersQuery>(q => q.AccountId == accountId),
-            It.IsAny<CancellationToken>())
+            cancellationToken)
         );
     }
 
@@ -43,8 +43,8 @@ public class AccountProvidersControllerGetTests
         var notFoundResponse = ValidatedResponse<GetAccountProvidersQueryResult>.EmptySuccessResponse();
 
         mediatorMock.Setup(m => 
-            m.Send(It.Is<GetAccountProvidersQuery>(q => q.AccountId == accountId), 
-            It.IsAny<CancellationToken>())
+            m.Send(It.Is<GetAccountProvidersQuery>(q => q.AccountId == accountId),
+            cancellationToken)
         ).ReturnsAsync(notFoundResponse);
 
         var result = await sut.Get(accountId, cancellationToken);
@@ -63,8 +63,8 @@ public class AccountProvidersControllerGetTests
         var response = new ValidatedResponse<GetAccountProvidersQueryResult>(getAccountProviderResult);
 
         mediatorMock.Setup(m => 
-            m.Send(It.Is<GetAccountProvidersQuery>(q => q.AccountId == accountId), 
-            It.IsAny<CancellationToken>())
+            m.Send(It.Is<GetAccountProvidersQuery>(q => q.AccountId == accountId),
+            cancellationToken)
         ).ReturnsAsync(response);
 
         var result = await sut.Get(accountId, cancellationToken);
@@ -85,8 +85,8 @@ public class AccountProvidersControllerGetTests
         var errorResponse = new ValidatedResponse<GetAccountProvidersQueryResult>(errors);
 
         mediatorMock.Setup(m => 
-            m.Send(It.Is<GetAccountProvidersQuery>(q => q.AccountId == accountId), 
-            It.IsAny<CancellationToken>())
+            m.Send(It.Is<GetAccountProvidersQuery>(q => q.AccountId == accountId),
+            cancellationToken)
         ).ReturnsAsync(errorResponse);
 
         var result = await sut.Get(accountId, cancellationToken);

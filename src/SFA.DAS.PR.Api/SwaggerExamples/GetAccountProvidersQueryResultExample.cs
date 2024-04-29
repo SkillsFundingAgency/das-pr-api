@@ -1,4 +1,5 @@
 ﻿using SFA.DAS.PR.Application.AccountProviders.Queries.GetAccountProviders;
+using SFA.DAS.PR.Domain.Entities;
 using Swashbuckle.AspNetCore.Filters;
 using System.Diagnostics.CodeAnalysis;
 
@@ -22,13 +23,13 @@ public class GetAccountProvidersQueryResultExample : IExamplesProvider<GetAccoun
                     {
                         Id = 34270,
                         Name = "ADAM & ADAM PROPERTIES LTD",
-                        Operations = []
+                        Operations = [Operation.Recruitment]
                     },
                     new AccountLegalEntityModel()
                     {
                         Id = 22503,
                         Name = "BAWDEN FUND",
-                        Operations = []
+                        Operations = [Operation.CreateCohort]
                     }
                 }
             },
@@ -43,13 +44,13 @@ public class GetAccountProvidersQueryResultExample : IExamplesProvider<GetAccoun
                     {
                         Id = 34270,
                         Name = "ADAM & ADAM PROPERTIES LTD",
-                        Operations = []
+                        Operations = [Operation.RecruitmentRequiresReview]
                     },
                     new AccountLegalEntityModel()
                     {
                         Id = 22503,
                         Name = "BAWDEN FUND",
-                        Operations = []
+                        Operations = [Operation.Recruitment]
                     }
                 }
             }

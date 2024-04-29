@@ -35,7 +35,7 @@ namespace SFA.DAS.PR.Application.UnitTests.AccountProviders.Queries.GetAccountPr
 
         [Test]
         [RecursiveMoqAutoData]
-        public async Task Handle_ProvidersNotFound_ReturnsNullResult(
+        public async Task Handle_ProvidersNotFound_ReturnsOkEmptyResult(
             [Frozen] Mock<IAccountProvidersReadRepository> accountProvidersReadRepository,
             GetAccountProvidersQueryHandler sut,
             long accountId,
@@ -46,9 +46,11 @@ namespace SFA.DAS.PR.Application.UnitTests.AccountProviders.Queries.GetAccountPr
                 a.GetAccountProviders(accountId, cancellationToken)
             ).ReturnsAsync(() => new List<AccountProvider>());
 
+            GetAccountProvidersQueryResult expectedResult = new(accountId, []);
+
             var result = await sut.Handle(new GetAccountProvidersQuery(accountId), cancellationToken);
 
-            result.Result.Should().BeNull();
+            result.Result.Should().BeEquivalentTo(expectedResult, c => c.ExcludingMissingMembers());
         }
     }
 }
