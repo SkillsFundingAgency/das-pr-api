@@ -8,18 +8,18 @@ namespace SFA.DAS.PR.Api.Infrastructure;
 [ExcludeFromCodeCoverage]
 public class AuthorizeByPathControllerModelConvention : IControllerModelConvention
 {
-    private const string ReadPathName = "ReadControllers";
-    private const string WritePathName = "WriteControllers";
+    private const string IntegationPathName = "IntegrationControllers";
+    private const string ManagementPathName = "ManagementControllers";
     public void Apply(ControllerModel controller)
     {
         var controllerPath = controller?.ControllerType?.Namespace?.Split('.').Last();
-        if(!string.IsNullOrWhiteSpace(controllerPath) && controllerPath.Equals(ReadPathName))
+        if(!string.IsNullOrWhiteSpace(controllerPath) && controllerPath.Equals(IntegationPathName))
         {
-            controller?.Filters.Add(new AuthorizeFilter(ApiRoles.Read));
+            controller?.Filters.Add(new AuthorizeFilter(Policies.Integration));
         }
-        if (!string.IsNullOrWhiteSpace(controllerPath) && controllerPath.Equals(WritePathName))
+        if (!string.IsNullOrWhiteSpace(controllerPath) && controllerPath.Equals(ManagementPathName))
         {
-            controller?.Filters.Add(new AuthorizeFilter(ApiRoles.Write));
+            controller?.Filters.Add(new AuthorizeFilter(Policies.Management));
         }
     }
 }

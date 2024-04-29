@@ -1,6 +1,9 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Mvc.Versioning;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using SFA.DAS.Api.Common.AppStart;
 using SFA.DAS.Api.Common.Configuration;
@@ -43,9 +46,11 @@ builder.Services
     })
     .AddControllers(options =>
     {
-        if (!IsEnvironmentLocalOrDev)
-            options.Conventions.Add(new AuthorizeByPathControllerModelConvention());
-
+        if(IsEnvironmentLocalOrDev)
+        {
+            options.Filters.Add(new AllowAnonymousFilter());
+        }
+        //    options.Conventions.Add(new AuthorizeByPathControllerModelConvention());
     })
     .AddJsonOptions(options =>
     {
@@ -63,8 +68,21 @@ if (!IsEnvironmentLocalOrDev)
 
     builder.Services.AddAuthentication(azureAdConfiguration, new()
     {
-        {ApiRoles.Read, ApiRoles.Read},
-        {ApiRoles.Write, ApiRoles.Write}
+        {Policies.Integration, Policies.Integration},
+        {Policies.Management, Policies.Management}
+    });
+}
+else
+{
+    builder.Services.AddAuthorization(options =>
+    {
+        foreach (var policyName in new string[] { Policies.Integration, Policies.Management })
+        {
+            options.AddPolicy(policyName, policy =>
+            {
+                policy.Requirements.Add(new NoneRequirement());
+            });
+        }
     });
 }
 
@@ -105,6 +123,13 @@ app.UseHealthChecks("/ping",
 
 app.UseAuthorization();
 
-app.MapControllers();
+if(IsEnvironmentLocalOrDev)
+{
+    app.MapControllers().AllowAnonymous();
+}
+else
+{
+    app.MapControllers();
+}
 
 app.Run();

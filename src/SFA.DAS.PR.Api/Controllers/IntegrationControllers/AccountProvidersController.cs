@@ -1,5 +1,7 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SFA.DAS.PR.Api.Authorization;
 using SFA.DAS.PR.Api.Common;
 using SFA.DAS.PR.Api.SwaggerExamples;
 using SFA.DAS.PR.Application.AccountProviders.Queries.GetAccountProviders;
@@ -17,6 +19,7 @@ public class AccountProvidersController(IMediator mediator) : ActionResponseCont
     public override string ControllerName => "AccountProviders";
 
     [HttpGet]
+    [Authorize(Policy = Policies.Integration)]
     [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(NotFoundResult), StatusCodes.Status404NotFound)]
     [SwaggerRequestExample(typeof(GetAccountProvidersQueryResult), typeof(GetAccountProvidersQueryResultExample))]
