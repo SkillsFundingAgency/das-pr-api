@@ -5,7 +5,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using SFA.DAS.PR.Api.Common;
-using SFA.DAS.PR.Api.Controllers;
+using SFA.DAS.PR.Api.Controllers.ReadControllers;
 using SFA.DAS.PR.Application.AccountProviders.Queries.GetAccountProviders;
 using SFA.DAS.PR.Application.Mediatr.Responses;
 using SFA.DAS.Testing.AutoFixture;
@@ -19,13 +19,13 @@ public class AccountProvidersControllerGetTests
     public async Task GetProviders_InvokesQueryHandler(
        [Frozen] Mock<IMediator> mediatorMock,
        [Greedy] AccountProvidersController sut,
-       long accountId, 
+       long accountId,
        CancellationToken cancellationToken
     )
     {
         await sut.Get(accountId, cancellationToken);
 
-        mediatorMock.Verify(m => 
+        mediatorMock.Verify(m =>
             m.Send(It.Is<GetAccountProvidersQuery>(q => q.AccountId == accountId),
             cancellationToken)
         );
@@ -42,7 +42,7 @@ public class AccountProvidersControllerGetTests
     {
         var notFoundResponse = ValidatedResponse<GetAccountProvidersQueryResult>.EmptySuccessResponse();
 
-        mediatorMock.Setup(m => 
+        mediatorMock.Setup(m =>
             m.Send(It.Is<GetAccountProvidersQuery>(q => q.AccountId == accountId),
             cancellationToken)
         ).ReturnsAsync(notFoundResponse);
@@ -62,7 +62,7 @@ public class AccountProvidersControllerGetTests
     {
         var response = new ValidatedResponse<GetAccountProvidersQueryResult>(getAccountProviderResult);
 
-        mediatorMock.Setup(m => 
+        mediatorMock.Setup(m =>
             m.Send(It.Is<GetAccountProvidersQuery>(q => q.AccountId == accountId),
             cancellationToken)
         ).ReturnsAsync(response);
@@ -84,7 +84,7 @@ public class AccountProvidersControllerGetTests
     {
         var errorResponse = new ValidatedResponse<GetAccountProvidersQueryResult>(errors);
 
-        mediatorMock.Setup(m => 
+        mediatorMock.Setup(m =>
             m.Send(It.Is<GetAccountProvidersQuery>(q => q.AccountId == 0),
             cancellationToken)
         ).ReturnsAsync(errorResponse);

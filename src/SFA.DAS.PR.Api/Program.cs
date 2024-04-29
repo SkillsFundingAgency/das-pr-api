@@ -2,17 +2,22 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.OpenApi.Models;
+using SFA.DAS.Api.Common.AppStart;
+using SFA.DAS.Api.Common.Configuration;
 using SFA.DAS.Api.Common.Infrastructure;
 using SFA.DAS.PR.Api;
 using SFA.DAS.PR.Api.AppStart;
+using SFA.DAS.PR.Api.Authorization;
+using SFA.DAS.PR.Api.Infrastructure;
 using SFA.DAS.PR.Application.Extensions;
 using SFA.DAS.PR.Data.Extensions;
-using SFA.DAS.PR.Api.Authorization;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 IConfiguration _configuration = builder.Configuration.LoadConfiguration();
+
+bool IsEnvironmentLocalOrDev = _configuration.IsLocalEnvironment();
 
 builder.Services
     .AddEndpointsApiExplorer()
@@ -38,8 +43,9 @@ builder.Services
     })
     .AddControllers(options =>
     {
-        if (!_configuration.IsLocalEnvironment())
-            options.Conventions.Add(new AuthorizeControllerModelConvention(new List<string>()));
+        if (!IsEnvironmentLocalOrDev)
+            options.Conventions.Add(new AuthorizeByPathControllerModelConvention());
+
     })
     .AddJsonOptions(options =>
     {
@@ -49,7 +55,18 @@ builder.Services
 builder.Services.AddPrDataContext(_configuration["ApplicationSettings:DbConnectionString"]!, _configuration["EnvironmentName"]!);
 builder.Services.AddApplicationRegistrations();
 
-builder.Services.AddApiAuthorization(_configuration.IsLocalEnvironment());
+if (!IsEnvironmentLocalOrDev)
+{
+    var azureAdConfiguration = _configuration
+        .GetSection("AzureAd")
+        .Get<AzureActiveDirectoryConfiguration>();
+
+    builder.Services.AddAuthentication(azureAdConfiguration, new()
+    {
+        {ApiRoles.Read, ApiRoles.Read},
+        {ApiRoles.Write, ApiRoles.Write}
+    });
+}
 
 var app = builder.Build();
 
@@ -62,7 +79,7 @@ app.UseAuthentication();
 app.UseSwagger();
 app.UseSwaggerUI(options =>
 {
-    options.SwaggerEndpoint("/swagger/v1/swagger.json", "SFA.DAS.AANHub.Api v1");
+    options.SwaggerEndpoint("/swagger/v1/swagger.json", "SFA.DAS.PR.Api V1");
     options.RoutePrefix = string.Empty;
 });
 
