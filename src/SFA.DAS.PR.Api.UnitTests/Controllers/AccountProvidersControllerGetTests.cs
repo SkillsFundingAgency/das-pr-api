@@ -5,7 +5,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using SFA.DAS.PR.Api.Common;
-using SFA.DAS.PR.Api.Controllers.ReadControllers;
+using SFA.DAS.PR.Api.Controllers;
 using SFA.DAS.PR.Application.AccountProviders.Queries.GetAccountProviders;
 using SFA.DAS.PR.Application.Mediatr.Responses;
 using SFA.DAS.Testing.AutoFixture;

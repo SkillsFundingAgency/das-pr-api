@@ -8,7 +8,7 @@ using SFA.DAS.PR.Application.AccountProviders.Queries.GetAccountProviders;
 using SFA.DAS.PR.Application.Mediatr.Responses;
 using Swashbuckle.AspNetCore.Filters;
 
-namespace SFA.DAS.PR.Api.Controllers.ReadControllers;
+namespace SFA.DAS.PR.Api.Controllers;
 
 [ApiController]
 [Route("accounts/{accountId:long}/providers")]

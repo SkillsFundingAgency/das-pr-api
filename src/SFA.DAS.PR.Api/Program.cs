@@ -50,12 +50,18 @@ builder.Services
         {
             options.Filters.Add(new AllowAnonymousFilter());
         }
-        //    options.Conventions.Add(new AuthorizeByPathControllerModelConvention());
+        options.Conventions.Add(new ApiExplorerGroupingByAuthorizeAttributeConvention());
     })
     .AddJsonOptions(options =>
     {
         options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
     });
+
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc(Policies.Management, new OpenApiInfo { Title = "Management", Version = "v1" });
+    options.SwaggerDoc(Policies.Integration, new OpenApiInfo { Title = "Integration", Version = "v1" });
+});
 
 builder.Services.AddPrDataContext(_configuration["ApplicationSettings:DbConnectionString"]!, _configuration["EnvironmentName"]!);
 builder.Services.AddApplicationRegistrations();
@@ -97,7 +103,8 @@ app.UseAuthentication();
 app.UseSwagger();
 app.UseSwaggerUI(options =>
 {
-    options.SwaggerEndpoint("/swagger/v1/swagger.json", "SFA.DAS.PR.Api V1");
+    options.SwaggerEndpoint($"/swagger/{Policies.Integration}/swagger.json", Policies.Integration);
+    options.SwaggerEndpoint($"/swagger/{Policies.Management}/swagger.json", Policies.Management);
     options.RoutePrefix = string.Empty;
 });
 
