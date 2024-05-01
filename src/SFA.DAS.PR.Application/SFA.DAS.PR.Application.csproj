@@ -12,7 +12,14 @@
     <PackageReference Include="MediatR" Version="12.2.0" />
   </ItemGroup>
 
-  <ItemGroup>
+	<!--Transitive Packages-->
+	<ItemGroup>
+		<PackageReference Include="Azure.Identity" Version="1.11.2" />
+		<PackageReference Include="Microsoft.Identity.Client" Version="4.60.3" />
+	</ItemGroup>
+	<!--Transitive Packages-->
+
+	<ItemGroup>
     <ProjectReference Include="..\SFA.DAS.PR.Data\SFA.DAS.PR.Data.csproj" />
   </ItemGroup>
 

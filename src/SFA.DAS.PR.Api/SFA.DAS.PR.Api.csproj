@@ -16,6 +16,15 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="8.0.1" />
   </ItemGroup>
+	
+	<!--Transitive Packages-->
+	<ItemGroup>
+		<PackageReference Include="Azure.Identity" Version="1.11.2" />
+		<PackageReference Include="Microsoft.Identity.Client" Version="4.60.3" />
+		<PackageReference Include="System.Net.Http" Version="4.3.4" />
+		<PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
+	</ItemGroup>
+	<!--Transitive Packages-->
 
   <ItemGroup>
     <ProjectReference Include="..\SFA.DAS.PR.Application\SFA.DAS.PR.Application.csproj" />
