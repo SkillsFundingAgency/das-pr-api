@@ -10,24 +10,23 @@ public class GetAccountProvidersQueryResultExample : IExamplesProvider<GetAccoun
 {
     public GetAccountProvidersQueryResult GetExamples()
     {
-        GetAccountProvidersQueryResult result = new(8123, new List<AccountProviderModel>()
+        GetAccountProvidersQueryResult result = new("8123", new List<AccountProviderModel>()
         {
             new AccountProviderModel()
             {
-                Id = 116,
-                ProviderUkprn = 10000055,
+                Ukprn = 10000055,
                 ProviderName = "ABINGDON AND WITNEY COLLEGE",
                 AccountLegalEntities = new List<AccountLegalEntityModel>()
                 {
                     new AccountLegalEntityModel()
                     {
-                        Id = 34270,
+                        PublicHashedId = "34270",
                         Name = "ADAM & ADAM PROPERTIES LTD",
                         Operations = [Operation.Recruitment]
                     },
                     new AccountLegalEntityModel()
                     {
-                        Id = 22503,
+                        PublicHashedId = "22503",
                         Name = "BAWDEN FUND",
                         Operations = [Operation.CreateCohort]
                     }
@@ -35,20 +34,19 @@ public class GetAccountProvidersQueryResultExample : IExamplesProvider<GetAccoun
             },
             new AccountProviderModel()
             {
-                Id = 562,
-                ProviderUkprn = 10000143,
+                Ukprn = 10000143,
                 ProviderName = "BARKING & DAGENHAM LONDON BOROUGH COUNCIL",
                 AccountLegalEntities = new List<AccountLegalEntityModel>()
                 {
                     new AccountLegalEntityModel()
                     {
-                        Id = 34270,
+                        PublicHashedId = "34270",
                         Name = "ADAM & ADAM PROPERTIES LTD",
                         Operations = [Operation.RecruitmentRequiresReview]
                     },
                     new AccountLegalEntityModel()
                     {
-                        Id = 22503,
+                        PublicHashedId = "22503",
                         Name = "BAWDEN FUND",
                         Operations = [Operation.Recruitment]
                     }

@@ -7,6 +7,6 @@ public class GetAccountProvidersQueryValidator : AbstractValidator<GetAccountPro
     public const string AccountProvidersIdValidationMessage = "Account ID needs to be set.";
     public GetAccountProvidersQueryValidator()
     {
-        RuleFor(model => model.AccountId).Must(id => id > 0).WithMessage(AccountProvidersIdValidationMessage);
+        RuleFor(model => model.AccountHashedId).Must(id => !string.IsNullOrWhiteSpace(id) && id != "0").WithMessage(AccountProvidersIdValidationMessage);
     }
 }

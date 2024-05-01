@@ -17,38 +17,38 @@ namespace SFA.DAS.PR.Application.UnitTests.AccountProviders.Queries.GetAccountPr
             [Frozen] Mock<IAccountProvidersReadRepository> accountProvidersReadRepository,
             GetAccountProvidersQueryHandler sut,
             List<AccountProvider> providers,
-            long accountId,
+            string accountPublicHashId,
             CancellationToken cancellationToken
         )
         {
             accountProvidersReadRepository.Setup(a =>
-                a.GetAccountProviders(accountId, cancellationToken)
+                a.GetAccountProviders(accountPublicHashId, cancellationToken)
             ).ReturnsAsync(providers);
 
-            GetAccountProvidersQueryResult expectedResult = new(accountId, providers.Select(a => (AccountProviderModel)a).ToList());
+            GetAccountProvidersQueryResult expectedResult = new(accountPublicHashId, providers.Select(a => (AccountProviderModel)a).ToList());
 
             ValidatedResponse<GetAccountProvidersQueryResult> result =
-                await sut.Handle(new GetAccountProvidersQuery(accountId), cancellationToken);
+                await sut.Handle(new GetAccountProvidersQuery(accountPublicHashId), cancellationToken);
 
             result.Result.Should().BeEquivalentTo(expectedResult, c => c.ExcludingMissingMembers());
         }
 
         [Test]
         [RecursiveMoqAutoData]
-        public async Task Handle_ProvidersNotFound_ReturnsOkEmptyResult(
+        public async Task Handle_ProvidersNotFound_ReturnsEmptyResult(
             [Frozen] Mock<IAccountProvidersReadRepository> accountProvidersReadRepository,
             GetAccountProvidersQueryHandler sut,
-            long accountId,
+            string accountPublicHashId,
             CancellationToken cancellationToken
         )
         {
             accountProvidersReadRepository.Setup(a =>
-                a.GetAccountProviders(accountId, cancellationToken)
+                a.GetAccountProviders(accountPublicHashId, cancellationToken)
             ).ReturnsAsync(() => new List<AccountProvider>());
 
-            GetAccountProvidersQueryResult expectedResult = new(accountId, []);
+            GetAccountProvidersQueryResult expectedResult = new(accountPublicHashId, []);
 
-            var result = await sut.Handle(new GetAccountProvidersQuery(accountId), cancellationToken);
+            var result = await sut.Handle(new GetAccountProvidersQuery(accountPublicHashId), cancellationToken);
 
             result.Result.Should().BeEquivalentTo(expectedResult, c => c.ExcludingMissingMembers());
         }

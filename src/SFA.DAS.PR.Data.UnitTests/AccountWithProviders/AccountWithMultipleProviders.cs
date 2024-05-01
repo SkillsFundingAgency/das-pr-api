@@ -86,7 +86,7 @@ namespace SFA.DAS.PR.Data.UnitTests.AccountWithProviders
                 }
             };
 
-            long accountId = accountsToAdd.First().Id;
+            string accountHashedId = accountsToAdd.First().PublicHashedId;
 
             List<AccountProvider> result = new();
 
@@ -99,7 +99,7 @@ namespace SFA.DAS.PR.Data.UnitTests.AccountWithProviders
 
                 AccountProvidersReadRepository sut = new(context);
 
-                result = await sut.GetAccountProviders(accountId, cancellationToken);
+                result = await sut.GetAccountProviders(accountHashedId, cancellationToken);
             }
 
             var accountProvidersCount = accountsToAdd.First().AccountProviders.Count();

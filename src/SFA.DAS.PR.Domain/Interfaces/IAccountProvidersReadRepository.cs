@@ -4,6 +4,6 @@ namespace SFA.DAS.PR.Domain.Interfaces;
 
 public interface IAccountProvidersReadRepository
 {
-    Task<List<AccountProvider>> GetAccountProviders(long accountId, CancellationToken cancellationToken);
+    Task<List<AccountProvider>> GetAccountProviders(string accountHashedId, CancellationToken cancellationToken);
 }
 
