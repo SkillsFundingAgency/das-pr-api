@@ -12,9 +12,9 @@ namespace SFA.DAS.PR.Application.Mediatr.Behaviours
         where TRequest : IRequest<TResponse>
     {
         private readonly IValidator<TRequest> _compositeValidator;
-        private readonly ILogger<IPipelineBehavior<TRequest, TResponse>> _logger;
+        private readonly ILogger<ValidationBehaviour<TRequest, TResponse>> _logger;
 
-        public ValidationBehaviour(IValidator<TRequest> compositeValidator, ILogger<IPipelineBehavior<TRequest, TResponse>> logger)
+        public ValidationBehaviour(IValidator<TRequest> compositeValidator, ILogger<ValidationBehaviour<TRequest, TResponse>> logger)
         {
             _compositeValidator = compositeValidator;
             _logger = logger;
