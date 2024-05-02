@@ -9,7 +9,7 @@ public class ApiExplorerGroupingByAuthorizeAttributeConvention : IActionModelCon
         var authorizePolicy = action.Attributes.OfType<AuthorizeAttribute>().FirstOrDefault();
         if (authorizePolicy != null)
         {
-            action.ApiExplorer.GroupName = authorizePolicy?.Policy?.ToString();
+            action.ApiExplorer.GroupName = authorizePolicy.Policy?.ToString();
         }
     }
 }
