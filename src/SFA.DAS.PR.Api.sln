@@ -19,6 +19,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.PR.Data", "SFA.DAS.
 EndProject
 Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "SFA.DAS.PR.Database", "SFA.DAS.PR.Database\SFA.DAS.PR.Database.sqlproj", "{C6252020-B819-4120-9DF6-1F852C9AE4DC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.PR.Data.UnitTests", "SFA.DAS.PR.Data.UnitTests\SFA.DAS.PR.Data.UnitTests.csproj", "{22EAC520-2A03-46D8-88B2-EFE7305185F0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +57,10 @@ Global
 		{C6252020-B819-4120-9DF6-1F852C9AE4DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C6252020-B819-4120-9DF6-1F852C9AE4DC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C6252020-B819-4120-9DF6-1F852C9AE4DC}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{22EAC520-2A03-46D8-88B2-EFE7305185F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22EAC520-2A03-46D8-88B2-EFE7305185F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22EAC520-2A03-46D8-88B2-EFE7305185F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22EAC520-2A03-46D8-88B2-EFE7305185F0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -62,6 +68,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{8BF3E855-688E-478A-BEE4-BCF09A5F6C00} = {73D855CC-2B68-4F4B-B9D1-4A37F9DAC82D}
 		{B68562F0-0378-4432-AF8A-4B4DCE683A46} = {73D855CC-2B68-4F4B-B9D1-4A37F9DAC82D}
+		{22EAC520-2A03-46D8-88B2-EFE7305185F0} = {73D855CC-2B68-4F4B-B9D1-4A37F9DAC82D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C07EDC03-3B01-46D4-B491-07B96A62BB68}

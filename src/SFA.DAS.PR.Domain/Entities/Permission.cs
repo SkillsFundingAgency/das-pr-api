@@ -1,4 +1,5 @@
 ﻿namespace SFA.DAS.PR.Domain.Entities;
+
 public class Permission
 {
     public long Id { get; set; }

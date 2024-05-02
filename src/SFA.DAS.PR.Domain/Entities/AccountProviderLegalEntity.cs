@@ -1,4 +1,5 @@
 ﻿namespace SFA.DAS.PR.Domain.Entities;
+
 public class AccountProviderLegalEntity
 {
     public long Id { get; set; }

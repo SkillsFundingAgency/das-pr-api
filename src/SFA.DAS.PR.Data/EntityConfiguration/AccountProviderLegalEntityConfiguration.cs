@@ -6,10 +6,10 @@ using System.Diagnostics.CodeAnalysis;
 namespace SFA.DAS.PR.Data.EntityConfiguration;
 
 [ExcludeFromCodeCoverage]
-public class ProviderConfiguration : IEntityTypeConfiguration<Provider>
+public class AccountProviderLegalEntityConfiguration : IEntityTypeConfiguration<AccountProviderLegalEntity>
 {
-    public void Configure(EntityTypeBuilder<Provider> builder)
+    public void Configure(EntityTypeBuilder<AccountProviderLegalEntity> builder)
     {
-        builder.HasKey(p => p.Ukprn);
+        builder.HasKey(p => p.Id);
     }
 }

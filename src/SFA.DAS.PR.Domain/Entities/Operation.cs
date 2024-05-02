@@ -1,4 +1,5 @@
 ﻿namespace SFA.DAS.PR.Domain.Entities;
+
 public enum Operation : short
 {
     CreateCohort = 0,
