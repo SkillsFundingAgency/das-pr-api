@@ -1,9 +1,7 @@
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Mvc.Versioning;
-using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using SFA.DAS.Api.Common.AppStart;
 using SFA.DAS.Api.Common.Configuration;
@@ -46,15 +44,11 @@ builder.Services
     })
     .AddControllers(options =>
     {
-        if(IsEnvironmentLocalOrDev)
+        if (IsEnvironmentLocalOrDev)
         {
             options.Filters.Add(new AllowAnonymousFilter());
         }
         options.Conventions.Add(new ApiExplorerGroupingByAuthorizeAttributeConvention());
-    })
-    .AddJsonOptions(options =>
-    {
-        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
     });
 
 builder.Services.AddSwaggerGen(options =>
