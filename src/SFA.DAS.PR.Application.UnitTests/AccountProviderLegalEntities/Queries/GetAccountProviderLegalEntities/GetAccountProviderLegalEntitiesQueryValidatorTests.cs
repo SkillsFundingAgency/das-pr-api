@@ -8,7 +8,7 @@ public class GetAccountProviderLegalEntitiesQueryValidatorTests
     [Test]
     public async Task GetAccountProviderLegalEntitiesQueryValidator_Validate_Ukprn_Returns_ErrorMessage()
     {
-        var query = new GetAccountProviderLegalEntitiesQuery()
+        GetAccountProviderLegalEntitiesQuery query = new()
         {
             Ukprn = 0,
             Operations = new List<Operation>() { Operation.Recruitment }
@@ -22,7 +22,7 @@ public class GetAccountProviderLegalEntitiesQueryValidatorTests
     [Test]
     public async Task GetAccountProviderLegalEntitiesQueryValidator_Validate_AccountHashId_Returns_ErrorMessage()
     {
-        var query = new GetAccountProviderLegalEntitiesQuery()
+        GetAccountProviderLegalEntitiesQuery query = new()
         {
             Ukprn = null,
             AccountHashedId = "",
@@ -37,7 +37,7 @@ public class GetAccountProviderLegalEntitiesQueryValidatorTests
     [Test]
     public async Task GetAccountProviderLegalEntitiesQueryValidator_Validate_Operations_Returns_ErrorMessage()
     {
-        var query = new GetAccountProviderLegalEntitiesQuery()
+        GetAccountProviderLegalEntitiesQuery query = new()
         {
             Ukprn = null,
             AccountHashedId = "Hash",
