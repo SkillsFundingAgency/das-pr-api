@@ -20,7 +20,7 @@ public class GetAccountProviderLegalEntitiesQueryValidator : AbstractValidator<G
             .When(x => !x.Ukprn.HasValue);
 
         RuleFor(model => model.Ukprn)
-            .Must(ukprn => ukprn.ToString()!.StartsWith('1') && ukprn?.ToString().Length == 8)
+            .Must(ukprn => ukprn.ToString()!.StartsWith('1') && ukprn.ToString()!.Length == 8)
             .WithMessage(UkprnFormatValidationMessage)
             .When(model => model.Ukprn.HasValue);
 
@@ -29,7 +29,7 @@ public class GetAccountProviderLegalEntitiesQueryValidator : AbstractValidator<G
             .NotEmpty()
             .When(model => model.Operations == null || !model.Operations.Any())
             .WithMessage(OperationFilterValidationMessage)
-            .Must(operations =>  (operations.Any() && operations.All(op => (int)op == 0 || (int)op == 1 || (int)op == 2)))
+            .Must(operations =>  (operations.Any() && operations.TrueForAll(op => (int)op == 0 || (int)op == 1 || (int)op == 2)))
             .WithMessage(OperationFilterFormatValidationMessage);
     }
 }
