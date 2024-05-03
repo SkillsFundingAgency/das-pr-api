@@ -1,9 +1,7 @@
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Mvc.Versioning;
-using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using SFA.DAS.Api.Common.AppStart;
 using SFA.DAS.Api.Common.Configuration;
@@ -14,7 +12,6 @@ using SFA.DAS.PR.Api.Authorization;
 using SFA.DAS.PR.Api.Infrastructure;
 using SFA.DAS.PR.Application.Extensions;
 using SFA.DAS.PR.Data.Extensions;
-using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -46,15 +43,11 @@ builder.Services
     })
     .AddControllers(options =>
     {
-        if(IsEnvironmentLocalOrDev)
+        if (IsEnvironmentLocalOrDev)
         {
             options.Filters.Add(new AllowAnonymousFilter());
         }
         options.Conventions.Add(new ApiExplorerGroupingByAuthorizeAttributeConvention());
-    })
-    .AddJsonOptions(options =>
-    {
-        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
     });
 
 builder.Services.AddSwaggerGen(options =>
@@ -130,7 +123,7 @@ app.UseHealthChecks("/ping",
 
 app.UseAuthorization();
 
-if(IsEnvironmentLocalOrDev)
+if (IsEnvironmentLocalOrDev)
 {
     app.MapControllers().AllowAnonymous();
 }

@@ -6,4 +6,3 @@ public interface IAccountProvidersReadRepository
 {
     Task<List<AccountProvider>> GetAccountProviders(string accountHashedId, CancellationToken cancellationToken);
 }
-
