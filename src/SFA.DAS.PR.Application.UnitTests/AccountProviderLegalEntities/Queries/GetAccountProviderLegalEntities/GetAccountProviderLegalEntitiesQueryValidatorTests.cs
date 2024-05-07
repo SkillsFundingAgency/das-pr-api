@@ -1,5 +1,6 @@
 ﻿using FluentValidation.TestHelper;
 using SFA.DAS.PR.Application.AccountProviderLegalEntities.Queries.GetAccountProviderLegalEntities;
+using SFA.DAS.PR.Application.Validators;
 using SFA.DAS.PR.Domain.Entities;
 
 namespace SFA.DAS.PR.Application.UnitTests.AccountProviderLegalEntities.Queries.GetAccountProviderLegalEntities;
@@ -16,7 +17,7 @@ public class GetAccountProviderLegalEntitiesQueryValidatorTests
         var sut = new GetAccountProviderLegalEntitiesQueryValidator();
         var result = await sut.TestValidateAsync(query);
         result.ShouldHaveValidationErrorFor(q => q.Ukprn)
-                    .WithErrorMessage(GetAccountProviderLegalEntitiesQueryValidator.UkprnFormatValidationMessage);
+                    .WithErrorMessage(UkprnFormatValidator.UkprnFormatValidationMessage);
     }
 
     [Test]
