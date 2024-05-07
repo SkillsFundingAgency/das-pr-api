@@ -4,14 +4,14 @@ namespace SFA.DAS.PR.Application.AccountProviderLegalEntities.Queries.GetAccount
 
 public class AccountProviderLegalEntityModel
 {
-    public long AccountId {  get; set; }
-    public string? AccountHashedId { get; set; }
-    public string? AccountPublicHashedId { get; set; }
-    public string? AccountName { get; set; }
-    public long AccountLegalEntityId { get; set; }
-    public string? AccountLegalEntityPublicHashedId { get; set; }
-    public string? AccountLegalEntityName { get; set; }
-    public long AccountProviderId { get; set; }
+    public required long AccountId {  get; set; }
+    public required string AccountHashedId { get; set; }
+    public required string AccountPublicHashedId { get; set; }
+    public required string AccountName { get; set; }
+    public required long AccountLegalEntityId { get; set; }
+    public required string AccountLegalEntityPublicHashedId { get; set; }
+    public required string AccountLegalEntityName { get; set; }
+    public required long AccountProviderId { get; set; }
 
     public static implicit operator AccountProviderLegalEntityModel(AccountProviderLegalEntity source) => new()
     {
