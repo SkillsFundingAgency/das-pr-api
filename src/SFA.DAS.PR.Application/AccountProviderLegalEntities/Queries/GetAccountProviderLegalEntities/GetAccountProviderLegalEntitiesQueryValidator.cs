@@ -9,17 +9,17 @@ public class GetAccountProviderLegalEntitiesQueryValidator : AbstractValidator<G
     public const string OperationFilterFormatValidationMessage = "Operation filter values are limited to 0, 1 or 2.";
     public GetAccountProviderLegalEntitiesQueryValidator()
     {
-        RuleFor(x => x.Ukprn)
+
+        When(x => string.IsNullOrEmpty(x.AccountHashedId), () => RuleFor(x => x.Ukprn)
+            .Cascade(CascadeMode.Stop)
             .NotEmpty()
             .WithMessage(UkprnAccountHashIdValidationMessage)
-            .When(x => string.IsNullOrEmpty(x.AccountHashedId));
+            .CheckUkprnFormat());
 
         RuleFor(x => x.AccountHashedId)
             .NotEmpty()
             .WithMessage(UkprnAccountHashIdValidationMessage)
             .When(x => !x.Ukprn.HasValue);
-
-        RuleFor(model => model.Ukprn).IsCorrectUkprnFormat();
 
         RuleFor(model => model.Operations).ContainsValidOperations();
     }

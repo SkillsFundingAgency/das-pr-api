@@ -1,0 +1,2 @@
+﻿namespace SFA.DAS.PR.Application.Permissions.Queries.HasRelationshipWithPermission;
+public record HasRelationshipWithPermissionQueryResult(bool HasPermission);

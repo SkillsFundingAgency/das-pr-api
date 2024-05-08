@@ -14,11 +14,21 @@ public static class OperationsValidator
             .Cascade(CascadeMode.Stop)
             .NotEmpty()
             .WithMessage(OperationFilterValidationMessage)
-            .Must(operations => operations.All(op =>
+            .Must(operations => operations.TrueForAll(op =>
             {
                 return Enum.TryParse(op.ToString(), out Operation operation) &&
                        Enum.IsDefined(typeof(Operation), operation);
             }))
+            .WithMessage(OperationFilterFormatValidationMessage);
+    }
+
+    public static IRuleBuilderOptions<T, Operation> IsValidOperation<T>(this IRuleBuilderInitial<T, Operation> ruleBuilder) where T : IOperationEntity
+    {
+        return ruleBuilder
+            .Cascade(CascadeMode.Stop)
+            .NotEmpty()
+            .WithMessage(OperationFilterValidationMessage)
+            .Must(op =>  Enum.TryParse(op.ToString(), out Operation operation) && Enum.IsDefined(typeof(Operation), operation))
             .WithMessage(OperationFilterFormatValidationMessage);
     }
 }
