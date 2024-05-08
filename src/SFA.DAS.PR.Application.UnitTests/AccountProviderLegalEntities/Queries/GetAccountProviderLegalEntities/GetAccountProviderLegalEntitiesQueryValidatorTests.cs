@@ -47,6 +47,6 @@ public class GetAccountProviderLegalEntitiesQueryValidatorTests
         var sut = new GetAccountProviderLegalEntitiesQueryValidator();
         var result = await sut.TestValidateAsync(query);
         result.ShouldHaveValidationErrorFor(q => q.Operations)
-                    .WithErrorMessage(GetAccountProviderLegalEntitiesQueryValidator.OperationFilterValidationMessage);
+                    .WithErrorMessage(OperationsValidator.OperationFilterValidationMessage);
     }
 }
