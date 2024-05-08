@@ -4,7 +4,6 @@ using SFA.DAS.PR.Domain.Entities;
 using SFA.DAS.PR.Domain.Interfaces;
 
 namespace SFA.DAS.PR.Application.AccountProviders.Queries.GetAccountProviders;
-
 public class GetAccountProvidersQueryHandler(IAccountProvidersReadRepository _accountProvidersReadRepository) : IRequestHandler<GetAccountProvidersQuery, ValidatedResponse<GetAccountProvidersQueryResult>>
 {
     public async Task<ValidatedResponse<GetAccountProvidersQueryResult>> Handle(GetAccountProvidersQuery query, CancellationToken cancellationToken)

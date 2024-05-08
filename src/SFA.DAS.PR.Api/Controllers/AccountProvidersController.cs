@@ -12,14 +12,13 @@ namespace SFA.DAS.PR.Api.Controllers;
 
 [ApiController]
 [Route("accounts/{accountHashedId}/providers")]
-public class AccountProvidersController(IMediator mediator) : ActionResponseControllerBase
+public class AccountProvidersController(IMediator _mediator) : ActionResponseControllerBase
 {
-    private readonly IMediator _mediator = mediator;
-
     public override string ControllerName => "AccountProviders";
 
     [HttpGet]
     [Authorize(Policy = Policies.Integration)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
     [SwaggerRequestExample(typeof(GetAccountProvidersQueryResult), typeof(GetAccountProvidersQueryResultExample))]
     public async Task<IActionResult> Get([FromRoute] string accountHashedId, CancellationToken cancellationToken)
