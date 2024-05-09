@@ -4,7 +4,6 @@ parameters:
   displayName: Add /p:BlockOnPossibleDataLoss=false argument to DACPAC deployment
   type: boolean
   default: false
-- name: Data
 
 trigger:
   batch: true
