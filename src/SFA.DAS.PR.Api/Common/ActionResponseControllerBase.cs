@@ -1,6 +1,6 @@
 ﻿using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
-using SFA.DAS.PR.Application.Common;
+using SFA.DAS.PR.Application.Common.Commands;
 using SFA.DAS.PR.Application.Mediatr.Responses;
 using System.Diagnostics.CodeAnalysis;
 
@@ -26,6 +26,21 @@ namespace SFA.DAS.PR.Api.Common
                 return new OkObjectResult(response.Result);
             }
                 
+            return new BadRequestObjectResult(FormatErrors(response.Errors));
+        }
+
+        protected IActionResult GetBooleanResponse(ValidatedBooleanResult response)
+        {
+            if (response.Result == null && response.IsValidResponse)
+            {
+                return NotFound();
+            }
+
+            if (response.IsValidResponse)
+            {
+                return new OkObjectResult(response.Result);
+            }
+
             return new BadRequestObjectResult(FormatErrors(response.Errors));
         }
 

@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using SFA.DAS.PR.Application.Validators;
+using SFA.DAS.PR.Application.Common.Validators;
 
 namespace SFA.DAS.PR.Application.AccountProviderLegalEntities.Queries.GetAccountProviderLegalEntities;
 public class GetAccountProviderLegalEntitiesQueryValidator : AbstractValidator<GetAccountProviderLegalEntitiesQuery>

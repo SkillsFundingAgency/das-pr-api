@@ -46,7 +46,7 @@ public static class AddPrDataContextExtension
         });
 
         services.AddTransient<IProviderRelationshipsDataContext, ProviderRelationshipsDataContext>(provider => provider.GetService<ProviderRelationshipsDataContext>()!);
-
+        
         services
             .AddHealthChecks()
             .AddDbContextCheck<ProviderRelationshipsDataContext>();
@@ -60,5 +60,6 @@ public static class AddPrDataContextExtension
     {
         services.AddTransient<IAccountProvidersReadRepository, AccountProvidersReadRepository>();
         services.AddTransient<IAccountProviderLegalEntitiesReadRepository, AccountProviderLegalEntitiesReadRepository>();
+        services.AddTransient<IPermissionsReadRepository, PermissionsReadRepository>();
     }
 }
