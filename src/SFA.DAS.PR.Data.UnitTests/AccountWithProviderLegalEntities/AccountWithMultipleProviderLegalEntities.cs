@@ -2,6 +2,7 @@
 using NUnit.Framework;
 using SFA.DAS.PR.Data.Repositories;
 using SFA.DAS.PR.Data.UnitTests.InMemoryDatabases;
+using SFA.DAS.PR.Data.UnitTests.Setup;
 using SFA.DAS.PR.Domain.Entities;
 
 namespace SFA.DAS.PR.Data.UnitTests.AccountWithProviderLegalEntities;
@@ -23,62 +24,10 @@ public class AccountWithMultipleProviderLegalEntities
     [Test]
     public async Task Multiple_AccountProviderLegalEntities_Are_Returned()
     {
-        Account account = new()
-        {
-            Id = 1004,
-            HashedId = "hash",
-            PublicHashedId = "phash",
-            Name = "Name",
-            Created = DateTime.Now.AddDays(-1),
-            Updated = DateTime.Now
-        };
+        Account account = AccountTestData.CreateAccount(1004);
 
-        List<AccountProviderLegalEntity> accountProviderLegalEntitiesToAdd = new()
-        {
-            new()
-            {
-                Id = 1001,
-                AccountProviderId = 1002,
-                AccountLegalEntityId = 1003,
-                Created = DateTime.UtcNow.AddDays(-1),
-                Updated = DateTime.UtcNow,
-                Permissions = new List<Permission>()
-                {
-                    new ()
-                    {
-                        Id = 1,
-                        AccountProviderLegalEntityId = 1001,
-                        Operation = Operation.Recruitment
-                    }
-                },
-                AccountLegalEntity = new()
-                {
-                    Id = 1003,
-                    PublicHashedId = "hash",
-                    AccountId = 1004,
-                    Account = account,
-                    Name = "Name",
-                    Created = DateTime.Now.AddDays(-1),
-                    Updated = DateTime.Now,
-                    Deleted = null
-                },
-                AccountProvider = new()
-                {
-                    Id = 1002,
-                    AccountId = 1004,
-                    Account = account,
-                    ProviderUkprn = 1005,
-                    Created = DateTime.Now.AddDays(-1),
-                    Provider = new()
-                    {
-                        Ukprn = 1005,
-                        Name = "Name",
-                        Created = DateTime.Now.AddDays(-1),
-                        Updated = DateTime.Now
-                    }
-                }
-            }
-        };
+        List<AccountProviderLegalEntity> accountProviderLegalEntitiesToAdd = 
+            AccountProviderLegalEntityTestData.CreateAccountProviderLegalEntitiesWithPermissions(account);
 
         long ukprn = accountProviderLegalEntitiesToAdd.First().AccountProvider.ProviderUkprn;
 

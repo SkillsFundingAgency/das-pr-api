@@ -2,6 +2,7 @@
 using NUnit.Framework;
 using SFA.DAS.PR.Data.Repositories;
 using SFA.DAS.PR.Data.UnitTests.InMemoryDatabases;
+using SFA.DAS.PR.Data.UnitTests.Setup;
 using SFA.DAS.PR.Domain.Entities;
 
 namespace SFA.DAS.PR.Data.UnitTests.AccountWithProviders
@@ -23,68 +24,7 @@ namespace SFA.DAS.PR.Data.UnitTests.AccountWithProviders
         [Test]
         public async Task Multiple_AccountProviders_Are_Returned()
         {
-            List<Account> accountsToAdd = new()
-            {
-                new()
-                {
-                    Id = 1001,
-                    HashedId = Guid.NewGuid().ToString(),
-                    PublicHashedId = Guid.NewGuid().ToString(),
-                    Name = "AccountName",
-                    Created = DateTime.UtcNow.AddDays(-1),
-                    Updated = DateTime.UtcNow,
-                    AccountProviders = new()
-                    {
-                        new()
-                        {
-                            Id = 1002,
-                            AccountId = 1001,
-                            ProviderUkprn = 1006,
-                            Created = DateTime.UtcNow.AddDays(-1),
-                            Provider = new()
-                            {
-                                Ukprn = 1006,
-                                Name = "ProviderName",
-                                Created = DateTime.UtcNow.AddDays(-1),
-                                Updated = DateTime.UtcNow
-                            },
-                            AccountProviderLegalEntities = new()
-                            {
-                                new()
-                                {
-                                    Id = 1005,
-                                    AccountProviderId = 1002,
-                                    AccountLegalEntityId = 1004,
-                                    Created = DateTime.UtcNow.AddDays(-1),
-                                    Updated = DateTime.UtcNow,
-                                    Permissions = new()
-                                    {
-                                        new()
-                                        {
-                                            AccountProviderLegalEntityId = 1005,
-                                            Id = 106,
-                                            Operation = Operation.CreateCohort
-                                        }
-                                    },
-                                }
-                            }
-                        }
-                    },
-                    AccountLegalEntities = new()
-                    {
-                        new()
-                        {
-                            Id = 1004,
-                            PublicHashedId = Guid.NewGuid().ToString(),
-                            AccountId = 1001,
-                            Name = "AccountLegalEntityName",
-                            Created = DateTime.UtcNow.AddDays(-1),
-                            Updated = DateTime.UtcNow,
-                            Deleted = null
-                        }
-                    }
-                }
-            };
+            List<Account> accountsToAdd = AccountTestData.CreateAccounts();
 
             string accountHashedId = accountsToAdd.First().PublicHashedId;
 
