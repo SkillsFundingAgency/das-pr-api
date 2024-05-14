@@ -22,6 +22,12 @@ public static class AccountProviderLegalEntityTestData
                         Id = 1,
                         AccountProviderLegalEntityId = 1001,
                         Operation = Operation.Recruitment
+                    },
+                    new ()
+                    {
+                        Id = 2,
+                        AccountProviderLegalEntityId = 1001,
+                        Operation = Operation.CreateCohort
                     }
                 },
                 AccountLegalEntity = new()

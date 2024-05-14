@@ -9,7 +9,7 @@
     }
   },
   "profiles": {
-    "https": {
+    "SFA.DAS.PR.Api": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": false,
