@@ -1,30 +1,30 @@
 ﻿using AutoFixture.NUnit3;
 using Moq;
 using SFA.DAS.PR.Application.Mediatr.Responses;
-using SFA.DAS.PR.Application.Permissions.Queries.GetPermissions;
+using SFA.DAS.PR.Application.Permissions.Queries.GetAllPermissionsForAccount;
 using SFA.DAS.PR.Domain.Entities;
 using SFA.DAS.PR.Domain.Interfaces;
 using SFA.DAS.Testing.AutoFixture;
 
-namespace SFA.DAS.PR.Application.UnitTests.Permissions.Queries.GetPermissions;
-public class GetPermissionsQueryHandlerTests
+namespace SFA.DAS.PR.Application.UnitTests.Permissions.Queries.GetAllPermissionsForAccount;
+public class GetAllPermissionsForAccountQueryHandlerTests
 {
     [Test]
     [RecursiveMoqAutoData]
     public async Task Handle_GetPermissions_Returns_Populated_Result(
             [Frozen] Mock<IPermissionsReadRepository> permissionsReadRepository,
-            GetPermissionsQueryHandler sut,
+            GetAllPermissionsForAccountQueryHandler sut,
             Account account,
             CancellationToken cancellationToken
         )
     {
-        GetPermissionsQuery query = new(account.HashedId);
+        GetAllPermissionsForAccountQuery query = new(account.HashedId);
 
         permissionsReadRepository.Setup(a =>
             a.GetPermissions(query.AccountHashedId, cancellationToken)
         ).ReturnsAsync(account);
 
-        ValidatedResponse<GetPermissionsQueryResult> result = await sut.Handle(query, cancellationToken);
+        ValidatedResponse<GetAllPermissionsForAccountQueryResult> result = await sut.Handle(query, cancellationToken);
 
         Assert.That(result.Result.LegalEntities, !Is.Empty);
     }
@@ -33,18 +33,18 @@ public class GetPermissionsQueryHandlerTests
     [RecursiveMoqAutoData]
     public async Task Handle_GetPermissions_Returns_Empty_Result (
             [Frozen] Mock<IPermissionsReadRepository> permissionsReadRepository,
-            GetPermissionsQueryHandler sut,
+            GetAllPermissionsForAccountQueryHandler sut,
             string accountHashedId,
             CancellationToken cancellationToken
         )
     {
-        GetPermissionsQuery query = new(accountHashedId);
+        GetAllPermissionsForAccountQuery query = new(accountHashedId);
 
         permissionsReadRepository.Setup(a =>
             a.GetPermissions(query.AccountHashedId, cancellationToken)
         ).ReturnsAsync((Account?)null);
 
-        ValidatedResponse<GetPermissionsQueryResult> result = await sut.Handle(query, cancellationToken);
+        ValidatedResponse<GetAllPermissionsForAccountQueryResult> result = await sut.Handle(query, cancellationToken);
 
         Assert.That(result.Result.LegalEntities, Is.Empty);
     }
