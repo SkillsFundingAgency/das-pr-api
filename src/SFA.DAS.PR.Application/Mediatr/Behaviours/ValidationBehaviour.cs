@@ -36,14 +36,18 @@ namespace SFA.DAS.PR.Application.Mediatr.Behaviours
 
                 var responseType = typeof(TResponse);
 
-                if (responseType.IsGenericType || responseType == typeof(ValidatedBooleanResult))
+                if (responseType.IsGenericType)
                 {
-                    var resultType = responseType.IsGenericType ? responseType.GetGenericArguments()[0] : typeof(bool);
-                    var convertedType = responseType == typeof(ValidatedBooleanResult)
-                        ? typeof(ValidatedBooleanResult)
-                        : typeof(ValidatedResponse<>).MakeGenericType(resultType);
+                    var convertedType = typeof(ValidatedResponse<>).MakeGenericType(responseType.GetGenericArguments()[0]);
 
                     if (Activator.CreateInstance(convertedType, result.Errors) is TResponse invalidResponse)
+                    {
+                        return invalidResponse;
+                    }
+                }
+                else if (responseType == typeof(ValidatedBooleanResult))
+                {
+                    if (Activator.CreateInstance(typeof(ValidatedBooleanResult), result.Errors) is TResponse invalidResponse)
                     {
                         return invalidResponse;
                     }
