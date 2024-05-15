@@ -5,4 +5,6 @@ namespace SFA.DAS.PR.Domain.Interfaces;
 public interface IPermissionsReadRepository
 {
     Task<bool> HasPermissionWithRelationship(long ukprn, Operation operation, CancellationToken cancellationToken);
+
+    Task<Account?> GetPermissions(string accountHashedId, CancellationToken cancellationToken);
 }
