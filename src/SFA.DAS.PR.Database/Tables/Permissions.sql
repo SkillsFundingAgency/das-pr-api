@@ -4,15 +4,14 @@
     [AccountProviderLegalEntityId] BIGINT NOT NULL,
     [Operation] SMALLINT NOT NULL,
     CONSTRAINT [PK_Permissions] PRIMARY KEY CLUSTERED ([Id] ASC),
-    CONSTRAINT [FK_Permissions_AccountProviderLegalEntities_AccountProviderLegalEntityId] FOREIGN KEY ([AccountProviderLegalEntityId]) REFERENCES [AccountProviderLegalEntities] ([Id]) ON DELETE CASCADE,
-    CONSTRAINT [UK_Permissions_AccountProviderLegalEntityId_Operation] UNIQUE ([AccountProviderLegalEntityId] ASC, [Operation] ASC),
-    INDEX [IX_Permissions_AccountProviderLegalEntityId] NONCLUSTERED ([AccountProviderLegalEntityId] ASC)
-)
-
+    CONSTRAINT [FK_Permissions_AccountProviderLegalEntities_AccountProviderLegalEntityId] 
+    FOREIGN KEY ([AccountProviderLegalEntityId]) 
+    REFERENCES [AccountProviderLegalEntities] ([Id]) ON DELETE CASCADE
+);
 GO 
 
-CREATE NONCLUSTERED INDEX [idx_Permissions_Operation] 
-ON [dbo].[Permissions] ([Operation]) 
-INCLUDE ([AccountProviderLegalEntityId]) WITH (ONLINE = ON)
-
+CREATE UNIQUE INDEX [IX_Permissions_AccountProviderLegalEntityId_Operation] 
+ON [dbo].[Permissions] ([AccountProviderLegalEntityId] ASC,[Operation] ASC);
 GO
+
+
