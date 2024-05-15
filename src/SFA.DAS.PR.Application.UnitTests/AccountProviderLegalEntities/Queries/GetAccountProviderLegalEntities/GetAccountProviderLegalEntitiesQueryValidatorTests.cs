@@ -1,6 +1,6 @@
 ﻿using FluentValidation.TestHelper;
 using SFA.DAS.PR.Application.AccountProviderLegalEntities.Queries.GetAccountProviderLegalEntities;
-using SFA.DAS.PR.Application.Validators;
+using SFA.DAS.PR.Application.Common.Validators;
 using SFA.DAS.PR.Domain.Entities;
 
 namespace SFA.DAS.PR.Application.UnitTests.AccountProviderLegalEntities.Queries.GetAccountProviderLegalEntities;
