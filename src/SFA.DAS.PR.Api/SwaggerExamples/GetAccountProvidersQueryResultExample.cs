@@ -10,7 +10,7 @@ public class GetAccountProvidersQueryResultExample : IExamplesProvider<GetAccoun
 {
     public GetAccountProvidersQueryResult GetExamples()
     {
-        GetAccountProvidersQueryResult result = new("8123", new List<AccountProviderModel>()
+        GetAccountProvidersQueryResult result = new(8123, new List<AccountProviderModel>()
         {
             new AccountProviderModel()
             {

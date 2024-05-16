@@ -8,23 +8,16 @@ public class AccountProvidersReadRepository(IProviderRelationshipsDataContext pr
 {
     private readonly IProviderRelationshipsDataContext _providerRelationshipsDataContext = providerRelationshipsDataContext;
 
-    public async Task<List<AccountProvider>> GetAccountProviders(string accountHashedId, CancellationToken cancellationToken)
+    public async Task<List<AccountProvider>> GetAccountProviders(long accountId, CancellationToken cancellationToken)
     {
-        Account? account = await _providerRelationshipsDataContext.Accounts.FirstOrDefaultAsync(x => x.PublicHashedId == accountHashedId, cancellationToken);
-
-        if (account == null)
-            return new List<AccountProvider>();
-
-        var accountProviders = await _providerRelationshipsDataContext.AccountProviders
+        return await _providerRelationshipsDataContext.AccountProviders
             .AsNoTracking()
             .Include(x => x.Provider)
             .Include(x => x.AccountProviderLegalEntities)
                 .ThenInclude(y => y.AccountLegalEntity)
             .Include(x => x.AccountProviderLegalEntities)
                 .ThenInclude(y => y.Permissions)
-            .Where(x => x.AccountId == account.Id)
+            .Where(x => x.AccountId == accountId)
             .ToListAsync(cancellationToken);
-
-        return accountProviders;
     }
 }

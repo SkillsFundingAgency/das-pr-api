@@ -1,5 +1,6 @@
 ﻿using AutoFixture.NUnit3;
 using FluentAssertions;
+using Microsoft.Identity.Client;
 using Moq;
 using SFA.DAS.PR.Application.AccountProviders.Queries.GetAccountProviders;
 using SFA.DAS.PR.Application.Mediatr.Responses;
@@ -17,18 +18,18 @@ namespace SFA.DAS.PR.Application.UnitTests.AccountProviders.Queries.GetAccountPr
             [Frozen] Mock<IAccountProvidersReadRepository> accountProvidersReadRepository,
             GetAccountProvidersQueryHandler sut,
             List<AccountProvider> providers,
-            string accountPublicHashId,
+            long accountId,
             CancellationToken cancellationToken
         )
         {
             accountProvidersReadRepository.Setup(a =>
-                a.GetAccountProviders(accountPublicHashId, cancellationToken)
+                a.GetAccountProviders(accountId, cancellationToken)
             ).ReturnsAsync(providers);
 
-            GetAccountProvidersQueryResult expectedResult = new(accountPublicHashId, providers.Select(a => (AccountProviderModel)a).ToList());
+            GetAccountProvidersQueryResult expectedResult = new(accountId, providers.Select(a => (AccountProviderModel)a).ToList());
 
             ValidatedResponse<GetAccountProvidersQueryResult> result =
-                await sut.Handle(new GetAccountProvidersQuery(accountPublicHashId), cancellationToken);
+                await sut.Handle(new GetAccountProvidersQuery(accountId), cancellationToken);
 
             result.Result.Should().BeEquivalentTo(expectedResult, c => c.ExcludingMissingMembers());
         }
@@ -38,17 +39,17 @@ namespace SFA.DAS.PR.Application.UnitTests.AccountProviders.Queries.GetAccountPr
         public async Task Handle_ProvidersNotFound_ReturnsEmptyResult(
             [Frozen] Mock<IAccountProvidersReadRepository> accountProvidersReadRepository,
             GetAccountProvidersQueryHandler sut,
-            string accountPublicHashId,
+            long accountId,
             CancellationToken cancellationToken
         )
         {
             accountProvidersReadRepository.Setup(a =>
-                a.GetAccountProviders(accountPublicHashId, cancellationToken)
+                a.GetAccountProviders(accountId, cancellationToken)
             ).ReturnsAsync(() => new List<AccountProvider>());
 
-            GetAccountProvidersQueryResult expectedResult = new(accountPublicHashId, []);
+            GetAccountProvidersQueryResult expectedResult = new(accountId, []);
 
-            var result = await sut.Handle(new GetAccountProvidersQuery(accountPublicHashId), cancellationToken);
+            var result = await sut.Handle(new GetAccountProvidersQuery(accountId), cancellationToken);
 
             result.Result.Should().BeEquivalentTo(expectedResult, c => c.ExcludingMissingMembers());
         }
