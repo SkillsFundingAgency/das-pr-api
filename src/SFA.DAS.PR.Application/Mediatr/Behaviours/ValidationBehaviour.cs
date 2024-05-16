@@ -1,8 +1,8 @@
-﻿using FluentValidation;
+﻿using System.Diagnostics.CodeAnalysis;
+using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.PR.Application.Mediatr.Responses;
-using System.Diagnostics.CodeAnalysis;
 
 namespace SFA.DAS.PR.Application.Mediatr.Behaviours
 {
@@ -32,7 +32,7 @@ namespace SFA.DAS.PR.Application.Mediatr.Behaviours
                     (acc, current) => acc + string.Concat(' ', current)
                 );
 
-                _logger.LogTrace("{errors}", errors);
+                _logger.LogTrace("Validation errors: {Errors}", errors);
 
                 var responseType = typeof(TResponse);
 
