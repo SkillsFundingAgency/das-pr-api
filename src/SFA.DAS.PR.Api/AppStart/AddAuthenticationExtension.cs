@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using SFA.DAS.Api.Common.AppStart;
 using SFA.DAS.Api.Common.Configuration;
+using SFA.DAS.PR.Api.Authorization;
 
 namespace SFA.DAS.PR.Api.AppStart;
 
@@ -17,13 +18,26 @@ public static class AddAuthenticationExtension
 
             var policies = new Dictionary<string, string>
             {
-                {
-                    "Default", "Default"
-                }
+                {Policies.Integration, Policies.Integration},
+                {Policies.Management, Policies.Management}
             };
 
             services.AddAuthentication(azureAdConfiguration, policies);
         }
+        else
+        {
+            services.AddAuthorization(options =>
+            {
+                foreach (var policyName in new string[] { Policies.Integration, Policies.Management })
+                {
+                    options.AddPolicy(policyName, policy =>
+                    {
+                        policy.Requirements.Add(new NoneRequirement());
+                    });
+                }
+            });
+        }
+
 
         return services;
     }

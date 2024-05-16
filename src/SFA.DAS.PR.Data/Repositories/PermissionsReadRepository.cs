@@ -15,8 +15,8 @@ public class PermissionsReadRepository(IProviderRelationshipsDataContext _provid
                     p.Permissions.Any(a => a.Operation == operation) &&
                     p.AccountLegalEntity.Deleted == null, 
             cancellationToken
-        );
-
+    );
+        
     public async Task<Account?> GetPermissions(string accountHashedId, CancellationToken cancellationToken)
     {
         return await _providerRelationshipsDataContext.Accounts
@@ -28,5 +28,17 @@ public class PermissionsReadRepository(IProviderRelationshipsDataContext _provid
                     .ThenInclude(aple => aple.AccountProvider)
                         .ThenInclude(ap => ap.Account)
         .FirstOrDefaultAsync(a => a.HashedId == accountHashedId, cancellationToken);
+    }
+
+    public async Task<List<Operation>> GetOperations(long ukprn, string publicHashedId, CancellationToken cancellationToken)
+    {
+        var operations = await _providerRelationshipsDataContext.Permissions
+            .AsNoTracking()
+            .Where(x => x.AccountProviderLegalEntity.AccountProvider.ProviderUkprn == ukprn
+                        && x.AccountProviderLegalEntity.AccountLegalEntity.PublicHashedId == publicHashedId)
+            .Select(x => x.Operation)
+            .ToListAsync(cancellationToken);
+
+        return operations.ToList();
     }
 }
