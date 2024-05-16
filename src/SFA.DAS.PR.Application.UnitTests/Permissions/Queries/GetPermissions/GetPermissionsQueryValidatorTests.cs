@@ -1,5 +1,5 @@
 ﻿using FluentValidation.TestHelper;
-using SFA.DAS.PR.Application.AccountProviders.Queries.GetPermissions;
+using SFA.DAS.PR.Application.Permissions.Queries.GetPermissionsForProviderOnAccount;
 using SFA.DAS.PR.Application.Validators;
 
 namespace SFA.DAS.PR.Application.UnitTests.Permissions.Queries.GetPermissions;
@@ -8,25 +8,25 @@ public class GetPermissionsQueryValidatorTests
     [Test]
     public async Task Validate_AccountHashedIdEmpty_Returns_ErrorMessage()
     {
-        var sut = new GetPermissionsQueryValidator();
-        GetPermissionsQuery query = GetConstructedGetPermissionsQuery();
+        var sut = new GetPermissionsForProviderOnAccountQueryValidator();
+        GetPermissionsForProviderOnAccountQuery query = GetConstructedGetPermissionsQuery();
         query.PublicHashedId = null;
 
         var result = await sut.TestValidateAsync(query);
         result.ShouldHaveValidationErrorFor(q => q.PublicHashedId)
-            .WithErrorMessage(GetPermissionsQueryValidator.LegalEntityPublicHashedIdNotSuppliedValidationMessage);
+            .WithErrorMessage(GetPermissionsForProviderOnAccountQueryValidator.LegalEntityPublicHashedIdNotSuppliedValidationMessage);
     }
 
     [Test]
     public async Task Validate_UkprnEmpty_Returns_ErrorMessage()
     {
-        var sut = new GetPermissionsQueryValidator();
-        GetPermissionsQuery query = GetConstructedGetPermissionsQuery();
+        var sut = new GetPermissionsForProviderOnAccountQueryValidator();
+        GetPermissionsForProviderOnAccountQuery query = GetConstructedGetPermissionsQuery();
         query.Ukprn = null;
         var result = await sut.TestValidateAsync(query);
 
         result.ShouldHaveValidationErrorFor(q => q.Ukprn)
-            .WithErrorMessage(GetPermissionsQueryValidator.UkprnNotSuppliedValidationMessage);
+            .WithErrorMessage(GetPermissionsForProviderOnAccountQueryValidator.UkprnNotSuppliedValidationMessage);
     }
 
     [TestCase(1)]
@@ -40,8 +40,8 @@ public class GetPermissionsQueryValidatorTests
     [TestCase(211111111)]
     public async Task Validate_UkprnWrongFormat_Returns_ErrorMessage(long ukprn)
     {
-        var sut = new GetPermissionsQueryValidator();
-        GetPermissionsQuery query = GetConstructedGetPermissionsQuery();
+        var sut = new GetPermissionsForProviderOnAccountQueryValidator();
+        GetPermissionsForProviderOnAccountQuery query = GetConstructedGetPermissionsQuery();
         query.Ukprn = ukprn;
         var result = await sut.TestValidateAsync(query);
 
@@ -52,16 +52,16 @@ public class GetPermissionsQueryValidatorTests
     [Test]
     public async Task Validate_Valid_Query()
     {
-        var sut = new GetPermissionsQueryValidator();
-        GetPermissionsQuery query = GetConstructedGetPermissionsQuery();
+        var sut = new GetPermissionsForProviderOnAccountQueryValidator();
+        GetPermissionsForProviderOnAccountQuery query = GetConstructedGetPermissionsQuery();
         var result = await sut.TestValidateAsync(query);
 
         result.ShouldNotHaveAnyValidationErrors();
     }
 
-    private GetPermissionsQuery GetConstructedGetPermissionsQuery()
+    private GetPermissionsForProviderOnAccountQuery GetConstructedGetPermissionsQuery()
     {
-        return new GetPermissionsQuery
+        return new GetPermissionsForProviderOnAccountQuery
         {
             Ukprn = 12345678,
             PublicHashedId = "hashedId"
