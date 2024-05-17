@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using SFA.DAS.PR.Application.Validators;
 
-namespace SFA.DAS.PR.Application.AccountProviders.Queries.GetPermissions;
+namespace SFA.DAS.PR.Application.Permissions.Queries.GetPermissions;
 public class GetPermissionsQueryValidator : AbstractValidator<GetPermissionsQuery>
 {
     public const string UkprnNotSuppliedValidationMessage = "A Ukprn needs to be supplied";

@@ -38,4 +38,34 @@ public class PermissionsReadRepositoryTests
 
         Assert.AreEqual(expectedOperations, actualOperations);
     }
+
+    [Test]
+    public async Task AccountProviderLegalEntities_Get_Operations_Has()
+    {
+        Account account = AccountTestData.CreateAccount(1005);
+
+        List<AccountProviderLegalEntity> accountProviderLegalEntitiesToAdd =
+            AccountProviderLegalEntityTestData.CreateAccountProviderLegalEntitiesWithPermissions(account);
+
+        long ukprn = accountProviderLegalEntitiesToAdd.First().AccountProvider.ProviderUkprn;
+        long accountLegalEntityId = accountProviderLegalEntitiesToAdd.First().AccountLegalEntity.Id;
+
+        bool hasPermissions;
+        var actualOperations = accountProviderLegalEntitiesToAdd.First().Permissions.Select(x => x.Operation).ToList();
+
+        using (var context = InMemoryProviderRelationshipsDataContext.CreateInMemoryContext(
+                   contextName: $"{nameof(InMemoryProviderRelationshipsDataContext)}_{nameof(AccountProviderLegalEntities_Get_Operations_Has)}")
+              )
+        {
+            await context.AddAsync(account);
+            await context.AddRangeAsync(accountProviderLegalEntitiesToAdd);
+            await context.SaveChangesAsync(_cancellationToken);
+
+            PermissionsReadRepository sut = new(context);
+
+            hasPermissions = await sut.GetHasPermissions(ukprn, accountLegalEntityId, actualOperations, _cancellationToken);
+        }
+
+        Assert.That(hasPermissions, Is.True);
+    }
 }

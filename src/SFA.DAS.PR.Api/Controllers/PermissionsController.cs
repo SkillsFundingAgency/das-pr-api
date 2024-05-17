@@ -4,8 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.PR.Api.Authorization;
 using SFA.DAS.PR.Api.Common;
 using SFA.DAS.PR.Api.SwaggerExamples;
-using SFA.DAS.PR.Application.AccountProviders.Queries.GetPermissions;
 using SFA.DAS.PR.Application.Mediatr.Responses;
+using SFA.DAS.PR.Application.Permissions.Queries.GetHasPermissions;
+using SFA.DAS.PR.Application.Permissions.Queries.GetPermissions;
 using SFA.DAS.PR.Application.Permissions.Queries.HasRelationshipWithPermission;
 using Swashbuckle.AspNetCore.Filters;
 
@@ -36,9 +37,19 @@ public class PermissionsController(IMediator _mediator) : ActionResponseControll
     [SwaggerRequestExample(typeof(GetPermissionsQueryResult), typeof(GetPermissionsQueryResultExample))]
     public async Task<IActionResult> GetPermissions([FromQuery] GetPermissionsQuery query, CancellationToken cancellationToken)
     {
-
         ValidatedResponse<GetPermissionsQueryResult> result = await _mediator.Send(query, cancellationToken);
 
         return GetResponse(result);
+    }
+
+    [HttpGet("has")]
+    [Authorize(Policy = Policies.Integration)]
+    [ProducesResponseType(typeof(bool), StatusCodes.Status400BadRequest)]
+    [SwaggerRequestExample(typeof(GetHasPermissionsQuery), typeof(GetHasPermissionsQueryExample))]
+
+    public async Task<IActionResult> HasPermission([FromQuery] GetHasPermissionsQuery query, CancellationToken cancellationToken)
+    {
+        ValidatedBooleanResult result = await _mediator.Send(query, cancellationToken);
+        return GetBooleanResponse(result);
     }
 }

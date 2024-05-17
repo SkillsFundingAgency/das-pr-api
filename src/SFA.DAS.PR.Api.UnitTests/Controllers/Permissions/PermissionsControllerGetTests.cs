@@ -6,11 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using SFA.DAS.PR.Api.Common;
 using SFA.DAS.PR.Api.Controllers;
-using SFA.DAS.PR.Application.AccountProviders.Queries.GetPermissions;
 using SFA.DAS.PR.Application.Mediatr.Responses;
+using SFA.DAS.PR.Application.Permissions.Queries.GetPermissions;
 using SFA.DAS.Testing.AutoFixture;
 
-namespace SFA.DAS.PR.Api.UnitTests.Controllers;
+namespace SFA.DAS.PR.Api.UnitTests.Controllers.Permissions;
 public class PermissionsControllerGetTests
 {
     [Test, MoqAutoData]

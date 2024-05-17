@@ -29,4 +29,16 @@ public class PermissionsReadRepository(IProviderRelationshipsDataContext _provid
 
         return operations.ToList();
     }
+
+    public async Task<bool> GetHasPermissions(long ukprn, long accountLegalEntityId, List<Operation> operations, CancellationToken cancellationToken)
+    {
+        var permissions = await _providerRelationshipsDataContext.Permissions
+            .AsNoTracking()
+            .Where(x => x.AccountProviderLegalEntity.AccountProvider.ProviderUkprn == ukprn
+                        && x.AccountProviderLegalEntity.AccountLegalEntity.Id == accountLegalEntityId
+                        && x.AccountProviderLegalEntity.AccountLegalEntity.Deleted == null)
+        .ToListAsync(cancellationToken);
+
+        return permissions.Count > 0 && operations.TrueForAll(operation => permissions.Exists(x => x.Operation == operation));
+    }
 }

@@ -11,7 +11,7 @@ using SFA.DAS.PR.Application.Permissions.Queries.HasRelationshipWithPermission;
 using SFA.DAS.PR.Domain.Entities;
 using SFA.DAS.Testing.AutoFixture;
 
-namespace SFA.DAS.PR.Api.UnitTests.Controllers;
+namespace SFA.DAS.PR.Api.UnitTests.Controllers.Permissions;
 
 public class PermissionsControllerTests
 {
