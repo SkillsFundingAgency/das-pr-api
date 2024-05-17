@@ -26,7 +26,7 @@ public class PermissionsControllerGetTests
         mediatorMock.Verify(m =>
             m.Send(It.Is<GetPermissionsQuery>(q =>
                     q.Ukprn == query.Ukprn
-                    && q.PublicHashedId == query.PublicHashedId),
+                    && q.accountLegalEntityId == query.accountLegalEntityId),
             cancellationToken)
         );
     }
@@ -45,7 +45,7 @@ public class PermissionsControllerGetTests
         mediatorMock.Setup(m =>
                 m.Send(It.Is<GetPermissionsQuery>(q =>
                         q.Ukprn == query.Ukprn
-                        && q.PublicHashedId == query.PublicHashedId),
+                        && q.accountLegalEntityId == query.accountLegalEntityId),
                     cancellationToken)
         ).ReturnsAsync(response);
 

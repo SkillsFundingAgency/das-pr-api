@@ -28,11 +28,10 @@ public class GetHasPermissionsQueryHandlerTests
         };
 
         permissionsReadRepository.Setup(a =>
-            a.GetHasPermissions(ukprn, accountLegalEntityId, operations, cancellationToken)
-        ).ReturnsAsync(true);
+            a.GetOperations(ukprn, accountLegalEntityId, cancellationToken)
+        ).ReturnsAsync(operations);
 
         ValidatedBooleanResult result = await sut.Handle(query, cancellationToken);
-
         result.Result.Should().BeTrue();
     }
 
@@ -42,23 +41,32 @@ public class GetHasPermissionsQueryHandlerTests
         GetHasPermissionsQueryHandler sut,
         long ukprn,
         long accountLegalEntityId,
-        List<Operation> operations,
         CancellationToken cancellationToken
     )
     {
+        List<Operation> operationsInQuery = new()
+        {
+            Operation.CreateCohort,
+            Operation.Recruitment
+        };
+
+        List<Operation> returnedOperations = new()
+        {
+            Operation.RecruitmentRequiresReview
+        };
+
         GetHasPermissionsQuery query = new()
         {
             Ukprn = ukprn,
             AccountLegalEntityId = accountLegalEntityId,
-            Operations = operations
+            Operations = returnedOperations
         };
 
         permissionsReadRepository.Setup(a =>
-            a.GetHasPermissions(ukprn, accountLegalEntityId, operations, cancellationToken)
-        ).ReturnsAsync(false);
+            a.GetOperations(ukprn, accountLegalEntityId, cancellationToken)
+        ).ReturnsAsync(operationsInQuery);
 
         ValidatedBooleanResult result = await sut.Handle(query, cancellationToken);
-
         result.Result.Should().BeFalse();
     }
 }

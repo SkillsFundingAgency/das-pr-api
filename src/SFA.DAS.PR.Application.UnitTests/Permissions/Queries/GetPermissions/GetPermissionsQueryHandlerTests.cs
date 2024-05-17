@@ -22,7 +22,7 @@ public class GetPermissionsQueryHandlerTests
         GetPermissionsQueryResult getPermissionsHasResult = new GetPermissionsQueryResult { Operations = response };
 
         readRepository.Setup(a =>
-            a.GetOperations(query.Ukprn.GetValueOrDefault(), query.PublicHashedId!, cancellationToken)
+            a.GetOperations(query.Ukprn.GetValueOrDefault(), query.accountLegalEntityId.GetValueOrDefault(), cancellationToken)
         ).ReturnsAsync(response);
 
         ValidatedResponse<GetPermissionsQueryResult> result =

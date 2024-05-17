@@ -8,8 +8,10 @@ public class GetHasPermissionsQueryHandler(IPermissionsReadRepository _permissio
 {
     public async Task<ValidatedBooleanResult> Handle(GetHasPermissionsQuery query, CancellationToken cancellationToken)
     {
-        var hasPermissions = await _permissionsReadRespository.GetHasPermissions(query.Ukprn!.Value, query.AccountLegalEntityId!.Value,
-            query.Operations, cancellationToken);
+        var operations = await _permissionsReadRespository.GetOperations(query.Ukprn!.Value, query.AccountLegalEntityId!.Value,
+            cancellationToken);
+
+        bool hasPermissions = operations.Count > 0 && query.Operations.TrueForAll(operation => operations.Exists(x => x == operation));
 
         return new ValidatedBooleanResult(hasPermissions);
     }

@@ -7,7 +7,7 @@ public class GetPermissionsQueryHandler(IPermissionsReadRepository _permissionsR
 {
     public async Task<ValidatedResponse<GetPermissionsQueryResult>> Handle(GetPermissionsQuery query, CancellationToken cancellationToken)
     {
-        var operations = await _permissionsReadRespository.GetOperations(query.Ukprn!.Value, query.PublicHashedId, cancellationToken);
+        var operations = await _permissionsReadRespository.GetOperations(query.Ukprn!.Value, query.accountLegalEntityId!.Value, cancellationToken);
 
         GetPermissionsQueryResult result = new GetPermissionsQueryResult { Operations = operations };
 

@@ -5,7 +5,7 @@ namespace SFA.DAS.PR.Application.Permissions.Queries.GetPermissions;
 public class GetPermissionsQueryValidator : AbstractValidator<GetPermissionsQuery>
 {
     public const string UkprnNotSuppliedValidationMessage = "A Ukprn needs to be supplied";
-    public const string LegalEntityPublicHashedIdNotSuppliedValidationMessage = "A Legal entity public hashed Id needs to be supplied";
+    public const string LegalEntityIdNotSuppliedValidationMessage = "Account Legal entity Id needs to be supplied";
 
     public GetPermissionsQueryValidator()
     {
@@ -17,8 +17,8 @@ public class GetPermissionsQueryValidator : AbstractValidator<GetPermissionsQuer
         RuleFor(x => x.Ukprn)
             .CheckUkprnFormat();
 
-        RuleFor(model => model.PublicHashedId)
+        RuleFor(model => model.accountLegalEntityId)
             .NotEmpty()
-            .WithMessage(LegalEntityPublicHashedIdNotSuppliedValidationMessage);
+            .WithMessage(LegalEntityIdNotSuppliedValidationMessage);
     }
 }
