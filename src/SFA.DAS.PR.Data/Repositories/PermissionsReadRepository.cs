@@ -27,5 +27,4 @@ public class PermissionsReadRepository(IProviderRelationshipsDataContext _provid
             .Select(x => x.Operation)
             .ToListAsync(cancellationToken);
     }
-
 }
