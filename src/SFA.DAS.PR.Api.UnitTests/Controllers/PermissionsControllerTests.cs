@@ -1,4 +1,5 @@
-﻿using AutoFixture.NUnit3;
+﻿using AutoFixture;
+using AutoFixture.NUnit3;
 using FluentAssertions;
 using FluentValidation.Results;
 using MediatR;
@@ -7,6 +8,7 @@ using Moq;
 using SFA.DAS.PR.Api.Common;
 using SFA.DAS.PR.Api.Controllers;
 using SFA.DAS.PR.Application.Mediatr.Responses;
+using SFA.DAS.PR.Application.Permissions.Queries.GetEmployerRelationships;
 using SFA.DAS.PR.Application.Permissions.Queries.HasRelationshipWithPermission;
 using SFA.DAS.PR.Domain.Entities;
 using SFA.DAS.Testing.AutoFixture;
@@ -15,6 +17,16 @@ namespace SFA.DAS.PR.Api.UnitTests.Controllers;
 
 public class PermissionsControllerTests
 {
+    private Fixture _fixture = null!;
+
+    [SetUp]
+    public void Setup()
+    {
+        _fixture = new Fixture();
+        _fixture.Behaviors.Remove(new ThrowingRecursionBehavior());
+        _fixture.Behaviors.Add(new OmitOnRecursionBehavior());
+    }
+
     [Test]
     [MoqAutoData]
     public async Task HasRelationshipWithPermission_InvokesQueryHandler(

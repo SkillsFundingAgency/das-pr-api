@@ -15,8 +15,8 @@ public class PermissionsReadRepository(IProviderRelationshipsDataContext _provid
                     p.Permissions.Any(a => a.Operation == operation) &&
                     p.AccountLegalEntity.Deleted == null,
             cancellationToken
-        );
-
+    );
+        
     public async Task<List<Operation>> GetOperations(long ukprn, string publicHashedId, CancellationToken cancellationToken)
     {
         var operations = await _providerRelationshipsDataContext.Permissions
