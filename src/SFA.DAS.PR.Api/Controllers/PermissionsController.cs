@@ -31,7 +31,6 @@ public class PermissionsController(IMediator _mediator) : ActionResponseControll
 
     [HttpGet]
     [Authorize(Policy = Policies.Management)]
-    [Authorize(Policy = Policies.Integration)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(GetPermissionsQueryResult), StatusCodes.Status200OK)]
     [SwaggerRequestExample(typeof(GetPermissionsQueryResult), typeof(GetPermissionsQueryResultExample))]
