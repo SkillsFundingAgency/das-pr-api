@@ -17,19 +17,6 @@ public class PermissionsReadRepository(IProviderRelationshipsDataContext _provid
             cancellationToken
     );
         
-    public async Task<Account?> GetPermissions(string accountHashedId, CancellationToken cancellationToken)
-    {
-        return await _providerRelationshipsDataContext.Accounts
-            .Include(acc => acc.AccountLegalEntities)
-                .ThenInclude(ale => ale.AccountProviderLegalEntities)
-                    .ThenInclude(aple => aple.Permissions)
-            .Include(acc => acc.AccountLegalEntities)
-                .ThenInclude(ale => ale.AccountProviderLegalEntities)
-                    .ThenInclude(aple => aple.AccountProvider)
-                        .ThenInclude(ap => ap.Account)
-        .FirstOrDefaultAsync(a => a.HashedId == accountHashedId, cancellationToken);
-    }
-
     public async Task<List<Operation>> GetOperations(long ukprn, string publicHashedId, CancellationToken cancellationToken)
     {
         var operations = await _providerRelationshipsDataContext.Permissions

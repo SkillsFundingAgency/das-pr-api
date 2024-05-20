@@ -2,7 +2,7 @@
 using FluentAssertions;
 using Moq;
 using SFA.DAS.PR.Application.Mediatr.Responses;
-using SFA.DAS.PR.Application.Permissions.Queries.GetPermissionsForProviderOnAccount;
+using SFA.DAS.PR.Application.Permissions.Queries.GetPermissions;
 using SFA.DAS.PR.Domain.Entities;
 using SFA.DAS.PR.Domain.Interfaces;
 using SFA.DAS.Testing.AutoFixture;
@@ -13,19 +13,19 @@ public class GetPermissionsQueryHandlerTests
     [Test, RecursiveMoqAutoData]
     public async Task Handle_PermissionsChecked_ReturnsAccountProvidersResult(
         [Frozen] Mock<IPermissionsReadRepository> readRepository,
-        GetPermissionsForProviderOnAccountQueryHandler sut,
+        GetPermissionsQueryHandler sut,
         List<Operation> response,
-        GetPermissionsForProviderOnAccountQuery query,
+        GetPermissionsQuery query,
         CancellationToken cancellationToken
     )
     {
-        GetPermissionsForProviderOnAccountQueryResult getPermissionsHasResult = new GetPermissionsForProviderOnAccountQueryResult { Operations = response };
+        GetPermissionsQueryResult getPermissionsHasResult = new GetPermissionsQueryResult { Operations = response };
 
         readRepository.Setup(a =>
             a.GetOperations(query.Ukprn.GetValueOrDefault(), query.PublicHashedId!, cancellationToken)
         ).ReturnsAsync(response);
 
-        ValidatedResponse<GetPermissionsForProviderOnAccountQueryResult> result =
+        ValidatedResponse<GetPermissionsQueryResult> result =
             await sut.Handle(query, cancellationToken);
 
         result.Result.Should().BeEquivalentTo(getPermissionsHasResult);

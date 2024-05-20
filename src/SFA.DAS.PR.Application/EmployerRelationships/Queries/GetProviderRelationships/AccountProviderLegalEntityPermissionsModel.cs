@@ -1,6 +1,6 @@
 ﻿using SFA.DAS.PR.Domain.Entities;
 
-namespace SFA.DAS.PR.Application.Permissions.Queries.GetAllPermissionsForAccount;
+namespace SFA.DAS.PR.Application.Permissions.Queries.GetEmployerRelationships;
 
 public class AccountProviderLegalEntityPermissionsModel
 {

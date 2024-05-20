@@ -8,7 +8,7 @@ using Moq;
 using SFA.DAS.PR.Api.Common;
 using SFA.DAS.PR.Api.Controllers;
 using SFA.DAS.PR.Application.Mediatr.Responses;
-using SFA.DAS.PR.Application.Permissions.Queries.GetAllPermissionsForAccount;
+using SFA.DAS.PR.Application.Permissions.Queries.GetEmployerRelationships;
 using SFA.DAS.PR.Application.Permissions.Queries.HasRelationshipWithPermission;
 using SFA.DAS.PR.Domain.Entities;
 using SFA.DAS.Testing.AutoFixture;
@@ -128,50 +128,5 @@ public class PermissionsControllerTests
         var result = await sut.HasRelationshipWithPermission(query, cancellationToken);
         result.As<BadRequestObjectResult>().Should().NotBeNull();
         result.As<BadRequestObjectResult>().Value.As<List<ValidationError>>().Count.Should().Be(errors.Count);
-    }
-
-    [Test]
-    [MoqAutoData]
-    public async Task GetAllPermissionsForAccount_InvokesQueryHandler(
-       [Frozen] Mock<IMediator> mediatorMock,
-       [Greedy] PermissionsController sut,
-       GetAllPermissionsForAccountQuery query,
-       CancellationToken cancellationToken
-    )
-    {
-        await sut.GetAllPermissionsForAccount(query.AccountHashedId, cancellationToken);
-
-        mediatorMock.Verify(m =>
-            m.Send(It.IsAny<GetAllPermissionsForAccountQuery>(), cancellationToken)
-        );
-    }
-
-    [Test]
-    [MoqAutoData]
-    public async Task GetAllPermissionsForAccount_HandlerReturnsData_ReturnsOkResponse(
-        [Frozen] Mock<IMediator> mediatorMock,
-        [Greedy] PermissionsController sut,
-        GetAllPermissionsForAccountQuery query,
-        CancellationToken cancellationToken
-    )
-    {
-        var account = _fixture.Create<Account>();
-
-        var permissionsList = account.AccountLegalEntities
-            .Select(a => (AccountLegalEntityPermissionsModel)a)
-            .ToList();
-
-        var queryResult = new GetAllPermissionsForAccountQueryResult(permissionsList);
-
-        var response = new ValidatedResponse<GetAllPermissionsForAccountQueryResult>(queryResult);
-
-        mediatorMock.Setup(m =>
-            m.Send(It.IsAny<GetAllPermissionsForAccountQuery>(), cancellationToken)
-        ).ReturnsAsync(response);
-
-        var result = await sut.GetAllPermissionsForAccount(query.AccountHashedId, cancellationToken);
-
-        result.As<OkObjectResult>().Should().NotBeNull();
-        result.As<OkObjectResult>().Value.Should().Be(response.Result);
     }
 }

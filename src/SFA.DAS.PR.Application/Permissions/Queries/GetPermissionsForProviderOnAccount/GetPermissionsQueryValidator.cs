@@ -1,13 +1,13 @@
 ﻿using FluentValidation;
 using SFA.DAS.PR.Application.Validators;
 
-namespace SFA.DAS.PR.Application.Permissions.Queries.GetPermissionsForProviderOnAccount;
-public class GetPermissionsForProviderOnAccountQueryValidator : AbstractValidator<GetPermissionsForProviderOnAccountQuery>
+namespace SFA.DAS.PR.Application.Permissions.Queries.GetPermissions;
+public class GetPermissionsQueryValidator : AbstractValidator<GetPermissionsQuery>
 {
     public const string UkprnNotSuppliedValidationMessage = "A Ukprn needs to be supplied";
     public const string LegalEntityPublicHashedIdNotSuppliedValidationMessage = "A Legal entity public hashed Id needs to be supplied";
 
-    public GetPermissionsForProviderOnAccountQueryValidator()
+    public GetPermissionsQueryValidator()
     {
         RuleFor(x => x.Ukprn)
             .Cascade(CascadeMode.Stop)

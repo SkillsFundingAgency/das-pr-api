@@ -39,9 +39,9 @@ public class AccountWithMultiplePermission
             await context.AddRangeAsync(accountProviderLegalEntitiesToAdd);
             await context.SaveChangesAsync(cancellationToken);
 
-            PermissionsReadRepository sut = new(context);
+            EmployerRelationshipsReadRepository sut = new(context);
 
-            result = await sut.GetPermissions(account.HashedId, cancellationToken);
+            result = await sut.GetRelationships(account.HashedId, cancellationToken);
         }
 
         var accountProvidersCount = accountProviderLegalEntitiesToAdd.Count();
