@@ -39,7 +39,7 @@ public class PermissionsControllerHasPermissionsTests
     }
 
     [Test, MoqAutoData]
-    public async Task HasPermission_HandlerReturnsNullResult_ReturnsNotFoundResponse(
+    public async Task HasPermission_HandlerReturnsResult_ReturnsNotFoundResponse(
         [Frozen] Mock<IMediator> mediatorMock,
         [Greedy] PermissionsController sut,
         long ukprn,

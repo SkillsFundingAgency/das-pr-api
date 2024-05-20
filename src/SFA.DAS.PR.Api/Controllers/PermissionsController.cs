@@ -44,7 +44,7 @@ public class PermissionsController(IMediator _mediator) : ActionResponseControll
 
     [HttpGet("has")]
     [Authorize(Policy = Policies.Integration)]
-    [ProducesResponseType(typeof(bool), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
     [SwaggerRequestExample(typeof(GetHasPermissionsQuery), typeof(GetHasPermissionsQueryExample))]
 
     public async Task<IActionResult> HasPermission([FromQuery] GetHasPermissionsQuery query, CancellationToken cancellationToken)
