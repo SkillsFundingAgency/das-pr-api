@@ -8,11 +8,13 @@ using SFA.DAS.PR.Application.Permissions.Queries.GetEmployerRelationships;
 
 namespace SFA.DAS.PR.Api.Controllers;
 
+[ApiController]
+[Route("relationships")]
 public class EmployerRelationshipsController(IMediator _mediator) : ActionResponseControllerBase
 {
     public override string ControllerName => "EmployerRelationships";
 
-    [HttpGet("relationships/employeraccount/{accountHashedId}")]
+    [HttpGet("employeraccount/{accountHashedId}")]
     [Authorize(Policy = Policies.Management)]
     [ProducesResponseType(typeof(GetEmployerRelationshipsQueryResult), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetEmployerRelationships(string accountHashedId, CancellationToken cancellationToken)

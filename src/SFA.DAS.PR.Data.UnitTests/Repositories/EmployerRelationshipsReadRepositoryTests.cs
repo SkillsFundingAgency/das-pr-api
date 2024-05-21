@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using Newtonsoft.Json.Linq;
+using NUnit.Framework;
 using SFA.DAS.PR.Data.Repositories;
 using SFA.DAS.PR.Data.UnitTests.InMemoryDatabases;
 using SFA.DAS.PR.Data.UnitTests.Setup;
@@ -36,8 +37,8 @@ public class EmployerRelationshipsReadRepositoryTests
         var accountProvidersCount = accountProviderLegalEntitiesToAdd.Count();
 
         Assert.That(result, Is.Not.Null);
-        Assert.That(result.AccountLegalEntities.Count, Is.EqualTo(1));
-        Assert.That(result.AccountProviders.Count, Is.EqualTo(1));
-        Assert.That(result.AccountLegalEntities.SelectMany(a => a.AccountProviderLegalEntities).SelectMany(a => a.Permissions).Count, Is.EqualTo(1));
+        Assert.That(result.AccountLegalEntities, Has.Count.EqualTo(1));
+        Assert.That(result.AccountProviders, Has.Count.EqualTo(1));
+        Assert.That(result.AccountLegalEntities.SelectMany(a => a.AccountProviderLegalEntities).SelectMany(a => a.Permissions).ToList(), Has.Count.EqualTo(1));
     }
 }
