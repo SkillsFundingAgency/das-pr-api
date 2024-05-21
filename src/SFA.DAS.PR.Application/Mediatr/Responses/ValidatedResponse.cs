@@ -12,12 +12,12 @@ namespace SFA.DAS.PR.Application.Mediatr.Responses
     [ExcludeFromCodeCoverage]
     public class ValidatedResponse<TModel> : ValidatedResponse
     {
-        public static ValidatedResponse<TModel> EmptySuccessResponse() => new();
-        private readonly IList<ValidationFailure> _errorMessages = new List<ValidationFailure>();
         public ValidatedResponse() { }
         public ValidatedResponse(TModel model) => Result = model;
         public ValidatedResponse(IList<ValidationFailure> validationErrors) => _errorMessages = validationErrors;
-        public TModel? Result { get; } = default;
+        public static ValidatedResponse<TModel> EmptySuccessResponse() => new() { Result = default(TModel) };
+        private readonly IList<ValidationFailure> _errorMessages = new List<ValidationFailure>();
+        public TModel? Result { get; private set; } = default;
         public IReadOnlyCollection<ValidationFailure> Errors => new ReadOnlyCollection<ValidationFailure>(_errorMessages);
         public bool IsValidResponse => !_errorMessages.Any();
     }

@@ -39,7 +39,7 @@ public class PermissionsControllerHasPermissionsTests
     }
 
     [Test, MoqAutoData]
-    public async Task HasPermission_HandlerReturnsResult_ReturnsNotFoundResponse(
+    public async Task HasPermission_HandlerReturnsDefaultResult_ReturnsOkObjectResult(
         [Frozen] Mock<IMediator> mediatorMock,
         [Greedy] PermissionsController sut,
         long ukprn,
@@ -62,9 +62,7 @@ public class PermissionsControllerHasPermissionsTests
 
         var result = await sut.HasPermission(query, cancellationToken);
 
-        var response = result as ValidatedResponse<bool>;
-
-        result.As<ValidatedResponse<bool>>().Result.Should().Be(false);
+        result.As<OkObjectResult>().Value.Should().Be(false);
     }
 
     [Test, MoqAutoData]

@@ -40,7 +40,7 @@ public class PermissionsControllerTests
 
     [Test]
     [MoqAutoData]
-    public async Task HasRelationshipWithPermission_HandlerReturnsNullResult_ReturnsNotFoundResponse(
+    public async Task HasRelationshipWithPermission_HandlerReturnsDefaultResult_ReturnsOkObjectResult(
         [Frozen] Mock<IMediator> mediatorMock,
         [Greedy] PermissionsController sut,
         long ukprn,
@@ -61,7 +61,7 @@ public class PermissionsControllerTests
         ).ReturnsAsync(notFoundResponse);
 
         var result = await sut.HasRelationshipWithPermission(query, cancellationToken);
-        result.As<NotFoundResult>().Should().NotBeNull();
+        result.As<OkObjectResult>().Value.Should().Be(false);
     }
 
     [Test]
