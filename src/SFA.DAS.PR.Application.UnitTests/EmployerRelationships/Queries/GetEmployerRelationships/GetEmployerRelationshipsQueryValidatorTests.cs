@@ -5,7 +5,7 @@ namespace SFA.DAS.PR.Application.UnitTests.Permissions.Queries.GetAllPermissions
 public class GetEmployerRelationshipsQueryValidatorTests
 {
     [Test]
-    public async Task Validate_AccountHashedId_Valid_Query()
+    public async Task ValidateAccountHashedId_Valid()
     {
         var sut = new GetEmployerRelationshipsQueryValidator();
         var result = await sut.TestValidateAsync(new GetEmployerRelationshipsQuery("hash"));
@@ -13,7 +13,7 @@ public class GetEmployerRelationshipsQueryValidatorTests
     }
 
     [Test]
-    public async Task Validate_AccountHashedId_Returns_ErrorMessage()
+    public async Task ValidateAccountHashedId_Empty_Invalid()
     {
         var sut = new GetEmployerRelationshipsQueryValidator();
         var result = await sut.TestValidateAsync(new GetEmployerRelationshipsQuery(string.Empty));

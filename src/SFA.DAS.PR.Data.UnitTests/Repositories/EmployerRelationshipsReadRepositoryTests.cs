@@ -1,28 +1,17 @@
-﻿using AutoFixture;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using SFA.DAS.PR.Data.Repositories;
 using SFA.DAS.PR.Data.UnitTests.InMemoryDatabases;
 using SFA.DAS.PR.Data.UnitTests.Setup;
 using SFA.DAS.PR.Domain.Entities;
 
-namespace SFA.DAS.PR.Data.UnitTests.AccountWithPermissions;
+namespace SFA.DAS.PR.Data.UnitTests.Repositories;
 
-public class AccountWithMultiplePermission
+public class EmployerRelationshipsReadRepositoryTests
 {
     private CancellationToken cancellationToken = CancellationToken.None;
 
-    private Fixture _fixture = null!;
-
-    [SetUp]
-    public void Setup()
-    {
-        _fixture = new Fixture();
-        _fixture.Behaviors.Remove(new ThrowingRecursionBehavior());
-        _fixture.Behaviors.Add(new OmitOnRecursionBehavior());
-    }
-
     [Test]
-    public async Task Account_With_Permissions_Is_Returned()
+    public async Task GetRelationships_Returns_Permissions()
     {
         Account account = AccountTestData.CreateAccount(1004);
 
@@ -32,7 +21,7 @@ public class AccountWithMultiplePermission
         Account? result = new();
 
         using (var context = InMemoryProviderRelationshipsDataContext.CreateInMemoryContext(
-            $"{nameof(InMemoryProviderRelationshipsDataContext)}_{nameof(Account_With_Permissions_Is_Returned)}")
+            $"{nameof(InMemoryProviderRelationshipsDataContext)}_{nameof(GetRelationships_Returns_Permissions)}")
         )
         {
             await context.AddAsync(account);

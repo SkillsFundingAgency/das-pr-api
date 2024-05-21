@@ -2,7 +2,7 @@
 
 namespace SFA.DAS.PR.Application.Permissions.Queries.GetEmployerRelationships;
 
-public class AccountProviderLegalEntityPermissionsModel
+public class ProviderPermissionsModel
 {
     public required long Ukprn {  get; set; }
 
@@ -10,7 +10,7 @@ public class AccountProviderLegalEntityPermissionsModel
 
     public Operation[] Operations { get; set; } = [];
 
-    public static implicit operator AccountProviderLegalEntityPermissionsModel(AccountProviderLegalEntity source) => new()
+    public static implicit operator ProviderPermissionsModel(AccountProviderLegalEntity source) => new()
     {
         Ukprn = source.AccountProvider.ProviderUkprn,
         ProviderName = source.AccountProvider.Account.Name,

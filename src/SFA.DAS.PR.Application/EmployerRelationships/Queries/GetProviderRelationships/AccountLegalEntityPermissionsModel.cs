@@ -12,7 +12,7 @@ public class AccountLegalEntityPermissionsModel
 
     public required long AccountId { get; set; }
 
-    public List<AccountProviderLegalEntityPermissionsModel> Permissions { get; set; } = [];
+    public List<ProviderPermissionsModel> Permissions { get; set; } = [];
 
     public static implicit operator AccountLegalEntityPermissionsModel(AccountLegalEntity source) => new()
     {
@@ -20,6 +20,6 @@ public class AccountLegalEntityPermissionsModel
         PublicHashedId = source.PublicHashedId,
         Name = source.Name,
         AccountId = source.AccountId,
-        Permissions = source.AccountProviderLegalEntities.Select(a => (AccountProviderLegalEntityPermissionsModel)a).ToList()
+        Permissions = source.AccountProviderLegalEntities.Select(a => (ProviderPermissionsModel)a).ToList()
     };
 }
