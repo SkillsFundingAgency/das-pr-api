@@ -31,7 +31,7 @@ public class GetHasPermissionsQueryHandlerTests
             a.GetOperations(ukprn, accountLegalEntityId, cancellationToken)
         ).ReturnsAsync(operations);
 
-        ValidatedBooleanResult result = await sut.Handle(query, cancellationToken);
+        ValidatedResponse<bool> result = await sut.Handle(query, cancellationToken);
         result.Result.Should().BeTrue();
     }
 
@@ -66,7 +66,7 @@ public class GetHasPermissionsQueryHandlerTests
             a.GetOperations(ukprn, accountLegalEntityId, cancellationToken)
         ).ReturnsAsync(operationsInQuery);
 
-        ValidatedBooleanResult result = await sut.Handle(query, cancellationToken);
+        ValidatedResponse<bool> result = await sut.Handle(query, cancellationToken);
         result.Result.Should().BeFalse();
     }
 }

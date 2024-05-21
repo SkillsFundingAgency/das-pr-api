@@ -25,9 +25,8 @@ public class PermissionsController(IMediator _mediator) : ActionResponseControll
     [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> HasRelationshipWithPermission([FromQuery] HasRelationshipWithPermissionQuery query, CancellationToken cancellationToken)
     {
-        ValidatedBooleanResult result = await _mediator.Send(query, cancellationToken);
-
-        return GetBooleanResponse(result);
+        ValidatedResponse<bool> result = await _mediator.Send(query, cancellationToken);
+        return GetResponse(result);
     }
 
     [HttpGet]
@@ -49,7 +48,7 @@ public class PermissionsController(IMediator _mediator) : ActionResponseControll
 
     public async Task<IActionResult> HasPermission([FromQuery] GetHasPermissionsQuery query, CancellationToken cancellationToken)
     {
-        ValidatedBooleanResult result = await _mediator.Send(query, cancellationToken);
-        return GetBooleanResponse(result);
+        ValidatedResponse<bool> result = await _mediator.Send(query, cancellationToken);
+        return GetResponse(result);
     }
 }

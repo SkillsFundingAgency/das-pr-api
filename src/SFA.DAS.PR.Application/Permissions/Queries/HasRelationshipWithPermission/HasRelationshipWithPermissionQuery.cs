@@ -5,7 +5,7 @@ using SFA.DAS.PR.Domain.Interfaces;
 
 namespace SFA.DAS.PR.Application.Permissions.Queries.HasRelationshipWithPermission;
 
-public class HasRelationshipWithPermissionQuery : IRequest<ValidatedBooleanResult>, IUkprnEntity, IOperationEntity
+public class HasRelationshipWithPermissionQuery : IRequest<ValidatedResponse<bool>>, IUkprnEntity, IOperationEntity
 {
     public long? Ukprn {  get; set; }
     public required Operation? Operation { get; set; }

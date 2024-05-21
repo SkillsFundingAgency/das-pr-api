@@ -54,14 +54,17 @@ public class PermissionsControllerHasPermissionsTests
             AccountLegalEntityId = accountLegalEntityId,
             Operations = operations,
         };
-        var notFoundResponse = ValidatedBooleanResult.EmptySuccessResponse();
+        var notFoundResponse = ValidatedResponse<bool>.EmptySuccessResponse();
 
         mediatorMock.Setup(m =>
             m.Send(query, cancellationToken)
         ).ReturnsAsync(notFoundResponse);
 
         var result = await sut.HasPermission(query, cancellationToken);
-        result.As<NotFoundResult>().Should().NotBeNull();
+
+        var response = result as ValidatedResponse<bool>;
+
+        result.As<ValidatedResponse<bool>>().Result.Should().Be(false);
     }
 
     [Test, MoqAutoData]
@@ -81,7 +84,7 @@ public class PermissionsControllerHasPermissionsTests
             Operations = operations,
         };
 
-        var response = new ValidatedBooleanResult(true);
+        var response = new ValidatedResponse<bool>(true);
 
         mediatorMock.Setup(m =>
             m.Send(query, cancellationToken)
@@ -107,7 +110,7 @@ public class PermissionsControllerHasPermissionsTests
             AccountLegalEntityId = null
         };
 
-        var errorResponse = new ValidatedBooleanResult(errors);
+        var errorResponse = new ValidatedResponse<bool>(errors);
 
         mediatorMock.Setup(m =>
             m.Send(query, cancellationToken)

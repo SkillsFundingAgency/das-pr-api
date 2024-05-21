@@ -54,7 +54,7 @@ public class PermissionsControllerTests
             Operation = operation,
         };
 
-        var notFoundResponse = ValidatedBooleanResult.EmptySuccessResponse();
+        var notFoundResponse = ValidatedResponse<bool>.EmptySuccessResponse();
 
         mediatorMock.Setup(m =>
             m.Send(query, cancellationToken)
@@ -80,7 +80,7 @@ public class PermissionsControllerTests
             Operation = operation,
         };
 
-        var response = new ValidatedBooleanResult(true);
+        var response = new ValidatedResponse<bool>(true);
 
         mediatorMock.Setup(m =>
             m.Send(query, cancellationToken)
@@ -107,7 +107,7 @@ public class PermissionsControllerTests
             Operation = null,
         };
 
-        var errorResponse = new ValidatedBooleanResult(errors);
+        var errorResponse = new ValidatedResponse<bool>(errors);
 
         mediatorMock.Setup(m =>
             m.Send(query, cancellationToken)

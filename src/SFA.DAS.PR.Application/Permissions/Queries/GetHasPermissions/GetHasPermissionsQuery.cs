@@ -5,7 +5,7 @@ using SFA.DAS.PR.Domain.Interfaces;
 
 namespace SFA.DAS.PR.Application.Permissions.Queries.GetHasPermissions;
 
-public class GetHasPermissionsQuery : IRequest<ValidatedBooleanResult>, IUkprnEntity, IOperationsEntity
+public class GetHasPermissionsQuery : IRequest<ValidatedResponse<bool>>, IUkprnEntity, IOperationsEntity
 {
     public long? Ukprn { get; set; }
     public long? AccountLegalEntityId { get; set; }
