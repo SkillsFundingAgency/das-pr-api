@@ -34,11 +34,16 @@ public class EmployerRelationshipsReadRepositoryTests
             result = await sut.GetRelationships(account.HashedId, cancellationToken);
         }
 
-        var accountProvidersCount = accountProviderLegalEntitiesToAdd.Count();
-
-        Assert.That(result, Is.Not.Null);
-        Assert.That(result.AccountLegalEntities, Has.Count.EqualTo(1));
-        Assert.That(result.AccountProviders, Has.Count.EqualTo(1));
-        Assert.That(result.AccountLegalEntities.SelectMany(a => a.AccountProviderLegalEntities).SelectMany(a => a.Permissions).ToList(), Has.Count.EqualTo(1));
+        Assert.Multiple(() =>
+        {
+            Assert.That(result, Is.Not.Null, "result should not be null");
+            Assert.That(result?.AccountLegalEntities, Has.Count.EqualTo(1), "AccountLegalEntities count should be 1");
+            Assert.That(result?.AccountProviders, Has.Count.EqualTo(1), "AccountProviders count should be 1");
+            Assert.That(result?.AccountLegalEntities
+                           .SelectMany(a => a.AccountProviderLegalEntities)
+                           .SelectMany(a => a.Permissions)
+                           .ToList(),
+                        Has.Count.EqualTo(1), "Permissions count should be 1");
+        });
     }
 }
