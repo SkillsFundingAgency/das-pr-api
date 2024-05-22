@@ -36,7 +36,6 @@ public class PermissionsController(IMediator _mediator) : ActionResponseControll
     [SwaggerRequestExample(typeof(GetPermissionsQueryResult), typeof(GetPermissionsQueryResultExample))]
     public async Task<IActionResult> GetPermissions([FromQuery] GetPermissionsQuery query, CancellationToken cancellationToken)
     {
-
         ValidatedResponse<GetPermissionsQueryResult> result = await _mediator.Send(query, cancellationToken);
 
         return GetResponse(result);
