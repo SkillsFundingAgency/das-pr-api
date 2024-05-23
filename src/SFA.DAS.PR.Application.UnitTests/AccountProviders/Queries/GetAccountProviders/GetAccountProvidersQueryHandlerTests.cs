@@ -15,18 +15,18 @@ namespace SFA.DAS.PR.Application.UnitTests.AccountProviders.Queries.GetAccountPr
         [Test]
         [RecursiveMoqAutoData]
         public async Task Handle_ProvidersFound_ReturnsAccountProvidersResult(
-            [Frozen] Mock<IAccountProvidersReadRepository> accountProvidersReadRepository,
+            [Frozen] Mock<IAccountLegalEntityReadRepository> accountLegalEntityReadRepository,
             GetAccountProvidersQueryHandler sut,
-            List<AccountProvider> providers,
+            List<AccountLegalEntity> legalEntities,
             long accountId,
             CancellationToken cancellationToken
         )
         {
-            accountProvidersReadRepository.Setup(a =>
-                a.GetAccountProviders(accountId, cancellationToken)
-            ).ReturnsAsync(providers);
+            accountLegalEntityReadRepository.Setup(a =>
+                a.GetAccountLegalEntiies(accountId, cancellationToken)
+            ).ReturnsAsync(legalEntities);
 
-            GetAccountProvidersQueryResult expectedResult = new(accountId, providers.Select(a => (AccountProviderModel)a).ToList());
+            GetAccountProvidersQueryResult expectedResult = new(accountId, AccountProviderModel.BuildAccountProviderModels(legalEntities));
 
             ValidatedResponse<GetAccountProvidersQueryResult> result =
                 await sut.Handle(new GetAccountProvidersQuery(accountId), cancellationToken);
@@ -37,15 +37,15 @@ namespace SFA.DAS.PR.Application.UnitTests.AccountProviders.Queries.GetAccountPr
         [Test]
         [RecursiveMoqAutoData]
         public async Task Handle_ProvidersNotFound_ReturnsEmptyResult(
-            [Frozen] Mock<IAccountProvidersReadRepository> accountProvidersReadRepository,
+            [Frozen] Mock<IAccountLegalEntityReadRepository> accountLegalEntityReadRepository,
             GetAccountProvidersQueryHandler sut,
             long accountId,
             CancellationToken cancellationToken
         )
         {
-            accountProvidersReadRepository.Setup(a =>
-                a.GetAccountProviders(accountId, cancellationToken)
-            ).ReturnsAsync(() => new List<AccountProvider>());
+            accountLegalEntityReadRepository.Setup(a =>
+                a.GetAccountLegalEntiies(accountId, cancellationToken)
+            ).ReturnsAsync(() => new List<AccountLegalEntity>());
 
             GetAccountProvidersQueryResult expectedResult = new(accountId, []);
 
