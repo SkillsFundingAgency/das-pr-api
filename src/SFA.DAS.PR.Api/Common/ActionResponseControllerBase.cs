@@ -14,7 +14,7 @@ namespace SFA.DAS.PR.Api.Common
 
         public abstract string ControllerName { get; }
 
-        protected IActionResult GetResponse<T>(ValidatedResponse<T> response) where T : class
+        protected IActionResult GetResponse<T>(ValidatedResponse<T> response)
         {
             if (response.Result == null && response.IsValidResponse)
             {
@@ -26,21 +26,6 @@ namespace SFA.DAS.PR.Api.Common
                 return new OkObjectResult(response.Result);
             }
                 
-            return new BadRequestObjectResult(FormatErrors(response.Errors));
-        }
-
-        protected IActionResult GetBooleanResponse(ValidatedBooleanResult response)
-        {
-            if (response.Result == null && response.IsValidResponse)
-            {
-                return NotFound();
-            }
-
-            if (response.IsValidResponse)
-            {
-                return new OkObjectResult(response.Result);
-            }
-
             return new BadRequestObjectResult(FormatErrors(response.Errors));
         }
 

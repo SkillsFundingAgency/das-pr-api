@@ -11,7 +11,7 @@ using SFA.DAS.PR.Application.Permissions.Queries.HasRelationshipWithPermission;
 using SFA.DAS.PR.Domain.Entities;
 using SFA.DAS.Testing.AutoFixture;
 
-namespace SFA.DAS.PR.Api.UnitTests.Controllers;
+namespace SFA.DAS.PR.Api.UnitTests.Controllers.Permissions;
 
 public class PermissionsControllerTests
 {
@@ -40,7 +40,7 @@ public class PermissionsControllerTests
 
     [Test]
     [MoqAutoData]
-    public async Task HasRelationshipWithPermission_HandlerReturnsNullResult_ReturnsNotFoundResponse(
+    public async Task HasRelationshipWithPermission_HandlerReturnsDefaultResult_ReturnsOkObjectResult(
         [Frozen] Mock<IMediator> mediatorMock,
         [Greedy] PermissionsController sut,
         long ukprn,
@@ -54,14 +54,14 @@ public class PermissionsControllerTests
             Operation = operation,
         };
 
-        var notFoundResponse = ValidatedBooleanResult.EmptySuccessResponse();
+        var notFoundResponse = ValidatedResponse<bool>.EmptySuccessResponse();
 
         mediatorMock.Setup(m =>
             m.Send(query, cancellationToken)
         ).ReturnsAsync(notFoundResponse);
 
         var result = await sut.HasRelationshipWithPermission(query, cancellationToken);
-        result.As<NotFoundResult>().Should().NotBeNull();
+        result.As<OkObjectResult>().Value.Should().Be(false);
     }
 
     [Test]
@@ -80,7 +80,7 @@ public class PermissionsControllerTests
             Operation = operation,
         };
 
-        var response = new ValidatedBooleanResult(true);
+        var response = new ValidatedResponse<bool>(true);
 
         mediatorMock.Setup(m =>
             m.Send(query, cancellationToken)
@@ -107,7 +107,7 @@ public class PermissionsControllerTests
             Operation = null,
         };
 
-        var errorResponse = new ValidatedBooleanResult(errors);
+        var errorResponse = new ValidatedResponse<bool>(errors);
 
         mediatorMock.Setup(m =>
             m.Send(query, cancellationToken)
