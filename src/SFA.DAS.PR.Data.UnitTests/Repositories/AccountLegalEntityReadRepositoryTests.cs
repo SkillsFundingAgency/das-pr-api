@@ -42,16 +42,19 @@ public class AccountLegalEntityReadRepositoryTests
             result = await sut.GetAccountLegalEntiies(accountId, cancellationToken);
         }
 
-        var accountProvidersCount = accountsToAdd.First().AccountProviders.Count();
+        var accountProvidersCount = accountsToAdd.First().AccountProviders.Count;
 
         var resultEntity = result.FirstOrDefault();
 
-        Assert.That(resultEntity, Is.Not.Null);
-        Assert.That(result, Has.Count.EqualTo(accountProvidersCount));
-        Assert.That(resultEntity.Account, Is.Not.Null);
-        Assert.That(resultEntity.Account.AccountProviders, Has.Exactly(1).Items);
-        Assert.That(resultEntity.AccountProviderLegalEntities, Has.Exactly(1).Items);
-        Assert.That(resultEntity.AccountProviderLegalEntities.First().AccountLegalEntity, Is.Not.Null);
-        Assert.That(resultEntity.AccountProviderLegalEntities.First().Permissions, Has.Exactly(1).Items);
+        Assert.Multiple(() =>
+        {
+            Assert.That(resultEntity, Is.Not.Null);
+            Assert.That(result, Has.Count.EqualTo(accountProvidersCount));
+            Assert.That(resultEntity?.Account, Is.Not.Null);
+            Assert.That(resultEntity?.Account.AccountProviders, Has.Exactly(1).Items);
+            Assert.That(resultEntity?.AccountProviderLegalEntities, Has.Exactly(1).Items);
+            Assert.That(resultEntity?.AccountProviderLegalEntities.First().AccountLegalEntity, Is.Not.Null);
+            Assert.That(resultEntity?.AccountProviderLegalEntities.First().Permissions, Has.Exactly(1).Items);
+        });
     }
 }
