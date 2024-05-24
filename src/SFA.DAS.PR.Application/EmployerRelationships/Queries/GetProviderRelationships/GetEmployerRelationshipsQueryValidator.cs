@@ -11,9 +11,9 @@ public class GetEmployerRelationshipsQueryValidator : AbstractValidator<GetEmplo
             .NotEmpty()
             .WithMessage(AccountHashedIdValidationMessage);
 
-        //RuleFor(a => a.Ukprn)
-        //    .NotEmpty()
-        //    .When(a => a.Ukprn.HasValue)
-        //    .CheckUkprnFormat();
+        RuleFor(a => a.Ukprn)
+            .NotEmpty()
+            .When(a => a.Ukprn.HasValue)
+            .CheckUkprnFormat();
     }
 }
