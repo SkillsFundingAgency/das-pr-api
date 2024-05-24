@@ -9,7 +9,7 @@ public class GetEmployerRelationshipsQueryHandler(IEmployerRelationshipsReadRepo
 {
     public async Task<ValidatedResponse<GetEmployerRelationshipsQueryResult>> Handle(GetEmployerRelationshipsQuery query, CancellationToken cancellationToken)
     {
-        Account? account = await employerRelationshipsReadRepository.GetRelationships(query.AccountHashedId, cancellationToken);
+        Account? account = await employerRelationshipsReadRepository.GetRelationships(query.AccountHashedId, cancellationToken, query.Ukprn, query.AccountlegalentityPublicHashedId);
 
         if(account is null)
         {

@@ -6,16 +6,16 @@ namespace SFA.DAS.PR.Data.Repositories;
 
 public class EmployerRelationshipsReadRepository(IProviderRelationshipsDataContext providerRelationshipsDataContext) : IEmployerRelationshipsReadRepository
 {
-    public async Task<Account?> GetRelationships(string accountHashedId, CancellationToken cancellationToken)
+    public async Task<Account?> GetRelationships(string accountHashedId, CancellationToken cancellationToken, long? ukprn = null, string? accountlegalentityPublicHashedId = null)
     {
         return await providerRelationshipsDataContext.Accounts
-            .Include(acc => acc.AccountLegalEntities)
-                .ThenInclude(ale => ale.AccountProviderLegalEntities)
+            .Include(acc => acc.AccountLegalEntities.Where(a => string.IsNullOrWhiteSpace(accountlegalentityPublicHashedId) || a.PublicHashedId == accountlegalentityPublicHashedId))
+                .ThenInclude(ale => ale.AccountProviderLegalEntities.Where(a => !ukprn.HasValue || a.AccountProvider.ProviderUkprn == ukprn.Value))
                     .ThenInclude(aple => aple.Permissions)
-            .Include(acc => acc.AccountLegalEntities)
-                .ThenInclude(ale => ale.AccountProviderLegalEntities)
+            .Include(acc => acc.AccountLegalEntities.Where(a => string.IsNullOrWhiteSpace(accountlegalentityPublicHashedId) || a.PublicHashedId == accountlegalentityPublicHashedId))
+                .ThenInclude(ale => ale.AccountProviderLegalEntities.Where(a => !ukprn.HasValue || a.AccountProvider.ProviderUkprn == ukprn.Value))
                     .ThenInclude(aple => aple.AccountProvider)
-                        .ThenInclude(ap => ap.Account)
+                        .ThenInclude(ap => ap.Provider)
         .FirstOrDefaultAsync(a => a.HashedId == accountHashedId, cancellationToken);
     }
 }

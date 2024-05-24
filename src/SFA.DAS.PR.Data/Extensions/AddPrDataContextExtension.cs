@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using SFA.DAS.PR.Data.Repositories;
 using SFA.DAS.PR.Domain.Interfaces;
 using System.Diagnostics.CodeAnalysis;
+using LinqKit;
 
 namespace SFA.DAS.PR.Data.Extensions;
 
@@ -42,7 +43,8 @@ public static class AddPrDataContextExtension
 
             options.UseSqlServer(
                 connection,
-                o => o.CommandTimeout((int)TimeSpan.FromMinutes(5).TotalSeconds));
+                o => o.CommandTimeout((int)TimeSpan.FromMinutes(5).TotalSeconds)
+            );
         });
 
         services.AddTransient<IProviderRelationshipsDataContext, ProviderRelationshipsDataContext>(provider => provider.GetService<ProviderRelationshipsDataContext>()!);
