@@ -6,7 +6,6 @@ using Microsoft.Extensions.DependencyInjection;
 using SFA.DAS.PR.Data.Repositories;
 using SFA.DAS.PR.Domain.Interfaces;
 using System.Diagnostics.CodeAnalysis;
-using LinqKit;
 
 namespace SFA.DAS.PR.Data.Extensions;
 
