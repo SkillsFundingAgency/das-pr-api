@@ -6,16 +6,33 @@ namespace SFA.DAS.PR.Data.Repositories;
 
 public class EmployerRelationshipsReadRepository(IProviderRelationshipsDataContext providerRelationshipsDataContext) : IEmployerRelationshipsReadRepository
 {
-    public async Task<Account?> GetRelationships(string accountHashedId, CancellationToken cancellationToken, long? ukprn = null, string? accountlegalentityPublicHashedId = null)
+    public async Task<Account?> GetRelationships(string accountHashedId, long? ukprn, string? accountlegalentityPublicHashedId, CancellationToken cancellationToken)
     {
-        return await providerRelationshipsDataContext.Accounts
-            .Include(acc => acc.AccountLegalEntities.Where(a => string.IsNullOrWhiteSpace(accountlegalentityPublicHashedId) || a.PublicHashedId == accountlegalentityPublicHashedId))
-                .ThenInclude(ale => ale.AccountProviderLegalEntities.Where(a => !ukprn.HasValue || a.AccountProvider.ProviderUkprn == ukprn.Value))
+        var query = providerRelationshipsDataContext.Accounts.AsQueryable();
+
+        if(ukprn != null && !string.IsNullOrWhiteSpace(accountlegalentityPublicHashedId))
+        {
+            query = query.Include(acc => acc.AccountLegalEntities.Where(a => a.PublicHashedId == accountlegalentityPublicHashedId))
+                .ThenInclude(ale => ale.AccountProviderLegalEntities.Where(a => a.AccountProvider.ProviderUkprn == ukprn.Value))
                     .ThenInclude(aple => aple.Permissions)
-            .Include(acc => acc.AccountLegalEntities.Where(a => string.IsNullOrWhiteSpace(accountlegalentityPublicHashedId) || a.PublicHashedId == accountlegalentityPublicHashedId))
-                .ThenInclude(ale => ale.AccountProviderLegalEntities.Where(a => !ukprn.HasValue || a.AccountProvider.ProviderUkprn == ukprn.Value))
+            .Include(acc => acc.AccountLegalEntities.Where(a =>a.PublicHashedId == accountlegalentityPublicHashedId))
+                .ThenInclude(ale => ale.AccountProviderLegalEntities.Where(a => a.AccountProvider.ProviderUkprn == ukprn.Value))
                     .ThenInclude(aple => aple.AccountProvider)
-                        .ThenInclude(ap => ap.Provider)
-        .FirstOrDefaultAsync(a => a.HashedId == accountHashedId, cancellationToken);
+                        .ThenInclude(ap => ap.Provider);
+        }
+        else
+        {
+            query = query.Include(acc => acc.AccountLegalEntities)
+                .ThenInclude(ale => ale.AccountProviderLegalEntities)
+                    .ThenInclude(aple => aple.Permissions)
+            .Include(acc => acc.AccountLegalEntities)
+                .ThenInclude(ale => ale.AccountProviderLegalEntities)
+                    .ThenInclude(aple => aple.AccountProvider)
+                        .ThenInclude(ap => ap.Provider);
+        }
+
+        return await query
+            .AsNoTracking()
+            .FirstOrDefaultAsync(a => a.HashedId == accountHashedId, cancellationToken);
     }
 }

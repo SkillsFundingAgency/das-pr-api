@@ -21,7 +21,7 @@ public class GetEmployerRelationshipsQueryHandlerTests
         GetEmployerRelationshipsQuery query = new(account.HashedId);
 
         employerRelationshipsReadRepository.Setup(a =>
-            a.GetRelationships(query.AccountHashedId, cancellationToken, null, string.Empty)
+            a.GetRelationships(query.AccountHashedId, null, null, cancellationToken)
         ).ReturnsAsync(account);
 
         ValidatedResponse<GetEmployerRelationshipsQueryResult> result = await sut.Handle(query, cancellationToken);
@@ -41,7 +41,7 @@ public class GetEmployerRelationshipsQueryHandlerTests
         GetEmployerRelationshipsQuery query = new(accountHashedId);
 
         employerRelationshipsReadRepository.Setup(a =>
-            a.GetRelationships(query.AccountHashedId, cancellationToken, query.Ukprn, query.AccountlegalentityPublicHashedId)
+            a.GetRelationships(query.AccountHashedId, query.Ukprn, query.AccountlegalentityPublicHashedId, cancellationToken)
         ).ReturnsAsync((Account?)null);
 
         ValidatedResponse<GetEmployerRelationshipsQueryResult> result = await sut.Handle(query, cancellationToken);
