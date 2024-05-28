@@ -27,7 +27,7 @@ public class GetEmployerRelationshipsQueryValidatorTests
     {
         var sut = new GetEmployerRelationshipsQueryValidator();
         var result = await sut.TestValidateAsync(new GetEmployerRelationshipsQuery("hash", 10000003));
-        result.ShouldNotHaveValidationErrorFor(query => query.AccountHashedId);
+        result.ShouldNotHaveValidationErrorFor(query => query.Ukprn);
     }
 
     [Test]
