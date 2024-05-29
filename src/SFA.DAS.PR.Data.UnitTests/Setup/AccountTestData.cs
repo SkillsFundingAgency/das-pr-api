@@ -18,7 +18,7 @@ public static class AccountTestData
     }
 
     public static List<Account> CreateAccounts()
-    { 
+    {
         return new()
         {
             new()
