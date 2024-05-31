@@ -1,6 +1,7 @@
 ﻿using AutoFixture;
 using AutoFixture.NUnit3;
 using FluentAssertions;
+using FluentValidation.Results;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -71,23 +72,27 @@ public class EmployerRelationshipsControllerTests
 
     [Test]
     [MoqAutoData]
-    public async Task GetAllPermissionsForAccount_HandlerReturnsNull_ReturnsNotFoundResponse(
+    public async Task GetAllPermissionsForAccount_HandlerReturnsError_ReturnsBadRequestObjectResult(
         [Frozen] Mock<IMediator> mediatorMock,
         [Greedy] EmployerRelationshipsController sut,
+        IList<ValidationFailure> errors,
         GetEmployerRelationshipsQuery query,
         CancellationToken cancellationToken
     )
     {
-        GetEmployerRelationshipsQueryResult? queryResult = null;
-
-        var response = new ValidatedResponse<GetEmployerRelationshipsQueryResult>(queryResult);
+        var response = new ValidatedResponse<GetEmployerRelationshipsQueryResult>(errors);
 
         mediatorMock.Setup(m =>
             m.Send(It.IsAny<GetEmployerRelationshipsQuery>(), cancellationToken)
         ).ReturnsAsync(response);
 
-        var result = await sut.GetEmployerRelationships(query.AccountHashedId, query.Ukprn, query.AccountlegalentityPublicHashedId, cancellationToken);
+        var result = await sut.GetEmployerRelationships(
+            query.AccountHashedId,
+            query.Ukprn,
+            query.AccountlegalentityPublicHashedId,
+            cancellationToken
+        );
 
-        result.Should().BeOfType<NotFoundResult>();
+        result.Should().BeOfType<BadRequestObjectResult>();
     }
 }
