@@ -7,9 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Permissions\**" />
-    <EmbeddedResource Remove="Permissions\**" />
-    <None Remove="Permissions\**" />
+    <Compile Remove="Permissions\Commands\**" />
+    <EmbeddedResource Remove="Permissions\Commands\**" />
+    <None Remove="Permissions\Commands\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -28,5 +28,9 @@
 	<ItemGroup>
     <ProjectReference Include="..\SFA.DAS.PR.Data\SFA.DAS.PR.Data.csproj" />
   </ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Permissions\Queries\GetPermissionsForProviderOnAccount\" />
+	</ItemGroup>
 
 </Project>
