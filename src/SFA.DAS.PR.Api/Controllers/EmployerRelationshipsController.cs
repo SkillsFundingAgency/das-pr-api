@@ -17,6 +17,7 @@ public class EmployerRelationshipsController(IMediator _mediator) : ActionRespon
     [HttpGet("employeraccount/{accountHashedId}")]
     [Authorize(Policy = Policies.Management)]
     [ProducesResponseType(typeof(GetEmployerRelationshipsQueryResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetEmployerRelationships(string accountHashedId, [FromQuery]long? ukprn, [FromQuery]string? accountlegalentityPublicHashedId, CancellationToken cancellationToken)
     {
         GetEmployerRelationshipsQuery query = new(accountHashedId, ukprn, accountlegalentityPublicHashedId);

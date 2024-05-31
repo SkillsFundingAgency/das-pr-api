@@ -11,12 +11,7 @@ public class GetEmployerRelationshipsQueryHandler(IEmployerRelationshipsReadRepo
     {
         Account? account = await employerRelationshipsReadRepository.GetRelationships(query.AccountHashedId, query.Ukprn, query.AccountlegalentityPublicHashedId, cancellationToken);
 
-        if(account is null)
-        {
-            return new ValidatedResponse<GetEmployerRelationshipsQueryResult>(new GetEmployerRelationshipsQueryResult());
-        }
-
-        GetEmployerRelationshipsQueryResult queryResult = new GetEmployerRelationshipsQueryResult(account.AccountLegalEntities.Select(a => (AccountLegalEntityPermissionsModel)a).ToList());
+        GetEmployerRelationshipsQueryResult queryResult = new GetEmployerRelationshipsQueryResult(account?.AccountLegalEntities.Select(a => (AccountLegalEntityPermissionsModel)a).ToList());
 
         return new ValidatedResponse<GetEmployerRelationshipsQueryResult>(queryResult);
     }

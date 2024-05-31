@@ -4,7 +4,7 @@ using SFA.DAS.PR.Domain.Interfaces;
 
 namespace SFA.DAS.PR.Application.Permissions.Queries.GetEmployerRelationships;
 
-public class GetEmployerRelationshipsQuery : IRequest<ValidatedResponse<GetEmployerRelationshipsQueryResult>>, IUkprnEntity
+public class GetEmployerRelationshipsQuery : IRequest<ValidatedResponse<GetEmployerRelationshipsQueryResult>>, IUkprnEntity, IAccountHashedIdEntity
 {
     public string AccountHashedId { get; set; }
 

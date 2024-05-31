@@ -57,7 +57,7 @@ public class EmployerRelationshipsControllerTests
 
         var queryResult = new GetEmployerRelationshipsQueryResult(permissionsList);
 
-        var response = new ValidatedResponse<GetEmployerRelationshipsQueryResult>(queryResult);
+        var response = new ValidatedResponse<GetEmployerRelationshipsQueryResult?>(queryResult);
 
         mediatorMock.Setup(m =>
             m.Send(It.IsAny<GetEmployerRelationshipsQuery>(), cancellationToken)
@@ -67,5 +67,27 @@ public class EmployerRelationshipsControllerTests
 
         result.As<OkObjectResult>().Should().NotBeNull();
         result.As<OkObjectResult>().Value.Should().Be(response.Result);
+    }
+
+    [Test]
+    [MoqAutoData]
+    public async Task GetAllPermissionsForAccount_HandlerReturnsNull_ReturnsNotFoundResponse(
+        [Frozen] Mock<IMediator> mediatorMock,
+        [Greedy] EmployerRelationshipsController sut,
+        GetEmployerRelationshipsQuery query,
+        CancellationToken cancellationToken
+    )
+    {
+        GetEmployerRelationshipsQueryResult? queryResult = null;
+
+        var response = new ValidatedResponse<GetEmployerRelationshipsQueryResult?>(queryResult);
+
+        mediatorMock.Setup(m =>
+            m.Send(It.IsAny<GetEmployerRelationshipsQuery>(), cancellationToken)
+        ).ReturnsAsync(response);
+
+        var result = await sut.GetEmployerRelationships(query.AccountHashedId, query.Ukprn, query.AccountlegalentityPublicHashedId, cancellationToken);
+
+        result.Should().BeOfType<NotFoundResult>();
     }
 }

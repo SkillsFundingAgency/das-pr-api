@@ -6,10 +6,10 @@ public class GetEmployerRelationshipsQueryResult
 
     }
 
-    public GetEmployerRelationshipsQueryResult(List<AccountLegalEntityPermissionsModel> accountLegalEntities)
+    public GetEmployerRelationshipsQueryResult(List<AccountLegalEntityPermissionsModel>? accountLegalEntities)
     {
         this.AccountLegalEntities = accountLegalEntities;
     }
 
-    public List<AccountLegalEntityPermissionsModel> AccountLegalEntities { get; set; } = [];
+    public List<AccountLegalEntityPermissionsModel>? AccountLegalEntities { get; set; }
 }
