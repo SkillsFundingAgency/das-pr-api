@@ -50,7 +50,9 @@ public class GetEmployerRelationshipsQueryHandlerTests
 
         ValidatedResponse<GetEmployerRelationshipsQueryResult> result = await sut.Handle(query, cancellationToken);
 
-        Assert.That(result.Result?.AccountLegalEntities, Is.Null);
-        Assert.That(result.IsValidResponse, Is.True);
+        Assert.Multiple(() => {
+            Assert.That(result.Result?.AccountLegalEntities, Is.Null);
+            Assert.That(result.IsValidResponse, Is.True);
+        });
     }
 }

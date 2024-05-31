@@ -7,6 +7,6 @@ public class AccountReadRepository(IProviderRelationshipsDataContext _providerRe
 {
     public async Task<bool> AccountExists(string accountHashedId, CancellationToken cancellationToken)
     {
-        return await _providerRelationshipsDataContext.Accounts.AnyAsync(a => a.HashedId == accountHashedId);
+        return await _providerRelationshipsDataContext.Accounts.AnyAsync(a => a.HashedId == accountHashedId, cancellationToken);
     }
 }

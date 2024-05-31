@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using SFA.DAS.PR.Domain.Interfaces;
 
+namespace SFA.DAS.PR.Application.Common.Validators;
 public static class AccountValidator
 {
     public const string AccountNotExistValidationMessage = "Account must exist.";

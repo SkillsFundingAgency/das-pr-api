@@ -57,7 +57,7 @@ public class EmployerRelationshipsControllerTests
 
         var queryResult = new GetEmployerRelationshipsQueryResult(permissionsList);
 
-        var response = new ValidatedResponse<GetEmployerRelationshipsQueryResult?>(queryResult);
+        var response = new ValidatedResponse<GetEmployerRelationshipsQueryResult>(queryResult);
 
         mediatorMock.Setup(m =>
             m.Send(It.IsAny<GetEmployerRelationshipsQuery>(), cancellationToken)
@@ -80,7 +80,7 @@ public class EmployerRelationshipsControllerTests
     {
         GetEmployerRelationshipsQueryResult? queryResult = null;
 
-        var response = new ValidatedResponse<GetEmployerRelationshipsQueryResult?>(queryResult);
+        var response = new ValidatedResponse<GetEmployerRelationshipsQueryResult>(queryResult);
 
         mediatorMock.Setup(m =>
             m.Send(It.IsAny<GetEmployerRelationshipsQuery>(), cancellationToken)
