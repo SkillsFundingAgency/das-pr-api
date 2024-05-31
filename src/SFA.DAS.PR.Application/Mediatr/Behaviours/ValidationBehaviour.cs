@@ -1,8 +1,8 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using FluentValidation;
+﻿using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.PR.Application.Mediatr.Responses;
+using System.Diagnostics.CodeAnalysis;
 
 namespace SFA.DAS.PR.Application.Mediatr.Behaviours
 {
@@ -41,13 +41,6 @@ namespace SFA.DAS.PR.Application.Mediatr.Behaviours
                     var convertedType = typeof(ValidatedResponse<>).MakeGenericType(responseType.GetGenericArguments()[0]);
 
                     if (Activator.CreateInstance(convertedType, result.Errors) is TResponse invalidResponse)
-                    {
-                        return invalidResponse;
-                    }
-                }
-                else if (responseType == typeof(ValidatedBooleanResult))
-                {
-                    if (Activator.CreateInstance(typeof(ValidatedBooleanResult), result.Errors) is TResponse invalidResponse)
                     {
                         return invalidResponse;
                     }

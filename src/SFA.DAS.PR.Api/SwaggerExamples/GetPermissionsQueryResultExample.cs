@@ -1,4 +1,4 @@
-﻿using SFA.DAS.PR.Application.AccountProviders.Queries.GetPermissions;
+﻿using SFA.DAS.PR.Application.Permissions.Queries.GetPermissions;
 using SFA.DAS.PR.Domain.Entities;
 using Swashbuckle.AspNetCore.Filters;
 using System.Diagnostics.CodeAnalysis;

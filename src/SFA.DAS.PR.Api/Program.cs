@@ -11,6 +11,7 @@ using SFA.DAS.PR.Api.Authorization;
 using SFA.DAS.PR.Api.Infrastructure;
 using SFA.DAS.PR.Application.Extensions;
 using SFA.DAS.PR.Data.Extensions;
+using SFA.DAS.Telemetry.Startup;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,6 +34,7 @@ builder.Services
     .AddOptions()
     .AddLogging()
     .AddApplicationInsightsTelemetry()
+    .AddTelemetryNotFoundAsSuccessfulResponse()
     .AddServiceRegistrations()
     .AddAuthentication(_configuration)
     .AddApiVersioning(opt =>

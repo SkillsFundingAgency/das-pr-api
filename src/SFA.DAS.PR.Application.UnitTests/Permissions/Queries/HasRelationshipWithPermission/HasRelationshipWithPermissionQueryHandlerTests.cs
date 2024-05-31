@@ -30,7 +30,7 @@ public class HasRelationshipWithPermissionQueryHandlerTests
             a.HasPermissionWithRelationship(ukprn, operation, cancellationToken)
         ).ReturnsAsync(true);
 
-        ValidatedBooleanResult result = await sut.Handle(query, cancellationToken);
+        ValidatedResponse<bool> result = await sut.Handle(query, cancellationToken);
 
         result.Result.Should().BeTrue();
     }
@@ -55,7 +55,7 @@ public class HasRelationshipWithPermissionQueryHandlerTests
             a.HasPermissionWithRelationship(ukprn, operation, cancellationToken)
         ).ReturnsAsync(false);
 
-        ValidatedBooleanResult result = await sut.Handle(query, cancellationToken);
+        ValidatedResponse<bool> result = await sut.Handle(query, cancellationToken);
 
         result.Result.Should().BeFalse();
     }

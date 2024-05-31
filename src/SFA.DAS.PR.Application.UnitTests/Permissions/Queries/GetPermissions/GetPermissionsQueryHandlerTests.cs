@@ -1,8 +1,8 @@
 ﻿using AutoFixture.NUnit3;
 using FluentAssertions;
 using Moq;
-using SFA.DAS.PR.Application.AccountProviders.Queries.GetPermissions;
 using SFA.DAS.PR.Application.Mediatr.Responses;
+using SFA.DAS.PR.Application.Permissions.Queries.GetPermissions;
 using SFA.DAS.PR.Domain.Entities;
 using SFA.DAS.PR.Domain.Interfaces;
 using SFA.DAS.Testing.AutoFixture;
@@ -22,7 +22,7 @@ public class GetPermissionsQueryHandlerTests
         GetPermissionsQueryResult getPermissionsHasResult = new GetPermissionsQueryResult { Operations = response };
 
         readRepository.Setup(a =>
-            a.GetOperations(query.Ukprn.GetValueOrDefault(), query.PublicHashedId!, cancellationToken)
+            a.GetOperations(query.Ukprn.GetValueOrDefault(), query.accountLegalEntityId.GetValueOrDefault(), cancellationToken)
         ).ReturnsAsync(response);
 
         ValidatedResponse<GetPermissionsQueryResult> result =

@@ -17,16 +17,14 @@ public class PermissionsReadRepository(IProviderRelationshipsDataContext _provid
             cancellationToken
         );
 
-    public async Task<List<Operation>> GetOperations(long ukprn, string publicHashedId, CancellationToken cancellationToken)
+    public async Task<List<Operation>> GetOperations(long ukprn, long accountLegalEntityId, CancellationToken cancellationToken)
     {
-        var operations = await _providerRelationshipsDataContext.Permissions
+        return await _providerRelationshipsDataContext.Permissions
             .AsNoTracking()
             .Where(x => x.AccountProviderLegalEntity.AccountProvider.ProviderUkprn == ukprn
-                        && x.AccountProviderLegalEntity.AccountLegalEntity.PublicHashedId == publicHashedId
+                        && x.AccountProviderLegalEntity.AccountLegalEntity.Id == accountLegalEntityId
                         && x.AccountProviderLegalEntity.AccountLegalEntity.Deleted == null)
             .Select(x => x.Operation)
             .ToListAsync(cancellationToken);
-
-        return operations.ToList();
     }
 }

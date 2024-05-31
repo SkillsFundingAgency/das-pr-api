@@ -1,5 +1,5 @@
 ﻿using FluentValidation.TestHelper;
-using SFA.DAS.PR.Application.AccountProviders.Queries.GetPermissions;
+using SFA.DAS.PR.Application.Permissions.Queries.GetPermissions;
 using SFA.DAS.PR.Application.Validators;
 
 namespace SFA.DAS.PR.Application.UnitTests.Permissions.Queries.GetPermissions;
@@ -10,11 +10,11 @@ public class GetPermissionsQueryValidatorTests
     {
         var sut = new GetPermissionsQueryValidator();
         GetPermissionsQuery query = GetConstructedGetPermissionsQuery();
-        query.PublicHashedId = null;
+        query.accountLegalEntityId = null;
 
         var result = await sut.TestValidateAsync(query);
-        result.ShouldHaveValidationErrorFor(q => q.PublicHashedId)
-            .WithErrorMessage(GetPermissionsQueryValidator.LegalEntityPublicHashedIdNotSuppliedValidationMessage);
+        result.ShouldHaveValidationErrorFor(q => q.accountLegalEntityId)
+            .WithErrorMessage(GetPermissionsQueryValidator.LegalEntityIdNotSuppliedValidationMessage);
     }
 
     [Test]
@@ -64,7 +64,7 @@ public class GetPermissionsQueryValidatorTests
         return new GetPermissionsQuery
         {
             Ukprn = 12345678,
-            PublicHashedId = "hashedId"
+            accountLegalEntityId = 2
         };
     }
 }
