@@ -1,5 +1,6 @@
 ﻿using AutoFixture.NUnit3;
 using FluentAssertions;
+using Microsoft.Identity.Client;
 using Moq;
 using SFA.DAS.PR.Application.AccountProviders.Queries.GetAccountProviders;
 using SFA.DAS.PR.Application.Mediatr.Responses;
@@ -14,21 +15,21 @@ namespace SFA.DAS.PR.Application.UnitTests.AccountProviders.Queries.GetAccountPr
         [Test]
         [RecursiveMoqAutoData]
         public async Task Handle_ProvidersFound_ReturnsAccountProvidersResult(
-            [Frozen] Mock<IAccountProvidersReadRepository> accountProvidersReadRepository,
+            [Frozen] Mock<IAccountLegalEntityReadRepository> accountLegalEntityReadRepository,
             GetAccountProvidersQueryHandler sut,
-            List<AccountProvider> providers,
-            string accountPublicHashId,
+            List<AccountLegalEntity> legalEntities,
+            long accountId,
             CancellationToken cancellationToken
         )
         {
-            accountProvidersReadRepository.Setup(a =>
-                a.GetAccountProviders(accountPublicHashId, cancellationToken)
-            ).ReturnsAsync(providers);
+            accountLegalEntityReadRepository.Setup(a =>
+                a.GetAccountLegalEntiies(accountId, cancellationToken)
+            ).ReturnsAsync(legalEntities);
 
-            GetAccountProvidersQueryResult expectedResult = new(accountPublicHashId, providers.Select(a => (AccountProviderModel)a).ToList());
+            GetAccountProvidersQueryResult expectedResult = new(accountId, AccountProviderModel.BuildAccountProviderModels(legalEntities));
 
             ValidatedResponse<GetAccountProvidersQueryResult> result =
-                await sut.Handle(new GetAccountProvidersQuery(accountPublicHashId), cancellationToken);
+                await sut.Handle(new GetAccountProvidersQuery(accountId), cancellationToken);
 
             result.Result.Should().BeEquivalentTo(expectedResult, c => c.ExcludingMissingMembers());
         }
@@ -36,19 +37,19 @@ namespace SFA.DAS.PR.Application.UnitTests.AccountProviders.Queries.GetAccountPr
         [Test]
         [RecursiveMoqAutoData]
         public async Task Handle_ProvidersNotFound_ReturnsEmptyResult(
-            [Frozen] Mock<IAccountProvidersReadRepository> accountProvidersReadRepository,
+            [Frozen] Mock<IAccountLegalEntityReadRepository> accountLegalEntityReadRepository,
             GetAccountProvidersQueryHandler sut,
-            string accountPublicHashId,
+            long accountId,
             CancellationToken cancellationToken
         )
         {
-            accountProvidersReadRepository.Setup(a =>
-                a.GetAccountProviders(accountPublicHashId, cancellationToken)
-            ).ReturnsAsync(() => new List<AccountProvider>());
+            accountLegalEntityReadRepository.Setup(a =>
+                a.GetAccountLegalEntiies(accountId, cancellationToken)
+            ).ReturnsAsync(() => new List<AccountLegalEntity>());
 
-            GetAccountProvidersQueryResult expectedResult = new(accountPublicHashId, []);
+            GetAccountProvidersQueryResult expectedResult = new(accountId, []);
 
-            var result = await sut.Handle(new GetAccountProvidersQuery(accountPublicHashId), cancellationToken);
+            var result = await sut.Handle(new GetAccountProvidersQuery(accountId), cancellationToken);
 
             result.Result.Should().BeEquivalentTo(expectedResult, c => c.ExcludingMissingMembers());
         }

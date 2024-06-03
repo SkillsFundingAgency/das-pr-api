@@ -2,8 +2,8 @@
 
 namespace SFA.DAS.PR.Domain.Interfaces;
 
-public interface IAccountProvidersReadRepository
+public interface IAccountLegalEntityReadRepository
 {
-    Task<List<AccountProvider>> GetAccountProviders(string accountHashedId, CancellationToken cancellationToken);
+    Task<List<AccountLegalEntity>> GetAccountLegalEntiies(long accountId, CancellationToken cancellationToken);
 }
 

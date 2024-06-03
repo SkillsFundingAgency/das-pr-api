@@ -11,7 +11,7 @@ using Swashbuckle.AspNetCore.Filters;
 namespace SFA.DAS.PR.Api.Controllers;
 
 [ApiController]
-[Route("accounts/{accountHashedId}/providers")]
+[Route("accounts/{accountId:long}/providers")]
 public class AccountProvidersController(IMediator _mediator) : ActionResponseControllerBase
 {
     public override string ControllerName => "AccountProviders";
@@ -21,9 +21,9 @@ public class AccountProvidersController(IMediator _mediator) : ActionResponseCon
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
     [SwaggerRequestExample(typeof(GetAccountProvidersQueryResult), typeof(GetAccountProvidersQueryResultExample))]
-    public async Task<IActionResult> Get([FromRoute] string accountHashedId, CancellationToken cancellationToken)
+    public async Task<IActionResult> Get([FromRoute] long accountId, CancellationToken cancellationToken)
     {
-        GetAccountProvidersQuery query = new(accountHashedId);
+        GetAccountProvidersQuery query = new(accountId);
 
         ValidatedResponse<GetAccountProvidersQueryResult> result = await _mediator.Send(query, cancellationToken);
 

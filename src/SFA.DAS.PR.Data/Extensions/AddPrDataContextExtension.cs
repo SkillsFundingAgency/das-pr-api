@@ -58,7 +58,7 @@ public static class AddPrDataContextExtension
 
     private static void RegisterRepositories(IServiceCollection services)
     {
-        services.AddTransient<IAccountProvidersReadRepository, AccountProvidersReadRepository>();
+        services.AddTransient<IAccountLegalEntityReadRepository, AccountLegalEntityReadRepository>();
         services.AddTransient<IAccountProviderLegalEntitiesReadRepository, AccountProviderLegalEntitiesReadRepository>();
         services.AddTransient<IPermissionsReadRepository, PermissionsReadRepository>();
         services.AddTransient<IEmployerRelationshipsReadRepository, EmployerRelationshipsReadRepository>();

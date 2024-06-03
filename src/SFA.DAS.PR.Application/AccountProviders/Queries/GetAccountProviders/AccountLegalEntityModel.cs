@@ -12,6 +12,6 @@ public class AccountLegalEntityModel
     {
         PublicHashedId = source.PublicHashedId,
         Name = source.Name,
-        Operations = source.AccountProviderLegalEntities.SelectMany(a => a.Permissions).Select(a => a.Operation).ToList()
+        Operations = new()
     };
 }

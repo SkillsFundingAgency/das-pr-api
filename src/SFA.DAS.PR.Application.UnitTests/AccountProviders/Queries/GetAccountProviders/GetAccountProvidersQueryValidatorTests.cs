@@ -9,8 +9,8 @@ public class GetAccountProvidersQueryValidatorTests
     public async Task Validate_AccountHashedId_Returns_ErrorMessage()
     {
         var sut = new GetAccountProvidersQueryValidator();
-        var result = await sut.TestValidateAsync(new GetAccountProvidersQuery(""));
-        result.ShouldHaveValidationErrorFor(q => q.AccountHashedId)
+        var result = await sut.TestValidateAsync(new GetAccountProvidersQuery(0));
+        result.ShouldHaveValidationErrorFor(q => q.AccountId)
                     .WithErrorMessage(GetAccountProvidersQueryValidator.AccountProvidersIdValidationMessage);
     }
 
@@ -18,8 +18,8 @@ public class GetAccountProvidersQueryValidatorTests
     public async Task Validate_AccountHashedId_Valid_Query()
     {
         var sut = new GetAccountProvidersQueryValidator();
-        var result = await sut.TestValidateAsync(new GetAccountProvidersQuery("1"));
+        var result = await sut.TestValidateAsync(new GetAccountProvidersQuery(1));
 
-        result.ShouldNotHaveValidationErrorFor(query => query.AccountHashedId);
+        result.ShouldNotHaveValidationErrorFor(query => query.AccountId);
     }
 }

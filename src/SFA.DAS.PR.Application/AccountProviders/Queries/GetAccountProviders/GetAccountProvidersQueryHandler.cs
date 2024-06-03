@@ -4,13 +4,13 @@ using SFA.DAS.PR.Domain.Entities;
 using SFA.DAS.PR.Domain.Interfaces;
 
 namespace SFA.DAS.PR.Application.AccountProviders.Queries.GetAccountProviders;
-public class GetAccountProvidersQueryHandler(IAccountProvidersReadRepository _accountProvidersReadRepository) : IRequestHandler<GetAccountProvidersQuery, ValidatedResponse<GetAccountProvidersQueryResult>>
+public class GetAccountProvidersQueryHandler(IAccountLegalEntityReadRepository accountLegalEntityReadRepository) : IRequestHandler<GetAccountProvidersQuery, ValidatedResponse<GetAccountProvidersQueryResult>>
 {
     public async Task<ValidatedResponse<GetAccountProvidersQueryResult>> Handle(GetAccountProvidersQuery query, CancellationToken cancellationToken)
     {
-        List<AccountProvider> accountProviders = await _accountProvidersReadRepository.GetAccountProviders(query.AccountHashedId, cancellationToken);
+        List<AccountLegalEntity> legalEntities = await accountLegalEntityReadRepository.GetAccountLegalEntiies(query.AccountId, cancellationToken);
 
-        GetAccountProvidersQueryResult result = new(query.AccountHashedId, accountProviders.Select(a => (AccountProviderModel)a).ToList());
+        GetAccountProvidersQueryResult result = new(query.AccountId, AccountProviderModel.BuildAccountProviderModels(legalEntities));
 
         return new ValidatedResponse<GetAccountProvidersQueryResult>(result);
     }
