@@ -29,8 +29,4 @@
     <ProjectReference Include="..\SFA.DAS.PR.Data\SFA.DAS.PR.Data.csproj" />
   </ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="Permissions\Queries\GetPermissionsForProviderOnAccount\" />
-	</ItemGroup>
-
 </Project>
