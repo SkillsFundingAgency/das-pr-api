@@ -1,4 +1,5 @@
-﻿using SFA.DAS.PR.Domain.Entities;
+﻿using SFA.DAS.PR.Application.EmployerRelationships.Queries.GetProviderRelationships;
+using SFA.DAS.PR.Domain.Entities;
 
 namespace SFA.DAS.PR.Application.Permissions.Queries.GetEmployerRelationships;
 
@@ -6,7 +7,7 @@ public class AccountLegalEntityPermissionsModel
 {
     public required long Id { get; set; }
 
-    public required string PublicHashedId {  get; set; }
+    public required string PublicHashedId { get; set; }
 
     public required string Name { get; set; }
 
