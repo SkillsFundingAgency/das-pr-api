@@ -42,7 +42,8 @@ public static class AddPrDataContextExtension
 
             options.UseSqlServer(
                 connection,
-                o => o.CommandTimeout((int)TimeSpan.FromMinutes(5).TotalSeconds));
+                o => o.CommandTimeout((int)TimeSpan.FromMinutes(5).TotalSeconds)
+            );
         });
 
         services.AddTransient<IProviderRelationshipsDataContext, ProviderRelationshipsDataContext>(provider => provider.GetService<ProviderRelationshipsDataContext>()!);
@@ -62,5 +63,6 @@ public static class AddPrDataContextExtension
         services.AddTransient<IAccountProviderLegalEntitiesReadRepository, AccountProviderLegalEntitiesReadRepository>();
         services.AddTransient<IPermissionsReadRepository, PermissionsReadRepository>();
         services.AddTransient<IEmployerRelationshipsReadRepository, EmployerRelationshipsReadRepository>();
+        services.AddTransient<IAccountReadRepository, AccountReadRepository>();
     }
 }

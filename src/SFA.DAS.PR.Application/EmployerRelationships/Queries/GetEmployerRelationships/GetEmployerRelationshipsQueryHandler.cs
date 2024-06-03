@@ -9,14 +9,9 @@ public class GetEmployerRelationshipsQueryHandler(IEmployerRelationshipsReadRepo
 {
     public async Task<ValidatedResponse<GetEmployerRelationshipsQueryResult>> Handle(GetEmployerRelationshipsQuery query, CancellationToken cancellationToken)
     {
-        Account? account = await employerRelationshipsReadRepository.GetRelationships(query.AccountHashedId, cancellationToken);
+        Account? account = await employerRelationshipsReadRepository.GetRelationships(query.AccountHashedId, query.Ukprn, query.AccountlegalentityPublicHashedId, cancellationToken);
 
-        if(account is null)
-        {
-            return new ValidatedResponse<GetEmployerRelationshipsQueryResult>(new GetEmployerRelationshipsQueryResult());
-        }
-
-        GetEmployerRelationshipsQueryResult queryResult = new GetEmployerRelationshipsQueryResult(account.AccountLegalEntities.Select(a => (AccountLegalEntityPermissionsModel)a).ToList());
+        GetEmployerRelationshipsQueryResult queryResult = new GetEmployerRelationshipsQueryResult(account?.AccountLegalEntities.Select(a => (AccountLegalEntityPermissionsModel)a).ToList());
 
         return new ValidatedResponse<GetEmployerRelationshipsQueryResult>(queryResult);
     }

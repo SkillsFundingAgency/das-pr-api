@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using SFA.DAS.PR.Application.Validators;
+using SFA.DAS.PR.Application.Common.Validators;
 
 namespace SFA.DAS.PR.Application.Permissions.Queries.GetPermissions;
 public class GetPermissionsQueryValidator : AbstractValidator<GetPermissionsQuery>

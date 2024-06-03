@@ -21,17 +21,17 @@ public class GetEmployerRelationshipsQueryHandlerTests
         GetEmployerRelationshipsQuery query = new(account.HashedId);
 
         employerRelationshipsReadRepository.Setup(a =>
-            a.GetRelationships(query.AccountHashedId, cancellationToken)
+            a.GetRelationships(query.AccountHashedId, null, null, cancellationToken)
         ).ReturnsAsync(account);
 
         ValidatedResponse<GetEmployerRelationshipsQueryResult> result = await sut.Handle(query, cancellationToken);
 
-        Assert.That(result.Result.AccountLegalEntities, !Is.Empty);
+        Assert.That(result.Result?.AccountLegalEntities, !Is.Empty);
     }
 
     [Test]
     [RecursiveMoqAutoData]
-    public async Task Handle_GetEmployerRelationships_Returns_Empty_Result(
+    public async Task Handle_GetEmployerRelationships_Returns_Null_Result(
             [Frozen] Mock<IEmployerRelationshipsReadRepository> employerRelationshipsReadRepository,
             GetEmployerRelationshipsQueryHandler sut,
             string accountHashedId,
@@ -41,11 +41,18 @@ public class GetEmployerRelationshipsQueryHandlerTests
         GetEmployerRelationshipsQuery query = new(accountHashedId);
 
         employerRelationshipsReadRepository.Setup(a =>
-            a.GetRelationships(query.AccountHashedId, cancellationToken)
+            a.GetRelationships(
+                query.AccountHashedId, 
+                query.Ukprn,
+                query.AccountlegalentityPublicHashedId
+            , cancellationToken)
         ).ReturnsAsync((Account?)null);
 
         ValidatedResponse<GetEmployerRelationshipsQueryResult> result = await sut.Handle(query, cancellationToken);
 
-        Assert.That(result.Result.AccountLegalEntities, Is.Empty);
+        Assert.Multiple(() => {
+            Assert.That(result.Result?.AccountLegalEntities, Is.Null);
+            Assert.That(result.IsValidResponse, Is.True);
+        });
     }
 }

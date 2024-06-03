@@ -1,6 +1,7 @@
 ﻿using AutoFixture;
 using AutoFixture.NUnit3;
 using FluentAssertions;
+using FluentValidation.Results;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -33,7 +34,7 @@ public class EmployerRelationshipsControllerTests
        CancellationToken cancellationToken
     )
     {
-        await sut.GetEmployerRelationships(query.AccountHashedId, cancellationToken);
+        await sut.GetEmployerRelationships(query.AccountHashedId, query.Ukprn, query.AccountlegalentityPublicHashedId, cancellationToken);
 
         mediatorMock.Verify(m =>
             m.Send(It.IsAny<GetEmployerRelationshipsQuery>(), cancellationToken)
@@ -63,9 +64,35 @@ public class EmployerRelationshipsControllerTests
             m.Send(It.IsAny<GetEmployerRelationshipsQuery>(), cancellationToken)
         ).ReturnsAsync(response);
 
-        var result = await sut.GetEmployerRelationships(query.AccountHashedId, cancellationToken);
+        var result = await sut.GetEmployerRelationships(query.AccountHashedId, query.Ukprn, query.AccountlegalentityPublicHashedId, cancellationToken);
 
         result.As<OkObjectResult>().Should().NotBeNull();
         result.As<OkObjectResult>().Value.Should().Be(response.Result);
+    }
+
+    [Test]
+    [MoqAutoData]
+    public async Task GetAllPermissionsForAccount_HandlerReturnsError_ReturnsBadRequestObjectResult(
+        [Frozen] Mock<IMediator> mediatorMock,
+        [Greedy] EmployerRelationshipsController sut,
+        IList<ValidationFailure> errors,
+        GetEmployerRelationshipsQuery query,
+        CancellationToken cancellationToken
+    )
+    {
+        var response = new ValidatedResponse<GetEmployerRelationshipsQueryResult>(errors);
+
+        mediatorMock.Setup(m =>
+            m.Send(It.IsAny<GetEmployerRelationshipsQuery>(), cancellationToken)
+        ).ReturnsAsync(response);
+
+        var result = await sut.GetEmployerRelationships(
+            query.AccountHashedId,
+            query.Ukprn,
+            query.AccountlegalentityPublicHashedId,
+            cancellationToken
+        );
+
+        result.Should().BeOfType<BadRequestObjectResult>();
     }
 }

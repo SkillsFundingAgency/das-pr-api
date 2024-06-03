@@ -13,7 +13,7 @@ namespace SFA.DAS.PR.Application.Mediatr.Responses
     public class ValidatedResponse<TModel> : ValidatedResponse
     {
         public ValidatedResponse() { }
-        public ValidatedResponse(TModel model) => Result = model;
+        public ValidatedResponse(TModel? model) => Result = model;
         public ValidatedResponse(IList<ValidationFailure> validationErrors) => _errorMessages = validationErrors;
         public static ValidatedResponse<TModel> EmptySuccessResponse() => new() { Result = default(TModel) };
         private readonly IList<ValidationFailure> _errorMessages = new List<ValidationFailure>();
