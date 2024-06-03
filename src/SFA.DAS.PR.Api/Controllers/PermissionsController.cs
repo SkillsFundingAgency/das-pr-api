@@ -53,4 +53,15 @@ public class PermissionsController(IMediator _mediator) : ActionResponseControll
         ValidatedResponse<bool> result = await _mediator.Send(query, cancellationToken);
         return GetResponse(result);
     }
+
+    [HttpPost]
+    [Authorize(Policy = Policies.Management)]
+    [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(List<ValidationError>), StatusCodes.Status400BadRequest)]
+    //[SwaggerRequestExample(typeof(GetHasPermissionsQuery), typeof(GetHasPermissionsQueryExample))]
+    public async Task<IActionResult> PostPermission([FromQuery] GetHasPermissionsQuery query, CancellationToken cancellationToken)
+    {
+        ValidatedResponse<bool> result = await _mediator.Send(query, cancellationToken);
+        return GetResponse(result);
+    }
 }
