@@ -14,6 +14,7 @@ public class ProviderRelationshipsDataContext : DbContext, IProviderRelationship
     public DbSet<AccountProvider> AccountProviders => Set<AccountProvider>();
     public DbSet<AccountProviderLegalEntity> AccountProviderLegalEntities => Set<AccountProviderLegalEntity>();
     public DbSet<Permission> Permissions => Set<Permission>();
+    public DbSet<PermissionsAudit> PermissionsAudit => Set<PermissionsAudit>();
 
     public ProviderRelationshipsDataContext(DbContextOptions<ProviderRelationshipsDataContext> options)
         : base(options)
@@ -24,5 +25,6 @@ public class ProviderRelationshipsDataContext : DbContext, IProviderRelationship
     {
         base.OnModelCreating(modelBuilder);
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ProviderConfiguration).Assembly);
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(PermissionsAuditConfiguration).Assembly);
     }
 }
