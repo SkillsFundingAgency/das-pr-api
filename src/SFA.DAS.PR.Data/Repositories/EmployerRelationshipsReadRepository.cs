@@ -15,7 +15,7 @@ public class EmployerRelationshipsReadRepository(IProviderRelationshipsDataConte
             .Include(acc => acc.AccountLegalEntities)
                 .ThenInclude(ale => ale.AccountProviderLegalEntities)
                     .ThenInclude(aple => aple.AccountProvider)
-                        .ThenInclude(ap => ap.Account)
+                        .ThenInclude(ap => ap.Provider)
         .FirstOrDefaultAsync(a => a.HashedId == accountHashedId, cancellationToken);
     }
 }
