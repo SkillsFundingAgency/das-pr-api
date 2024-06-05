@@ -66,7 +66,7 @@ public class PostPermissionsCommandHandler(
         ).ToArray();
 
         await permissionsWriteRepository.CreatePermissions(permissions, cancellationToken);
-        await CreatePermissionsAudit(command, command.Operations.ToArray(), PermissionAuditActions.PermissionCreatedAction, cancellationToken);
+        await CreatePermissionsAudit(command, command.Operations, PermissionAuditActions.PermissionCreatedAction, cancellationToken);
         await providerRelationshipsDataContext.SaveChangesAsync(cancellationToken);
 
         return new ValidatedResponse<PostPermissionsCommandResult>(new PostPermissionsCommandResult());
@@ -82,19 +82,16 @@ public class PostPermissionsCommandHandler(
             return new ValidatedResponse<PostPermissionsCommandResult>(new PostPermissionsCommandResult());
         }
 
-        Operation[] operationsToAdd = command.Operations.Except(existingOperations).ToArray();
-        Operation[] operationsToRemove = existingOperations.Except(command.Operations).ToArray();
-
-        await AddPermissions(accountProviderLegalEntity.Id, operationsToAdd, cancellationToken);
-        RemovePermissions(accountProviderLegalEntity.Permissions, operationsToRemove);
-
-        await CreatePermissionsAudit(command, operationsToAdd, PermissionAuditActions.PermissionUpdatedAction, cancellationToken);
+        RemovePermissions(accountProviderLegalEntity.Permissions);
+        await AddPermissions(accountProviderLegalEntity.Id, command.Operations, cancellationToken);
+        
+        await CreatePermissionsAudit(command, command.Operations, PermissionAuditActions.PermissionUpdatedAction, cancellationToken);
         await providerRelationshipsDataContext.SaveChangesAsync(cancellationToken);
 
         return new ValidatedResponse<PostPermissionsCommandResult>(new PostPermissionsCommandResult());
     }
 
-    private async Task AddPermissions(long accountProviderLegalEntityId, Operation[] operationsToAdd, CancellationToken cancellationToken)
+    private async Task AddPermissions(long accountProviderLegalEntityId, List<Operation> operationsToAdd, CancellationToken cancellationToken)
     {
         if (operationsToAdd.Any())
         {
@@ -107,16 +104,17 @@ public class PostPermissionsCommandHandler(
             await permissionsWriteRepository.CreatePermissions(permissionsToAdd, cancellationToken);
         }
     }
-    private void RemovePermissions(IEnumerable<Permission> existingPermissions, Operation[] operationsToRemove)
+
+    private void RemovePermissions(IEnumerable<Permission> existingPermissions)
     {
-        if (operationsToRemove.Any())
+        if (existingPermissions.Any())
         {
-            Permission[] permissionsToDelete = existingPermissions.Where(permission => operationsToRemove.Contains(permission.Operation)).ToArray();
+            Permission[] permissionsToDelete = existingPermissions.ToArray();
             permissionsWriteRepository.DeletePermissions(permissionsToDelete);
         }
     }
 
-    private async Task CreatePermissionsAudit(PostPermissionsCommand command, Operation[] addedOperations, string action, CancellationToken cancellationToken)
+    private async Task CreatePermissionsAudit(PostPermissionsCommand command, List<Operation> operations, string action, CancellationToken cancellationToken)
     {
         PermissionsAudit permissionsAudit = new()
         {
@@ -125,7 +123,7 @@ public class PostPermissionsCommandHandler(
             Ukprn = command.Ukprn!.Value,
             AccountLegalEntityId = command.AccountLegalEntityId,
             EmployerUserRef = command.UserRef,
-            Operations = JsonConvert.SerializeObject(addedOperations)
+            Operations = JsonConvert.SerializeObject(operations)
         };
 
         await permissionsAuditWriteRepository.RecordPermissionsAudit(permissionsAudit, cancellationToken);
