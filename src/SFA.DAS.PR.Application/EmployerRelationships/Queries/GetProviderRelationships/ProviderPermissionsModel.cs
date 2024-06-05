@@ -13,7 +13,7 @@ public class ProviderPermissionsModel
     public static implicit operator ProviderPermissionsModel(AccountProviderLegalEntity source) => new()
     {
         Ukprn = source.AccountProvider.ProviderUkprn,
-        ProviderName = source.AccountProvider.Provider!.Name,
+        ProviderName = source.AccountProvider.Account.Name,
         Operations = source.Permissions.Select(a => a.Operation).ToArray()
     };
 }

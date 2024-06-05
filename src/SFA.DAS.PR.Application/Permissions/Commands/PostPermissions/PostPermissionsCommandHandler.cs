@@ -85,27 +85,35 @@ public class PostPermissionsCommandHandler(
         Operation[] operationsToAdd = command.Operations.Except(existingOperations).ToArray();
         Operation[] operationsToRemove = existingOperations.Except(command.Operations).ToArray();
 
-        if (operationsToAdd.Any())
-        {
-            Permission[] permissionsToAdd = operationsToAdd.Select(operation => new Permission
-            {
-                AccountProviderLegalEntityId = accountProviderLegalEntity.Id,
-                Operation = operation
-            }).ToArray();
-
-            await permissionsWriteRepository.CreatePermissions(permissionsToAdd, cancellationToken);
-        }
-
-        if (operationsToRemove.Any())
-        {
-            Permission[] permissionsToDelete = accountProviderLegalEntity.Permissions.Where(permission => operationsToRemove.Contains(permission.Operation)).ToArray();
-            permissionsWriteRepository.DeletePermissions(permissionsToDelete);
-        }
+        await AddPermissions(accountProviderLegalEntity.Id, operationsToAdd, cancellationToken);
+        RemovePermissions(accountProviderLegalEntity.Permissions, operationsToRemove);
 
         await CreatePermissionsAudit(command, operationsToAdd, PermissionAuditActions.PermissionUpdatedAction, cancellationToken);
         await providerRelationshipsDataContext.SaveChangesAsync(cancellationToken);
 
         return new ValidatedResponse<PostPermissionsCommandResult>(new PostPermissionsCommandResult());
+    }
+
+    private async Task AddPermissions(long accountProviderLegalEntityId, Operation[] operationsToAdd, CancellationToken cancellationToken)
+    {
+        if (operationsToAdd.Any())
+        {
+            Permission[] permissionsToAdd = operationsToAdd.Select(operation => new Permission
+            {
+                AccountProviderLegalEntityId = accountProviderLegalEntityId,
+                Operation = operation
+            }).ToArray();
+
+            await permissionsWriteRepository.CreatePermissions(permissionsToAdd, cancellationToken);
+        }
+    }
+    private void RemovePermissions(IEnumerable<Permission> existingPermissions, Operation[] operationsToRemove)
+    {
+        if (operationsToRemove.Any())
+        {
+            Permission[] permissionsToDelete = existingPermissions.Where(permission => operationsToRemove.Contains(permission.Operation)).ToArray();
+            permissionsWriteRepository.DeletePermissions(permissionsToDelete);
+        }
     }
 
     private async Task CreatePermissionsAudit(PostPermissionsCommand command, Operation[] addedOperations, string action, CancellationToken cancellationToken)
