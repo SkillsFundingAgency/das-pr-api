@@ -59,7 +59,6 @@ public class PermissionsController(IMediator _mediator) : ActionResponseControll
     [Authorize(Policy = Policies.Management)]
     [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(List<ValidationError>), StatusCodes.Status400BadRequest)]
-    //[SwaggerRequestExample(typeof(PostPermissionsCommand), typeof(PostPermissionsCommandExample))]
     public async Task<IActionResult> PostPermission([FromBody] PostPermissionsCommand command, CancellationToken cancellationToken)
     {
         ValidatedResponse<PostPermissionsCommandResult> result = await _mediator.Send(command, cancellationToken);
