@@ -69,5 +69,6 @@
     <Build Include="Tables\Providers.sql" />
     <Build Include="StoredProcedures\ImportProviders.sql" />
     <Build Include="UserDefinedTypes\Providers.sql" />
+    <Build Include="Tables\PermissionsAudit.sql" />
   </ItemGroup>
 </Project>

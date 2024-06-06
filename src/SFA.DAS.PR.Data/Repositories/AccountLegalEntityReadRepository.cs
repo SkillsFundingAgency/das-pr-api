@@ -6,11 +6,9 @@ namespace SFA.DAS.PR.Data.Repositories;
 
 public class AccountLegalEntityReadRepository(IProviderRelationshipsDataContext providerRelationshipsDataContext) : IAccountLegalEntityReadRepository
 {
-    private readonly IProviderRelationshipsDataContext _providerRelationshipsDataContext = providerRelationshipsDataContext;
-
-    public async Task<List<AccountLegalEntity>> GetAccountLegalEntiies(long accountId, CancellationToken cancellationToken)
+    public async Task<List<AccountLegalEntity>> GetAccountLegalEntities(long accountId, CancellationToken cancellationToken)
     {
-        return await _providerRelationshipsDataContext.AccountLegalEntities
+        return await providerRelationshipsDataContext.AccountLegalEntities
             .Include(a => a.AccountProviderLegalEntities)
                 .ThenInclude(a => a.Permissions)
             .Include(a => a.Account)
@@ -18,5 +16,10 @@ public class AccountLegalEntityReadRepository(IProviderRelationshipsDataContext 
                     .ThenInclude(a => a.Provider)
         .Where(ale => ale.AccountId == accountId)
         .ToListAsync(cancellationToken);
+    }
+
+    public async Task<AccountLegalEntity?> GetAccountLegalEntity(long accountLegalEntityId, CancellationToken cancellationToken)
+    {
+        return await providerRelationshipsDataContext.AccountLegalEntities.FirstOrDefaultAsync(a => a.Id == accountLegalEntityId, cancellationToken);
     }
 }
