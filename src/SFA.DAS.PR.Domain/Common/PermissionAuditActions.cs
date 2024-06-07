@@ -4,5 +4,5 @@ public static class PermissionAuditActions
 {
     public static readonly string PermissionCreatedAction = "Created";
     public static readonly string PermissionUpdatedAction = "Updated";
-    public static readonly string PermissionDeledAction = "Deleted";
+    public static readonly string PermissionDeletedAction = "Deleted";
 }
