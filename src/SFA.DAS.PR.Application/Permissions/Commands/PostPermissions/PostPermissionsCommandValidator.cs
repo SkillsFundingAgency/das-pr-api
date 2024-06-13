@@ -9,7 +9,7 @@ public class PostPermissionsCommandValidator : AbstractValidator<PostPermissions
 
     public static readonly string UkprnValidationMessage = "A Ukprn must be provided.";
 
-    public static readonly string AccountLegalEntityIdValidationMessage = "A AccountLegalEntityId must be provided.";
+    public static readonly string AccountLegalEntityIdValidationMessage = "An AccountLegalEntityId must be provided.";
 
     public PostPermissionsCommandValidator()
     {

@@ -1,10 +1,10 @@
 ﻿using MediatR;
-using Newtonsoft.Json;
 using SFA.DAS.PR.Application.Mediatr.Responses;
 using SFA.DAS.PR.Data;
 using SFA.DAS.PR.Domain.Common;
 using SFA.DAS.PR.Domain.Entities;
 using SFA.DAS.PR.Domain.Interfaces;
+using System.Text.Json;
 
 namespace SFA.DAS.PR.Application.Permissions.Commands.PostPermissions;
 
@@ -123,7 +123,7 @@ public class PostPermissionsCommandHandler(
             Ukprn = command.Ukprn!.Value,
             AccountLegalEntityId = command.AccountLegalEntityId,
             EmployerUserRef = command.UserRef,
-            Operations = JsonConvert.SerializeObject(operations)
+            Operations = JsonSerializer.Serialize(operations)
         };
 
         await permissionsAuditWriteRepository.RecordPermissionsAudit(permissionsAudit, cancellationToken);

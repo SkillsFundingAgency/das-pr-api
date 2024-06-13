@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json.Linq;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using SFA.DAS.PR.Data.Repositories;
 using SFA.DAS.PR.Data.UnitTests.InMemoryDatabases;
 using SFA.DAS.PR.Data.UnitTests.Setup;
