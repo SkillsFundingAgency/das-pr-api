@@ -1,8 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.AspNetCore.Mvc;
-using SFA.DAS.PR.Domain.Convertors;
-using SFA.DAS.PR.Domain.Entities;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace SFA.DAS.PR.Api.Attributes;
 
@@ -16,9 +15,9 @@ public class UseEnumMemberConverterAttribute : ActionFilterAttribute
             {
                 Converters =
                 {
-                    new JsonStringEnumMemberConverter<PermissionAction>(),
-                    new JsonStringEnumMemberConverter<RequestStatus>()
-                }
+                    new JsonStringEnumConverter()
+                },
+                WriteIndented = true
             };
 
             objectResult.Value = JsonSerializer.Serialize(objectResult.Value, options);

@@ -1,7 +1,9 @@
 ﻿using SFA.DAS.PR.Domain.Entities;
+using System.Diagnostics.CodeAnalysis;
 
 namespace SFA.DAS.PR.Application.EmployerRelationships.Queries.GetProviderEmployerRelationship;
 
+[ExcludeFromCodeCoverage]
 public class GetProviderEmployerRelationshipQueryResult
 {
     public long AccountLegalEntityId { get; set; }
@@ -18,7 +20,7 @@ public class GetProviderEmployerRelationshipQueryResult
 
     public Operation[] Operations { get; set; } = [];
 
-    public PermissionAction LastAction { get; set; }
+    public PermissionAction? LastAction { get; set; }
 
     public DateTime? LastActionTime {  get; set; }
 

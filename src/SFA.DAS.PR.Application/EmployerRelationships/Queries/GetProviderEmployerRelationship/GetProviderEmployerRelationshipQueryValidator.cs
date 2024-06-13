@@ -6,12 +6,15 @@ namespace SFA.DAS.PR.Application.EmployerRelationships.Queries.GetProviderEmploy
 public class GetProviderEmployerRelationshipQueryValidator : AbstractValidator<GetProviderEmployerRelationshipQuery>
 {
     public const string UkprnValidationMessage = "A Ukprn must be supplied.";
-    public const string AccountLegalEntityIdValidationMessage = "A AccountLegalEntityId must be supplied.";
+    public const string AccountLegalEntityIdValidationMessage = "An AccountLegalEntityId must be supplied.";
     public GetProviderEmployerRelationshipQueryValidator()
     {
-        RuleFor(a => a.Ukprn)
+        RuleFor(x => x.Ukprn)
+            .Cascade(CascadeMode.Stop)
             .NotEmpty()
-            .WithMessage(UkprnValidationMessage)
+            .WithMessage(UkprnValidationMessage);
+
+        RuleFor(x => x.Ukprn)
             .CheckUkprnFormat();
 
         RuleFor(a => a.AccountLegalEntityId)
