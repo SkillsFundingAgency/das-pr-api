@@ -8,4 +8,6 @@ public class Provider
     public DateTime? Updated { get; set; }
 
     public virtual List<AccountProvider> AccountProviders { get; set; } = new();
+
+    public virtual List<Request> Requests { get; set; } = [];
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SFA.DAS.PR.Domain.Entities;
 using SFA.DAS.PR.Domain.Interfaces;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace SFA.DAS.PR.Data.Repositories;
 public class AccountProviderLegalEntitiesReadRepository(IProviderRelationshipsDataContext _providerRelationshipsDataContext) : IAccountProviderLegalEntitiesReadRepository
@@ -29,6 +30,19 @@ public class AccountProviderLegalEntitiesReadRepository(IProviderRelationshipsDa
             a.AccountLegalEntityId == accountLegalEntityId &&
             a.AccountProvider.ProviderUkprn == ukprn,
             cancellationToken
+        );
+    }
+
+    public async Task<AccountProviderLegalEntity?> GetAccountProviderLegalEntityByProvider(long ukprn, long accountLegalEntityId, CancellationToken cancellationToken)
+    {
+        return await _providerRelationshipsDataContext.AccountProviderLegalEntities
+            .Include(a => a.AccountProvider)
+                .ThenInclude(a => a.Provider)
+            .Include(a => a.AccountLegalEntity)
+            .Include(a => a.Permissions)
+        .FirstOrDefaultAsync(a =>
+            a.AccountProvider.ProviderUkprn == ukprn &&
+            a.AccountLegalEntityId == accountLegalEntityId
         );
     }
 }
