@@ -11,7 +11,7 @@ using SFA.DAS.PR.Application.Permissions.Queries.GetHasPermissions;
 using SFA.DAS.PR.Domain.Entities;
 using SFA.DAS.Testing.AutoFixture;
 
-namespace SFA.DAS.PR.Api.UnitTests.Controllers.Permissions;
+namespace SFA.DAS.PR.Api.UnitTests.Controllers.PermissionsControllerTests;
 public class PermissionsControllerHasPermissionsTests
 {
     [Test, MoqAutoData]

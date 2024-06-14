@@ -8,7 +8,7 @@ using SFA.DAS.PR.Application.Mediatr.Responses;
 using SFA.DAS.PR.Application.Permissions.Commands.PostPermissions;
 using SFA.DAS.Testing.AutoFixture;
 
-namespace SFA.DAS.PR.Api.UnitTests.Controllers.Permissions;
+namespace SFA.DAS.PR.Api.UnitTests.Controllers.PermissionsControllerTests;
 
 public class PermissionsControllerPostTests
 {

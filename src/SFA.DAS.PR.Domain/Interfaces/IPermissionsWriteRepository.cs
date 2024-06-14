@@ -4,7 +4,7 @@ namespace SFA.DAS.PR.Domain.Interfaces;
 
 public interface IPermissionsWriteRepository
 {
-    Task CreatePermissions(Permission[] permissions, CancellationToken cancellationToken);
+    void CreatePermissions(IEnumerable<Permission> permissions);
 
-    void DeletePermissions(Permission[] permissions);
+    void DeletePermissions(IEnumerable<Permission> permissions);
 }

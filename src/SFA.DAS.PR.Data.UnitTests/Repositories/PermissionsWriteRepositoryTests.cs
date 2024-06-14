@@ -22,7 +22,7 @@ public class PermissionsWriteRepositoryTests
         {
             PermissionsWriteRepository sut = new(context);
 
-            await sut.CreatePermissions(permissions, cancellationToken);
+            sut.CreatePermissions(permissions);
 
             await context.SaveChangesAsync(cancellationToken);
 

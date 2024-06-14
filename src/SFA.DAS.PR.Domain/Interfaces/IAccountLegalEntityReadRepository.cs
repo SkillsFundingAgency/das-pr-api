@@ -6,4 +6,5 @@ public interface IAccountLegalEntityReadRepository
 {
     Task<AccountLegalEntity?> GetAccountLegalEntity(long accountLegalEntityId, CancellationToken cancellationToken);
     Task<List<AccountLegalEntity>> GetAccountLegalEntities(long accountId, CancellationToken cancellationToken);
+    Task<bool> AccountLegalEntityExists(long accountLegalEntityId, CancellationToken cancellationToken);
 }

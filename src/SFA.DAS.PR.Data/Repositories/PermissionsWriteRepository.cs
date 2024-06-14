@@ -5,12 +5,12 @@ namespace SFA.DAS.PR.Data.Repositories;
 
 public class PermissionsWriteRepository(IProviderRelationshipsDataContext providerRelationshipsDataContext) : IPermissionsWriteRepository
 {
-    public async Task CreatePermissions(Permission[] permissions, CancellationToken cancellationToken)
+    public void CreatePermissions(IEnumerable<Permission> permissions)
     {
-        await providerRelationshipsDataContext.Permissions.AddRangeAsync(permissions, cancellationToken);
+        providerRelationshipsDataContext.Permissions.AddRange(permissions);
     }
 
-    public void DeletePermissions(Permission[] permissions)
+    public void DeletePermissions(IEnumerable<Permission> permissions)
     {
         providerRelationshipsDataContext.Permissions.RemoveRange(permissions);
     }
