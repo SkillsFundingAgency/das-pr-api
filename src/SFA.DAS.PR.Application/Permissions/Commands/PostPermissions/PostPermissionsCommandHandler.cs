@@ -91,7 +91,7 @@ public class PostPermissionsCommandHandler(
         return new ValidatedResponse<PostPermissionsCommandResult>(new PostPermissionsCommandResult());
     }
 
-    private void AddPermissions(long accountProviderLegalEntityId, List<Operation> operationsToAdd, CancellationToken cancellationToken)
+    private void AddPermissions(long accountProviderLegalEntityId, List<Operation> operationsToAdd)
     {
         if (operationsToAdd.Any())
         {
