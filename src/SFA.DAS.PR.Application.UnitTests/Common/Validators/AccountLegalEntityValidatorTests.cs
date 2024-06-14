@@ -9,7 +9,7 @@ public class AccountLegalEntityValidatorTests
 {
     public class TestAccountLegalEntityIdEntity : IAccountLegalEntityIdEntity
     {
-        public long? AccountLegalEntityId { get; set; }
+        public long AccountLegalEntityId { get; set; }
     }
 
     [Test]
@@ -33,7 +33,7 @@ public class AccountLegalEntityValidatorTests
     [Test]
     public async Task ValidateAccountLegalEntity_Null_AccountLegalEntityId_ReturnsInvalid()
     {
-        var entity = new TestAccountLegalEntityIdEntity { AccountLegalEntityId = null };
+        var entity = new TestAccountLegalEntityIdEntity { AccountLegalEntityId = 0 };
 
         var mockRepository = new Mock<IAccountLegalEntityReadRepository>();
         mockRepository.Setup(r => r.AccountLegalEntityExists(It.IsAny<long>(), It.IsAny<CancellationToken>()))

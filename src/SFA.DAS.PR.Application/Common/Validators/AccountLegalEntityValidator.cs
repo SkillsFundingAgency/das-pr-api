@@ -7,7 +7,7 @@ public static class AccountLegalEntityValidator
 {
     public const string AccountLegalEntityExistValidationMessage = "AccountLegalEntity must exist.";
     public const string AccountLegalEntityIdValidationMessage = "An AccountLegalEntityId must be supplied.";
-    public static IRuleBuilderOptions<T, long?> ValidateAccountLegalEntityExists<T>(this IRuleBuilderInitial<T, long?> ruleBuilder, IAccountLegalEntityReadRepository accountLegalEntityReadRepository) where T : IAccountLegalEntityIdEntity
+    public static IRuleBuilderOptions<T, long> ValidateAccountLegalEntityExists<T>(this IRuleBuilderInitial<T, long> ruleBuilder, IAccountLegalEntityReadRepository accountLegalEntityReadRepository) where T : IAccountLegalEntityIdEntity
     {
         return ruleBuilder
             .Cascade(CascadeMode.Stop)
@@ -15,7 +15,7 @@ public static class AccountLegalEntityValidator
             .WithMessage(AccountLegalEntityIdValidationMessage)
             .MustAsync(async (accountLegalEntityId, ancellationToken) =>
             {
-                return await accountLegalEntityReadRepository.AccountLegalEntityExists(accountLegalEntityId!.Value, ancellationToken);
+                return await accountLegalEntityReadRepository.AccountLegalEntityExists(accountLegalEntityId, ancellationToken);
             })
             .WithMessage(AccountLegalEntityExistValidationMessage);
     }

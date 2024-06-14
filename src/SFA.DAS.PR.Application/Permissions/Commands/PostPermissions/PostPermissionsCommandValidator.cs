@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using SFA.DAS.PR.Application.Common.Validators;
+using SFA.DAS.PR.Domain.Interfaces;
 
 namespace SFA.DAS.PR.Application.Permissions.Commands.PostPermissions;
 
@@ -11,7 +12,7 @@ public class PostPermissionsCommandValidator : AbstractValidator<PostPermissions
 
     public static readonly string AccountLegalEntityIdValidationMessage = "An AccountLegalEntityId must be provided.";
 
-    public PostPermissionsCommandValidator()
+    public PostPermissionsCommandValidator(IAccountLegalEntityReadRepository accountLegalEntityReadRepository)
     {
         RuleFor(a => a.UserRef)
             .NotEmpty()
@@ -26,8 +27,7 @@ public class PostPermissionsCommandValidator : AbstractValidator<PostPermissions
             .CheckUkprnFormat();
 
         RuleFor(a => a.AccountLegalEntityId)
-            .NotEmpty()
-            .WithMessage(AccountLegalEntityIdValidationMessage);
+            .ValidateAccountLegalEntityExists(accountLegalEntityReadRepository);
 
         RuleFor(a => a.Operations).ValidateOperationCombinations();
     }

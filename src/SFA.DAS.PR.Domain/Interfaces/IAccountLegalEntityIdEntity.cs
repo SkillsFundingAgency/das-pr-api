@@ -2,5 +2,5 @@
 
 public interface IAccountLegalEntityIdEntity
 {
-    public long? AccountLegalEntityId { get; set; }
+    public long AccountLegalEntityId { get; set; }
 }
