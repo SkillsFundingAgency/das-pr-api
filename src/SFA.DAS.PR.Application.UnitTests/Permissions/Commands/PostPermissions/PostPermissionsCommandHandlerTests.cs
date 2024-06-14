@@ -2,6 +2,7 @@
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Moq;
+using Newtonsoft.Json.Linq;
 using SFA.DAS.PR.Application.Mediatr.Responses;
 using SFA.DAS.PR.Application.Permissions.Commands.PostPermissions;
 using SFA.DAS.PR.Data;
@@ -11,6 +12,7 @@ using SFA.DAS.PR.Data.UnitTests.Setup;
 using SFA.DAS.PR.Domain.Entities;
 using SFA.DAS.PR.Domain.Interfaces;
 using SFA.DAS.Testing.AutoFixture;
+using System.Runtime.Intrinsics.X86;
 
 namespace SFA.DAS.PR.Application.UnitTests.Permissions.Commands.PostPermissions;
 
@@ -131,7 +133,7 @@ public class PostPermissionsCommandHandlerTests
         {
             Assert.That(audit, Is.Not.Null, "Audit must have been recorded.");
             Assert.That(audit?.Action, Is.EqualTo("Updated"), "Audit action must equal updated.");
-            Assert.That(command.Operations.Count, Is.EqualTo(permissionCount), "Permissions after removal should be equal to the passed permissions count.");
+            Assert.That(command.Operations, Has.Count.EqualTo(permissionCount), "Permissions after removal should be equal to the passed permissions count.");
         });
     }
 
@@ -193,7 +195,7 @@ public class PostPermissionsCommandHandlerTests
         {
             Assert.That(audit, Is.Not.Null, "Audit must have been recorded.");
             Assert.That(audit?.Action, Is.EqualTo("Updated"), "Audit action must equal updated.");
-            Assert.That(command.Operations.Count, Is.EqualTo(permissionCount), "Added permissions should be equal to the passed permissions count.");
+            Assert.That(command.Operations, Has.Count.EqualTo(permissionCount), "Added permissions should be equal to the passed permissions count.");
         });
     }
 
@@ -254,11 +256,11 @@ public class PostPermissionsCommandHandlerTests
         {
             Assert.That(audit, Is.Not.Null, "Audit must have been recorded.");
             Assert.That(audit?.Action, Is.EqualTo("Created"), "Audit action must equal created.");
-            Assert.That(command.Operations.Count, Is.EqualTo(permissionCount), "Added permissions should be equal to the passed permissions count.");
+            Assert.That(command.Operations, Has.Count.EqualTo(permissionCount), "Added permissions should be equal to the passed permissions count.");
         });
     }
 
-    private PostPermissionsCommandHandler CreatePostPermissionsCommandHandler(
+    private static PostPermissionsCommandHandler CreatePostPermissionsCommandHandler(
         IAccountProviderLegalEntitiesReadRepository accountProviderLegalEntitiesReadRepository,
         IAccountLegalEntityReadRepository accountLegalEntityReadRepository,
         ProviderRelationshipsDataContext context

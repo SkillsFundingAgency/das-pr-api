@@ -29,6 +29,6 @@ public class PermissionsWriteRepositoryTests
             permissionCount = context.Permissions.Count();
         }
 
-        Assert.That(permissionCount, Is.EqualTo(permissions.Count()), $"result should not be {permissions.Count()}");
+        Assert.That(permissionCount, Is.EqualTo(permissions.Length), $"result should not be {permissions.Length}");
     }
 }

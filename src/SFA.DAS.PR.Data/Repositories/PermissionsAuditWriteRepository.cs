@@ -7,6 +7,6 @@ public class PermissionsAuditWriteRepository(IProviderRelationshipsDataContext p
 {
     public async Task RecordPermissionsAudit(PermissionsAudit permissionsAudit, CancellationToken cancellationToken)
     {
-        await providerRelationshipsDataContext.PermissionsAudit.AddAsync(permissionsAudit);
+        await providerRelationshipsDataContext.PermissionsAudit.AddAsync(permissionsAudit, cancellationToken);
     }
 }

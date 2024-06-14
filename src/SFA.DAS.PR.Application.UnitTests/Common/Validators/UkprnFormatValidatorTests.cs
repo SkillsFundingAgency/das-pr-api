@@ -22,7 +22,7 @@ public class UkprnFormatValidatorTests
 
         var validationResult = await validator.ValidateAsync(entity);
 
-        Assert.IsTrue(validationResult.IsValid);
+        Assert.That(validationResult.IsValid, Is.True);
     }
 
     [Test]
@@ -36,7 +36,10 @@ public class UkprnFormatValidatorTests
 
         var validationResult = await validator.ValidateAsync(entity);
 
-        Assert.IsFalse(validationResult.IsValid);
-        Assert.That(validationResult.Errors[0].ErrorMessage, Is.EqualTo(UkprnFormatValidator.UkprnFormatValidationMessage));
+        Assert.Multiple(() =>
+        {
+            Assert.That(validationResult.IsValid, Is.False);
+            Assert.That(validationResult.Errors[0].ErrorMessage, Is.EqualTo(UkprnFormatValidator.UkprnFormatValidationMessage));
+        });        
     }
 }
