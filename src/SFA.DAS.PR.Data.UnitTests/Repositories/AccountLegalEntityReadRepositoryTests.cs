@@ -96,4 +96,26 @@ public class AccountLegalEntityReadRepositoryTests
 
         Assert.That(result, Is.Null, "result should be null");
     }
+
+    [Test]
+    public async Task AccountLegalEntityExists_Returns_True()
+    {
+        AccountLegalEntity accountLegalEntity = AccountLegalEntityTestData.CreateAccountLegalEntity();
+
+        bool result = false;
+
+        using (var context = InMemoryProviderRelationshipsDataContext.CreateInMemoryContext(
+            $"{nameof(InMemoryProviderRelationshipsDataContext)}_{nameof(AccountLegalEntityExists_Returns_True)}")
+        )
+        {
+            await context.AddAsync(accountLegalEntity);
+            await context.SaveChangesAsync(cancellationToken);
+
+            AccountLegalEntityReadRepository sut = new(context);
+
+            result = await sut.AccountLegalEntityExists(accountLegalEntity.Id, cancellationToken);
+        }
+
+        Assert.That(result, Is.True, "result should be true");
+    }
 }
