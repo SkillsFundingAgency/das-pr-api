@@ -1,8 +1,10 @@
 ﻿using AutoFixture.NUnit3;
 using FluentAssertions;
+using FluentValidation.Results;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using SFA.DAS.PR.Api.Common;
 using SFA.DAS.PR.Api.Controllers;
 using SFA.DAS.PR.Application.Mediatr.Responses;
 using SFA.DAS.PR.Application.Permissions.Commands.PostPermissions;
@@ -58,5 +60,31 @@ public class PermissionsControllerPostTests
         var result = await sut.PostPermission(command, cancellationToken);
         result.As<OkObjectResult>().Should().NotBeNull();
         result.As<OkObjectResult>().Value.Should().Be(postPermissionsCommandResult);
+    }
+
+    [Test, MoqAutoData]
+    public async Task PostPermission_HandlerReturnsData_ReturnsBadRequest(
+        [Frozen] Mock<IMediator> mediatorMock,
+        [Greedy] PermissionsController sut,
+        PostPermissionsCommand command,
+        IList<ValidationFailure> validationErrors,
+        CancellationToken cancellationToken
+    )
+    {
+        var response = new ValidatedResponse<PostPermissionsCommandResult>(validationErrors);
+
+        mediatorMock.Setup(m => m.Send(
+            It.Is<PostPermissionsCommand>(q =>
+                q.AccountLegalEntityId == command.AccountLegalEntityId &&
+                q.Ukprn == command.Ukprn &&
+                q.Operations == command.Operations &&
+                q.UserRef == command.UserRef
+            ),
+            cancellationToken)
+        ).ReturnsAsync(response);
+
+        var result = await sut.PostPermission(command, cancellationToken);
+        result.As<BadRequestObjectResult>().Should().NotBeNull();
+        result.As<BadRequestObjectResult>().Value.As<List<ValidationError>>().Count.Should().Be(validationErrors.Count);
     }
 }

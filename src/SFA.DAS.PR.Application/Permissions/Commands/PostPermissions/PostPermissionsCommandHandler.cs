@@ -83,7 +83,7 @@ public class PostPermissionsCommandHandler(
         }
 
         RemovePermissions(accountProviderLegalEntity.Permissions);
-        AddPermissions(accountProviderLegalEntity.Id, command.Operations, cancellationToken);
+        AddPermissions(accountProviderLegalEntity.Id, command.Operations);
         
         await CreatePermissionsAudit(command, command.Operations, PermissionAuditActions.PermissionUpdatedAction, cancellationToken);
         await _providerRelationshipsDataContext.SaveChangesAsync(cancellationToken);
