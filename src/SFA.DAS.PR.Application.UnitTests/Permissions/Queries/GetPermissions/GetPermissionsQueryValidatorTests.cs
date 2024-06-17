@@ -1,6 +1,6 @@
 ﻿using FluentValidation.TestHelper;
+using SFA.DAS.PR.Application.Common.Validators;
 using SFA.DAS.PR.Application.Permissions.Queries.GetPermissions;
-using SFA.DAS.PR.Application.Validators;
 
 namespace SFA.DAS.PR.Application.UnitTests.Permissions.Queries.GetPermissions;
 public class GetPermissionsQueryValidatorTests
