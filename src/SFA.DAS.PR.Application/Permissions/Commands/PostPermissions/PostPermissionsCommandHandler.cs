@@ -95,11 +95,11 @@ public class PostPermissionsCommandHandler(
     {
         if (operationsToAdd.Any())
         {
-            Permission[] permissionsToAdd = operationsToAdd.Select(operation => new Permission
+            IEnumerable<Permission> permissionsToAdd = operationsToAdd.Select(operation => new Permission
             {
                 AccountProviderLegalEntityId = accountProviderLegalEntityId,
                 Operation = operation
-            }).ToArray();
+            });
 
             _permissionsWriteRepository.CreatePermissions(permissionsToAdd);
         }
