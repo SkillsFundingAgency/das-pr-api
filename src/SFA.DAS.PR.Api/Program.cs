@@ -60,9 +60,10 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddPrDataContext(_configuration["ApplicationSettings:DbConnectionString"]!, _configuration["EnvironmentName"]!);
 builder.Services.AddApplicationRegistrations();
 
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
@@ -88,12 +89,7 @@ app.UseHealthChecks("/health",
 app.UseHealthChecks("/ping",
     new HealthCheckOptions
     {
-        Predicate = _ => false,
-        ResponseWriter = (context, report) =>
-        {
-            context.Response.ContentType = "application/json";
-            return context.Response.WriteAsync("");
-        }
+        ResponseWriter = HealthCheckResponseWriter.WriteJsonResponse
     });
 
 app.UseAuthorization();
