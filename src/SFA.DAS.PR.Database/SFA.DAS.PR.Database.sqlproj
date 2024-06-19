@@ -57,8 +57,6 @@
   <ItemGroup>
     <Folder Include="Properties" />
     <Folder Include="Tables" />
-    <Folder Include="StoredProcedures" />
-    <Folder Include="UserDefinedTypes" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="Tables\AccountLegalEntities.sql" />
@@ -67,7 +65,6 @@
     <Build Include="Tables\Accounts.sql" />
     <Build Include="Tables\Permissions.sql" />
     <Build Include="Tables\Providers.sql" />
-    <Build Include="StoredProcedures\ImportProviders.sql" />
-    <Build Include="UserDefinedTypes\Providers.sql" />
+    <Build Include="Tables\JobAudits.sql" />
   </ItemGroup>
 </Project>
