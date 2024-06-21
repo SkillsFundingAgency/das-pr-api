@@ -1,4 +1,4 @@
-﻿using AutoFixture;
+using AutoFixture;
 using NUnit.Framework;
 using SFA.DAS.PR.Data.Repositories;
 using SFA.DAS.PR.Data.UnitTests.InMemoryDatabases;
@@ -39,7 +39,7 @@ public class AccountLegalEntityReadRepositoryTests
 
             AccountLegalEntityReadRepository sut = new(context);
 
-            result = await sut.GetAccountLegalEntiies(accountId, cancellationToken);
+            result = await sut.GetAccountLegalEntities(accountId, cancellationToken);
         }
 
         var accountProvidersCount = accountsToAdd.First().AccountProviders.Count;
@@ -56,5 +56,66 @@ public class AccountLegalEntityReadRepositoryTests
             Assert.That(resultEntity?.AccountProviderLegalEntities.First().AccountLegalEntity, Is.Not.Null);
             Assert.That(resultEntity?.AccountProviderLegalEntities.First().Permissions, Has.Exactly(1).Items);
         });
+    }
+
+    [Test]
+    public async Task GetAccountLegalEntity_Returns_AccountLegalEntity()
+    {
+        AccountLegalEntity accountLegalEntity = AccountLegalEntityTestData.CreateAccountLegalEntity();
+
+        AccountLegalEntity? result = new();
+
+        using (var context = InMemoryProviderRelationshipsDataContext.CreateInMemoryContext(
+            $"{nameof(InMemoryProviderRelationshipsDataContext)}_{nameof(GetAccountLegalEntity_Returns_AccountLegalEntity)}")
+        )
+        {
+            await context.AddAsync(accountLegalEntity);
+            await context.SaveChangesAsync(cancellationToken);
+
+            AccountLegalEntityReadRepository sut = new(context);
+
+            result = await sut.GetAccountLegalEntity(1, cancellationToken);
+        }
+
+        Assert.That(result, Is.Not.Null, "result should not be null");
+    }
+
+    [Test]
+    public async Task GetAccountLegalEntity_Returns_Null()
+    {
+        AccountLegalEntity? result = new();
+
+        using (var context = InMemoryProviderRelationshipsDataContext.CreateInMemoryContext(
+            $"{nameof(InMemoryProviderRelationshipsDataContext)}_{nameof(GetAccountLegalEntity_Returns_Null)}")
+        )
+        {
+            AccountLegalEntityReadRepository sut = new(context);
+
+            result = await sut.GetAccountLegalEntity(1, cancellationToken);
+        }
+
+        Assert.That(result, Is.Null, "result should be null");
+    }
+
+    [Test]
+    public async Task AccountLegalEntityExists_Returns_True()
+    {
+        AccountLegalEntity accountLegalEntity = AccountLegalEntityTestData.CreateAccountLegalEntity();
+
+        bool result = false;
+
+        using (var context = InMemoryProviderRelationshipsDataContext.CreateInMemoryContext(
+            $"{nameof(InMemoryProviderRelationshipsDataContext)}_{nameof(AccountLegalEntityExists_Returns_True)}")
+        )
+        {
+            await context.AddAsync(accountLegalEntity);
+            await context.SaveChangesAsync(cancellationToken);
+
+            AccountLegalEntityReadRepository sut = new(context);
+
+            result = await sut.AccountLegalEntityExists(accountLegalEntity.Id, cancellationToken);
+        }
+
+        Assert.That(result, Is.True, "result should be true");
     }
 }

@@ -5,6 +5,7 @@ using SFA.DAS.PR.Api.Authorization;
 using SFA.DAS.PR.Api.Common;
 using SFA.DAS.PR.Api.SwaggerExamples;
 using SFA.DAS.PR.Application.Mediatr.Responses;
+using SFA.DAS.PR.Application.Permissions.Commands.PostPermissions;
 using SFA.DAS.PR.Application.Permissions.Queries.GetHasPermissions;
 using SFA.DAS.PR.Application.Permissions.Queries.GetPermissions;
 using SFA.DAS.PR.Application.Permissions.Queries.HasRelationshipWithPermission;
@@ -51,6 +52,16 @@ public class PermissionsController(IMediator _mediator) : ActionResponseControll
     public async Task<IActionResult> HasPermission([FromQuery] GetHasPermissionsQuery query, CancellationToken cancellationToken)
     {
         ValidatedResponse<bool> result = await _mediator.Send(query, cancellationToken);
+        return GetResponse(result);
+    }
+
+    [HttpPost]
+    [Authorize(Policy = Policies.Management)]
+    [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(List<ValidationError>), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> PostPermission([FromBody] PostPermissionsCommand command, CancellationToken cancellationToken)
+    {
+        ValidatedResponse<PostPermissionsCommandResult> result = await _mediator.Send(command, cancellationToken);
         return GetResponse(result);
     }
 }

@@ -26,7 +26,7 @@ public class GetEmployerRelationshipsQueryHandlerTests
 
         ValidatedResponse<GetEmployerRelationshipsQueryResult> result = await sut.Handle(query, cancellationToken);
 
-        Assert.That(result.Result.AccountLegalEntities, !Is.Empty);
+        Assert.That(result.Result!.AccountLegalEntities, !Is.Empty);
     }
 
     [Test]
@@ -46,6 +46,6 @@ public class GetEmployerRelationshipsQueryHandlerTests
 
         ValidatedResponse<GetEmployerRelationshipsQueryResult> result = await sut.Handle(query, cancellationToken);
 
-        Assert.That(result.Result.AccountLegalEntities, Is.Empty);
+        Assert.That(result.Result!.AccountLegalEntities, Is.Empty);
     }
 }

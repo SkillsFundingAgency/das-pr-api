@@ -14,9 +14,21 @@ public class AccountProviderLegalEntitiesReadRepository(IProviderRelationshipsDa
             .Include(a => a.AccountLegalEntity)
             .Where(t =>
                 (!ukprn.HasValue || t.AccountProvider.ProviderUkprn == ukprn) &&
-                (string.IsNullOrWhiteSpace(accountHashId) || t.AccountProvider.Account.HashedId == accountHashId) &&
+                (string.IsNullOrWhiteSpace(accountHashId) || t.AccountProvider.Account!.HashedId == accountHashId) &&
                 (t.Permissions.Any(p => operations.Contains(p.Operation))) &&
                 t.AccountLegalEntity.Deleted == null
         ).ToListAsync(cancellationToken);
-    }    
+    }
+
+    public async Task<AccountProviderLegalEntity?> GetAccountProviderLegalEntity(long? ukprn, long accountLegalEntityId, CancellationToken cancellationToken)
+    {
+        return await _providerRelationshipsDataContext.AccountProviderLegalEntities
+            .Include(a => a.AccountProvider)
+            .Include(a => a.Permissions)
+        .FirstOrDefaultAsync(a =>
+            a.AccountLegalEntityId == accountLegalEntityId &&
+            a.AccountProvider.ProviderUkprn == ukprn,
+            cancellationToken
+        );
+    }
 }

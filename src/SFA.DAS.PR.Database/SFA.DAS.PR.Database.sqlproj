@@ -66,5 +66,6 @@
     <Build Include="Tables\Permissions.sql" />
     <Build Include="Tables\Providers.sql" />
     <Build Include="Tables\JobAudits.sql" />
+    <Build Include="Tables\PermissionsAudit.sql" />
   </ItemGroup>
 </Project>

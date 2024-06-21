@@ -7,79 +7,77 @@ using Moq;
 using SFA.DAS.PR.Api.Common;
 using SFA.DAS.PR.Api.Controllers;
 using SFA.DAS.PR.Application.Mediatr.Responses;
-using SFA.DAS.PR.Application.Permissions.Queries.GetHasPermissions;
+using SFA.DAS.PR.Application.Permissions.Queries.HasRelationshipWithPermission;
 using SFA.DAS.PR.Domain.Entities;
 using SFA.DAS.Testing.AutoFixture;
 
-namespace SFA.DAS.PR.Api.UnitTests.Controllers.Permissions;
-public class PermissionsControllerHasPermissionsTests
+namespace SFA.DAS.PR.Api.UnitTests.Controllers.PermissionsControllerTests;
+
+public class PermissionsControllerTests
 {
-    [Test, MoqAutoData]
-    public async Task HasPermission_InvokesQueryHandler(
-     [Frozen] Mock<IMediator> mediatorMock,
-     [Greedy] PermissionsController sut,
-     long ukprn,
-     long accountLegalEntityId,
-     List<Operation> operations,
-     CancellationToken cancellationToken
-  )
+    [Test]
+    [MoqAutoData]
+    public async Task HasRelationshipWithPermission_InvokesQueryHandler(
+       [Frozen] Mock<IMediator> mediatorMock,
+       [Greedy] PermissionsController sut,
+       long ukprn,
+       Operation operation,
+       CancellationToken cancellationToken
+    )
     {
-        GetHasPermissionsQuery query = new()
+        HasRelationshipWithPermissionQuery query = new()
         {
             Ukprn = ukprn,
-            AccountLegalEntityId = accountLegalEntityId,
-            Operations = operations,
+            Operation = operation,
         };
 
-        await sut.HasPermission(query, cancellationToken);
+        await sut.HasRelationshipWithPermission(query, cancellationToken);
 
         mediatorMock.Verify(m =>
             m.Send(query, cancellationToken)
         );
     }
 
-    [Test, MoqAutoData]
-    public async Task HasPermission_HandlerReturnsDefaultResult_ReturnsOkObjectResult(
+    [Test]
+    [MoqAutoData]
+    public async Task HasRelationshipWithPermission_HandlerReturnsDefaultResult_ReturnsOkObjectResult(
         [Frozen] Mock<IMediator> mediatorMock,
         [Greedy] PermissionsController sut,
         long ukprn,
-        long accountLegalEntityId,
-        List<Operation> operations,
+        Operation operation,
         CancellationToken cancellationToken
     )
     {
-        GetHasPermissionsQuery query = new()
+        HasRelationshipWithPermissionQuery query = new()
         {
             Ukprn = ukprn,
-            AccountLegalEntityId = accountLegalEntityId,
-            Operations = operations,
+            Operation = operation,
         };
+
         var notFoundResponse = ValidatedResponse<bool>.EmptySuccessResponse();
 
         mediatorMock.Setup(m =>
             m.Send(query, cancellationToken)
         ).ReturnsAsync(notFoundResponse);
 
-        var result = await sut.HasPermission(query, cancellationToken);
-
+        var result = await sut.HasRelationshipWithPermission(query, cancellationToken);
         result.As<OkObjectResult>().Value.Should().Be(false);
     }
 
-    [Test, MoqAutoData]
-    public async Task HasPermission_HandlerReturnsData_ReturnsOkResponse(
+    [Test]
+    [MoqAutoData]
+    public async Task HasRelationshipWithPermission_HandlerReturnsData_ReturnsOkResponse(
         [Frozen] Mock<IMediator> mediatorMock,
         [Greedy] PermissionsController sut,
         long ukprn,
-        long accountLegalEntityId,
-        List<Operation> operations,
+        Operation operation,
         CancellationToken cancellationToken
     )
     {
-        GetHasPermissionsQuery query = new()
+        HasRelationshipWithPermissionQuery query = new()
         {
             Ukprn = ukprn,
-            AccountLegalEntityId = accountLegalEntityId,
-            Operations = operations,
+            Operation = operation,
         };
 
         var response = new ValidatedResponse<bool>(true);
@@ -88,24 +86,25 @@ public class PermissionsControllerHasPermissionsTests
             m.Send(query, cancellationToken)
         ).ReturnsAsync(response);
 
-        var result = await sut.HasPermission(query, cancellationToken);
+        var result = await sut.HasRelationshipWithPermission(query, cancellationToken);
 
         result.As<OkObjectResult>().Should().NotBeNull();
         result.As<OkObjectResult>().Value.Should().Be(response.Result);
     }
 
-    [Test, MoqAutoData]
-    public async Task HasPermission_InvalidRequest_ReturnsBadRequestResponse(
+    [Test]
+    [MoqAutoData]
+    public async Task HasRelationshipWithPermission_InvalidRequest_ReturnsBadRequestResponse(
         [Frozen] Mock<IMediator> mediatorMock,
         [Greedy] PermissionsController sut,
         List<ValidationFailure> errors,
         CancellationToken cancellationToken
     )
     {
-        GetHasPermissionsQuery query = new()
+        HasRelationshipWithPermissionQuery query = new()
         {
             Ukprn = null,
-            AccountLegalEntityId = null
+            Operation = null,
         };
 
         var errorResponse = new ValidatedResponse<bool>(errors);
@@ -114,7 +113,7 @@ public class PermissionsControllerHasPermissionsTests
             m.Send(query, cancellationToken)
         ).ReturnsAsync(errorResponse);
 
-        var result = await sut.HasPermission(query, cancellationToken);
+        var result = await sut.HasRelationshipWithPermission(query, cancellationToken);
         result.As<BadRequestObjectResult>().Should().NotBeNull();
         result.As<BadRequestObjectResult>().Value.As<List<ValidationError>>().Count.Should().Be(errors.Count);
     }

@@ -23,7 +23,7 @@ namespace SFA.DAS.PR.Application.UnitTests.AccountProviders.Queries.GetAccountPr
         )
         {
             accountLegalEntityReadRepository.Setup(a =>
-                a.GetAccountLegalEntiies(accountId, cancellationToken)
+                a.GetAccountLegalEntities(accountId, cancellationToken)
             ).ReturnsAsync(legalEntities);
 
             GetAccountProvidersQueryResult expectedResult = new(accountId, AccountProviderModel.BuildAccountProviderModels(legalEntities));
@@ -44,7 +44,7 @@ namespace SFA.DAS.PR.Application.UnitTests.AccountProviders.Queries.GetAccountPr
         )
         {
             accountLegalEntityReadRepository.Setup(a =>
-                a.GetAccountLegalEntiies(accountId, cancellationToken)
+                a.GetAccountLegalEntities(accountId, cancellationToken)
             ).ReturnsAsync(() => new List<AccountLegalEntity>());
 
             GetAccountProvidersQueryResult expectedResult = new(accountId, []);

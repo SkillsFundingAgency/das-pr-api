@@ -8,7 +8,7 @@ public class GetAccountProvidersQueryHandler(IAccountLegalEntityReadRepository a
 {
     public async Task<ValidatedResponse<GetAccountProvidersQueryResult>> Handle(GetAccountProvidersQuery query, CancellationToken cancellationToken)
     {
-        List<AccountLegalEntity> legalEntities = await accountLegalEntityReadRepository.GetAccountLegalEntiies(query.AccountId, cancellationToken);
+        List<AccountLegalEntity> legalEntities = await accountLegalEntityReadRepository.GetAccountLegalEntities(query.AccountId, cancellationToken);
 
         GetAccountProvidersQueryResult result = new(query.AccountId, AccountProviderModel.BuildAccountProviderModels(legalEntities));
 
