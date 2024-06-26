@@ -16,11 +16,13 @@
   <ItemGroup>
     <PackageReference Include="Azure.Identity" Version="1.11.4" />
     <PackageReference Include="Microsoft.Identity.Client" Version="4.61.3" />
+    <PackageReference Include="NServiceBus" Version="9.0.0" />
   </ItemGroup>
   <!--Transitive Packages-->
 
 	<ItemGroup>
     <ProjectReference Include="..\SFA.DAS.PR.Data\SFA.DAS.PR.Data.csproj" />
+    <ProjectReference Include="..\SFA.DAS.ProviderRelationships.Messages\SFA.DAS.ProviderRelationships.Messages.csproj" />
   </ItemGroup>
 
 </Project>
