@@ -55,7 +55,7 @@ stages:
       SolutionBaseName: $(SolutionBaseName)
       SqlProjectPath: src/$(SolutionBaseName).Database/$(SolutionBaseName).Database.sqlproj
 
-  - template: azure-pipelines-templates/deploy/stage/nuget-publish.yml@das-platform-building-blocks
+- template: azure-pipelines-templates/deploy/stage/nuget-publish.yml@das-platform-building-blocks
 
 - stage: Deploy_AT
   dependsOn: Build
