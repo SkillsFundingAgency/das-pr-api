@@ -35,4 +35,58 @@ public class PostPermissionsCommandValidatorTest
         result.ShouldHaveValidationErrorFor(q => q.Operations)
                     .WithErrorMessage(OperationsValidator.OperationsCombinationValidationMessage);
     }
+
+    [TestCase("FirstName", true)]
+    [TestCase("", false)]
+    [TestCase(null, false)]
+    public async Task Validate_UserFirstName(string firstName, bool isExpectedToBeValid)
+    {
+        PostPermissionsCommandValidator sut = new(Mock.Of<IAccountLegalEntityReadRepository>());
+        var result = await sut.TestValidateAsync(new PostPermissionsCommand { UserFirstName = firstName });
+
+        if (isExpectedToBeValid)
+        {
+            result.ShouldNotHaveValidationErrorFor(c => c.UserFirstName);
+        }
+        else
+        {
+            result.ShouldHaveValidationErrorFor(c => c.UserFirstName).WithErrorMessage(PostPermissionsCommandValidator.UserFirstNameValidationMessage);
+        }
+    }
+
+    [TestCase("LastName", true)]
+    [TestCase("", false)]
+    [TestCase(null, false)]
+    public async Task Validate_UserLastName(string lastName, bool isExpectedToBeValid)
+    {
+        PostPermissionsCommandValidator sut = new(Mock.Of<IAccountLegalEntityReadRepository>());
+        var result = await sut.TestValidateAsync(new PostPermissionsCommand { UserLastName = lastName });
+
+        if (isExpectedToBeValid)
+        {
+            result.ShouldNotHaveValidationErrorFor(c => c.UserLastName);
+        }
+        else
+        {
+            result.ShouldHaveValidationErrorFor(c => c.UserLastName).WithErrorMessage(PostPermissionsCommandValidator.UserLastNameValidationMessage);
+        }
+    }
+
+    [TestCase("abc@gmail.com", true)]
+    [TestCase("", false)]
+    [TestCase(null, false)]
+    public async Task Validate_UserEmail(string email, bool isExpectedToBeValid)
+    {
+        PostPermissionsCommandValidator sut = new(Mock.Of<IAccountLegalEntityReadRepository>());
+        var result = await sut.TestValidateAsync(new PostPermissionsCommand { UserEmail = email });
+
+        if (isExpectedToBeValid)
+        {
+            result.ShouldNotHaveValidationErrorFor(c => c.UserEmail);
+        }
+        else
+        {
+            result.ShouldHaveValidationErrorFor(c => c.UserEmail).WithErrorMessage(PostPermissionsCommandValidator.UserEmailValidationMessage);
+        }
+    }
 }
