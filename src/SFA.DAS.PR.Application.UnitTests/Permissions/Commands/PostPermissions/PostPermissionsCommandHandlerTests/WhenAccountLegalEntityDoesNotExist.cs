@@ -16,7 +16,6 @@ public class WhenAccountLegalEntityDoesNotExist
     CancellationToken _cancellationToken;
     Mock<IAccountProviderLegalEntitiesReadRepository> _accountProviderLegalEntitiesReadRepositoryMock;
     Mock<IAccountLegalEntityReadRepository> _accountLegalEntityReadRepositoryMock;
-    Mock<IAccountProviderReadRepository> _accountProviderReadRepositoryMock = null!;
     Mock<IAccountProviderWriteRepository> _accountProviderWriteRepositoryMock;
     Mock<IAccountProviderLegalEntitiesWriteRepository> _accountProviderLegalEntitiesWriteRepositoryMock;
     AccountLegalEntity _accountLegalEntity;
@@ -104,8 +103,8 @@ public class WhenAccountLegalEntityDoesNotExist
     [Test]
     public async Task AndAccountProviderRelationshipExists_ThenDoesNotInvokeCreateAccountProvider()
     {
-        _accountProviderReadRepositoryMock = _fixture.Freeze<Mock<IAccountProviderReadRepository>>();
-        _accountProviderReadRepositoryMock.Setup(a => a.GetAccountProvider(_command.Ukprn, _accountLegalEntity.AccountId, _cancellationToken)).ReturnsAsync(_fixture.Create<AccountProvider>());
+        _accountProviderWriteRepositoryMock = _fixture.Freeze<Mock<IAccountProviderWriteRepository>>();
+        _accountProviderWriteRepositoryMock.Setup(a => a.GetAccountProvider(_command.Ukprn, _accountLegalEntity.AccountId, _cancellationToken)).ReturnsAsync(_fixture.Create<AccountProvider>());
 
         _sut = _fixture.Create<PostPermissionsCommandHandler>();
         await _sut.Handle(_command, _cancellationToken);
@@ -117,8 +116,8 @@ public class WhenAccountLegalEntityDoesNotExist
     [Test]
     public async Task AndAccountProviderRelationshipDoesNotExists_ThenInvokesCreateAccountProvider()
     {
-        _accountProviderReadRepositoryMock = _fixture.Freeze<Mock<IAccountProviderReadRepository>>();
-        _accountProviderReadRepositoryMock.Setup(a => a.GetAccountProvider(_command.Ukprn, _accountLegalEntity.AccountId, _cancellationToken)).ReturnsAsync(() => null);
+        _accountProviderWriteRepositoryMock = _fixture.Freeze<Mock<IAccountProviderWriteRepository>>();
+        _accountProviderWriteRepositoryMock.Setup(a => a.GetAccountProvider(_command.Ukprn, _accountLegalEntity.AccountId, _cancellationToken)).ReturnsAsync(() => null);
 
         _sut = _fixture.Create<PostPermissionsCommandHandler>();
         await _sut.Handle(_command, _cancellationToken);

@@ -1,4 +1,5 @@
-﻿using SFA.DAS.PR.Domain.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using SFA.DAS.PR.Domain.Entities;
 using SFA.DAS.PR.Domain.Interfaces;
 
 namespace SFA.DAS.PR.Data.Repositories;
@@ -18,4 +19,11 @@ public class AccountProviderWriteRepository(IProviderRelationshipsDataContext _p
 
         return accountProvider;
     }
+
+    public Task<AccountProvider?> GetAccountProvider(long? ukprn, long accountId, CancellationToken cancellationToken)
+    {
+        return _providerRelationshipsDataContext.AccountProviders
+            .FirstOrDefaultAsync(a => a.AccountId == accountId && a.ProviderUkprn == ukprn, cancellationToken);
+    }
+
 }
