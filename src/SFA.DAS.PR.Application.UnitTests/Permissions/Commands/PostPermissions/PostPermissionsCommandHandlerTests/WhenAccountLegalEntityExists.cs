@@ -6,6 +6,7 @@ using SFA.DAS.PR.Data;
 using SFA.DAS.PR.Domain.Common;
 using SFA.DAS.PR.Domain.Entities;
 using SFA.DAS.PR.Domain.Interfaces;
+using SFA.DAS.ProviderRelationships.Types.Models;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.PR.Application.UnitTests.Permissions.Commands.PostPermissions.PostPermissionsCommandHandlerTests;

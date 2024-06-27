@@ -1,4 +1,4 @@
-﻿using SFA.DAS.PR.Domain.Entities;
+﻿using SFA.DAS.ProviderRelationships.Types.Models;
 
 namespace SFA.DAS.PR.Application.Permissions.Queries.GetPermissions;
 public class GetPermissionsQueryResult

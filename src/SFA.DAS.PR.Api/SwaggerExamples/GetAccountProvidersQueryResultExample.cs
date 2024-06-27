@@ -1,7 +1,7 @@
-﻿using SFA.DAS.PR.Application.AccountProviders.Queries.GetAccountProviders;
-using SFA.DAS.PR.Domain.Entities;
+﻿using System.Diagnostics.CodeAnalysis;
+using SFA.DAS.PR.Application.AccountProviders.Queries.GetAccountProviders;
+using SFA.DAS.ProviderRelationships.Types.Models;
 using Swashbuckle.AspNetCore.Filters;
-using System.Diagnostics.CodeAnalysis;
 
 namespace SFA.DAS.PR.Api.SwaggerExamples;
 

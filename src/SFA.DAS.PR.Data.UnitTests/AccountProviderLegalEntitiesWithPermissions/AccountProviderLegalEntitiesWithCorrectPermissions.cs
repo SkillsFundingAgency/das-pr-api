@@ -4,6 +4,7 @@ using SFA.DAS.PR.Data.Repositories;
 using SFA.DAS.PR.Data.UnitTests.InMemoryDatabases;
 using SFA.DAS.PR.Data.UnitTests.Setup;
 using SFA.DAS.PR.Domain.Entities;
+using SFA.DAS.ProviderRelationships.Types.Models;
 
 namespace SFA.DAS.PR.Data.UnitTests.AccountProviderLegalEntitiesWithPermissions;
 public class AccountProviderLegalEntitiesWithCorrectPermissions
@@ -28,7 +29,7 @@ public class AccountProviderLegalEntitiesWithCorrectPermissions
         List<AccountProviderLegalEntity> accountProviderLegalEntitiesToAdd =
             AccountProviderLegalEntityTestData.CreateAccountProviderLegalEntitiesWithPermissions(account);
 
-        long ukprn = accountProviderLegalEntitiesToAdd.First().AccountProvider.ProviderUkprn;
+        long ukprn = accountProviderLegalEntitiesToAdd[0].AccountProvider.ProviderUkprn;
 
         bool hasPermission;
 
@@ -56,7 +57,7 @@ public class AccountProviderLegalEntitiesWithCorrectPermissions
         List<AccountProviderLegalEntity> accountProviderLegalEntitiesToAdd =
             AccountProviderLegalEntityTestData.CreateAccountProviderLegalEntitiesWithPermissions(account);
 
-        long ukprn = accountProviderLegalEntitiesToAdd.First().AccountProvider.ProviderUkprn;
+        long ukprn = accountProviderLegalEntitiesToAdd[0].AccountProvider.ProviderUkprn;
 
         bool hasPermission;
 

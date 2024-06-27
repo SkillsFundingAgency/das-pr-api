@@ -1,4 +1,5 @@
 ﻿namespace SFA.DAS.PR.Domain.Entities;
+using SFA.DAS.ProviderRelationships.Types.Models;
 
 public class Permission
 {

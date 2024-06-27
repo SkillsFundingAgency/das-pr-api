@@ -2,14 +2,14 @@
 using Moq;
 using SFA.DAS.PR.Application.Common.Validators;
 using SFA.DAS.PR.Application.Permissions.Commands.PostPermissions;
-using SFA.DAS.PR.Domain.Entities;
 using SFA.DAS.PR.Domain.Interfaces;
+using SFA.DAS.ProviderRelationships.Types.Models;
 
 namespace SFA.DAS.PR.Application.UnitTests.Permissions.Commands.PostPermissions;
 
 public class PostPermissionsCommandValidatorTest
 {
-    private readonly Mock<IAccountLegalEntityReadRepository> _accountLegalEntityReadRepositoryMock = new Mock<IAccountLegalEntityReadRepository>(); 
+    private readonly Mock<IAccountLegalEntityReadRepository> _accountLegalEntityReadRepositoryMock = new Mock<IAccountLegalEntityReadRepository>();
 
     [Test]
     public async Task Validate_UserRef_Valid_Command()
