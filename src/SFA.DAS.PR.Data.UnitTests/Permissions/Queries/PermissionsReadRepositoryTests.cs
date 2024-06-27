@@ -36,6 +36,6 @@ public class PermissionsReadRepositoryTests
             expectedOperations = await sut.GetOperations(ukprn, accountLegalEntityId, _cancellationToken);
         }
 
-        Assert.AreEqual(expectedOperations, actualOperations);
+        Assert.That(expectedOperations, Is.EqualTo(actualOperations));
     }
 }

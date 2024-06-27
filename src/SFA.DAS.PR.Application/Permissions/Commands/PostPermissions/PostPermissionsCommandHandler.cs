@@ -17,7 +17,6 @@ public class PostPermissionsCommandHandler(
     IPermissionsWriteRepository _permissionsWriteRepository,
     IPermissionsAuditWriteRepository _permissionsAuditWriteRepository,
     IProviderRelationshipsDataContext _providerRelationshipsDataContext,
-    IAccountProviderReadRepository _accountProviderReadRepository,
     IMessageSession _messageSession)
     : IRequestHandler<PostPermissionsCommand, ValidatedResponse<PostPermissionsCommandResult>>
 {
@@ -43,7 +42,7 @@ public class PostPermissionsCommandHandler(
     private async Task<ValidatedResponse<PostPermissionsCommandResult>> CreateAccountProviderAndAddPermissions(PostPermissionsCommand command, long accountId, CancellationToken cancellationToken)
     {
         var hasAddedAccountProvider = false;
-        AccountProvider? accountProvider = await _accountProviderReadRepository.GetAccountProvider(command.Ukprn, accountId, cancellationToken);
+        AccountProvider? accountProvider = await _accountProviderWriteRepository.GetAccountProvider(command.Ukprn, accountId, cancellationToken);
         if (accountProvider == null)
         {
             hasAddedAccountProvider = true;

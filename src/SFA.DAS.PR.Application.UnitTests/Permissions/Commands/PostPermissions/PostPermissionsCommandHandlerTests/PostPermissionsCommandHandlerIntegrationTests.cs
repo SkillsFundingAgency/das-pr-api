@@ -250,7 +250,6 @@ public class PostPermissionsCommandHandlerIntegrationTests
             permissionsWriteRepository,
             permissionsAuditWriteRepository,
             context,
-            Mock.Of<IAccountProviderReadRepository>(),
             Mock.Of<IMessageSession>()
         );
     }
