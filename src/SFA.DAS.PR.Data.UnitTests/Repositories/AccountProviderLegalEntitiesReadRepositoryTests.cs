@@ -4,6 +4,7 @@ using SFA.DAS.PR.Data.Repositories;
 using SFA.DAS.PR.Data.UnitTests.InMemoryDatabases;
 using SFA.DAS.PR.Data.UnitTests.Setup;
 using SFA.DAS.PR.Domain.Entities;
+using SFA.DAS.ProviderRelationships.Types.Models;
 
 namespace SFA.DAS.PR.Data.UnitTests.Repositories;
 
@@ -82,8 +83,8 @@ public class AccountProviderLegalEntitiesReadRepositoryTests
             AccountProviderLegalEntitiesReadRepository sut = new(context);
 
             result = await sut.GetAccountProviderLegalEntity(
-                accountProviderLegalEntity.AccountProvider.ProviderUkprn, 
-                accountProviderLegalEntity.AccountLegalEntityId, 
+                accountProviderLegalEntity.AccountProvider.ProviderUkprn,
+                accountProviderLegalEntity.AccountLegalEntityId,
                 cancellationToken
            );
         }

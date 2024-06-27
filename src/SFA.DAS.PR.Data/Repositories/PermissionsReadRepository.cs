@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SFA.DAS.PR.Domain.Entities;
 using SFA.DAS.PR.Domain.Interfaces;
+using SFA.DAS.ProviderRelationships.Types.Models;
 
 namespace SFA.DAS.PR.Data.Repositories;
 

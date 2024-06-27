@@ -1,7 +1,7 @@
 ﻿using FluentValidation.TestHelper;
 using SFA.DAS.PR.Application.Common.Validators;
 using SFA.DAS.PR.Application.Permissions.Queries.GetHasPermissions;
-using Operation = SFA.DAS.PR.Domain.Entities.Operation;
+using SFA.DAS.ProviderRelationships.Types.Models;
 
 namespace SFA.DAS.PR.Application.UnitTests.Permissions.Queries.GetHasPermissions;
 public class GetHasPermissionsQueryValidatorTests

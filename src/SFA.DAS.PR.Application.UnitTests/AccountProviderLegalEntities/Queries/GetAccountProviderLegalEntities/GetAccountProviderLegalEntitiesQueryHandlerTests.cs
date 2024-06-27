@@ -1,11 +1,12 @@
 ﻿using AutoFixture.NUnit3;
+using FluentAssertions;
 using Moq;
 using SFA.DAS.PR.Application.AccountProviderLegalEntities.Queries.GetAccountProviderLegalEntities;
 using SFA.DAS.PR.Application.Mediatr.Responses;
 using SFA.DAS.PR.Domain.Entities;
 using SFA.DAS.PR.Domain.Interfaces;
+using SFA.DAS.ProviderRelationships.Types.Models;
 using SFA.DAS.Testing.AutoFixture;
-using FluentAssertions;
 
 namespace SFA.DAS.PR.Application.UnitTests.AccountProviderLegalEntities.Queries.GetAccountProviderLegalEntities;
 public class GetAccountProviderLegalEntitiesQueryHandlerTests

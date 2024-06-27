@@ -5,9 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using SFA.DAS.PR.Api.Controllers;
 using SFA.DAS.PR.Application.AccountProviderLegalEntities.Queries.GetAccountProviderLegalEntities;
-using SFA.DAS.PR.Application.AccountProviders.Queries.GetAccountProviders;
 using SFA.DAS.PR.Application.Mediatr.Responses;
-using SFA.DAS.PR.Domain.Entities;
+using SFA.DAS.ProviderRelationships.Types.Models;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.PR.Api.UnitTests.Controllers;
