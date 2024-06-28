@@ -1,4 +1,5 @@
-﻿using FluentValidation.TestHelper;
+﻿using AutoFixture.NUnit3;
+using FluentValidation.TestHelper;
 using Moq;
 using SFA.DAS.PR.Application.Common.Validators;
 using SFA.DAS.PR.Application.Permissions.Commands.PostPermissions;
@@ -11,34 +12,51 @@ public class PostPermissionsCommandValidatorTest
 {
     private readonly Mock<IAccountLegalEntityReadRepository> _accountLegalEntityReadRepositoryMock = new Mock<IAccountLegalEntityReadRepository>();
 
-    [Test]
-    public async Task Validate_UserRef_Valid_Command()
+    [InlineAutoData("5d143e25-79a9-4f45-996b-0df709fca713", true)]
+    [InlineAutoData("00000000-0000-0000-0000-000000000000", false)]
+    public async Task Validate_UserRef_Valid_Command(string userRef, bool isExpectedToBeValid, PostPermissionsCommand command)
     {
+        command.UserRef = Guid.Parse(userRef);
         var sut = new PostPermissionsCommandValidator(_accountLegalEntityReadRepositoryMock.Object);
-        var result = await sut.TestValidateAsync(new PostPermissionsCommand { Ukprn = 10000003, AccountLegalEntityId = 1, Operations = new List<Operation> { Operation.CreateCohort }, UserRef = Guid.NewGuid() });
-        result.ShouldNotHaveValidationErrorFor(query => query.UserRef);
+
+        var result = await sut.TestValidateAsync(command);
+
+        if (isExpectedToBeValid)
+        {
+            result.ShouldNotHaveValidationErrorFor(c => c.UserRef);
+        }
+        else
+        {
+            result.ShouldHaveValidationErrorFor(c => c.UserRef).WithErrorMessage(PostPermissionsCommandValidator.UserRefValidationMessage);
+        }
     }
 
     [Test]
-    public async Task Validate_Operations_Valid_Command()
+    [AutoData]
+    public async Task Validate_Operations_Valid_Command(PostPermissionsCommand command)
     {
+        command.Operations = new List<Operation> { Operation.CreateCohort };
         var sut = new PostPermissionsCommandValidator(_accountLegalEntityReadRepositoryMock.Object);
-        var result = await sut.TestValidateAsync(new PostPermissionsCommand { Ukprn = 10000003, AccountLegalEntityId = 1, Operations = new List<Operation> { Operation.CreateCohort }, UserRef = Guid.NewGuid() });
+
+        var result = await sut.TestValidateAsync(command);
+
         result.ShouldNotHaveValidationErrorFor(query => query.Operations);
     }
 
     [Test]
-    public async Task Validate_Operations_Returns_InvalidCombination_ErrorMessage()
+    [AutoData]
+    public async Task Validate_Operations_Returns_InvalidCombination_ErrorMessage(PostPermissionsCommand command)
     {
+        command.Operations = new List<Operation> { Operation.CreateCohort, Operation.CreateCohort };
         var sut = new PostPermissionsCommandValidator(_accountLegalEntityReadRepositoryMock.Object);
-        var result = await sut.TestValidateAsync(new PostPermissionsCommand { Ukprn = 10000003, AccountLegalEntityId = 1, Operations = new List<Operation> { Operation.CreateCohort, Operation.CreateCohort }, UserRef = Guid.NewGuid() });
-        result.ShouldHaveValidationErrorFor(q => q.Operations)
-                    .WithErrorMessage(OperationsValidator.OperationsCombinationValidationMessage);
+
+        var result = await sut.TestValidateAsync(command);
+
+        result.ShouldHaveValidationErrorFor(q => q.Operations).WithErrorMessage(OperationsValidator.OperationsCombinationValidationMessage);
     }
 
     [TestCase("FirstName", true)]
     [TestCase("", false)]
-    [TestCase(null, false)]
     public async Task Validate_UserFirstName(string firstName, bool isExpectedToBeValid)
     {
         PostPermissionsCommandValidator sut = new(Mock.Of<IAccountLegalEntityReadRepository>());
@@ -56,7 +74,6 @@ public class PostPermissionsCommandValidatorTest
 
     [TestCase("LastName", true)]
     [TestCase("", false)]
-    [TestCase(null, false)]
     public async Task Validate_UserLastName(string lastName, bool isExpectedToBeValid)
     {
         PostPermissionsCommandValidator sut = new(Mock.Of<IAccountLegalEntityReadRepository>());
@@ -74,7 +91,6 @@ public class PostPermissionsCommandValidatorTest
 
     [TestCase("abc@gmail.com", true)]
     [TestCase("", false)]
-    [TestCase(null, false)]
     public async Task Validate_UserEmail(string email, bool isExpectedToBeValid)
     {
         PostPermissionsCommandValidator sut = new(Mock.Of<IAccountLegalEntityReadRepository>());

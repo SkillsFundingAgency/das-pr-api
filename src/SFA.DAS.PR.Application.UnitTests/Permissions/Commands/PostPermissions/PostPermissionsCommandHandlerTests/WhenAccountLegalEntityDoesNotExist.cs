@@ -5,6 +5,7 @@ using SFA.DAS.PR.Data;
 using SFA.DAS.PR.Domain.Common;
 using SFA.DAS.PR.Domain.Entities;
 using SFA.DAS.PR.Domain.Interfaces;
+using SFA.DAS.ProviderRelationships.Messages.Events;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.PR.Application.UnitTests.Permissions.Commands.PostPermissions.PostPermissionsCommandHandlerTests;
@@ -101,6 +102,12 @@ public class WhenAccountLegalEntityDoesNotExist
     }
 
     [Test]
+    public void ThenRaisesUpdatedPermissionsEvent()
+    {
+        _messageSessionMock.Verify(m => m.Publish(It.IsAny<UpdatedPermissionsEvent>(), It.IsAny<PublishOptions>(), _cancellationToken), Times.Once);
+    }
+
+    [Test]
     public async Task AndAccountProviderRelationshipExists_ThenDoesNotInvokeCreateAccountProvider()
     {
         _accountProviderWriteRepositoryMock = _fixture.Freeze<Mock<IAccountProviderWriteRepository>>();
@@ -110,7 +117,7 @@ public class WhenAccountLegalEntityDoesNotExist
         await _sut.Handle(_command, _cancellationToken);
 
         _accountProviderWriteRepositoryMock.Verify(a => a.CreateAccountProvider(It.IsAny<long>(), It.IsAny<long>(), It.IsAny<CancellationToken>()), Times.Never);
-        _messageSessionMock.Verify(m => m.Publish(It.IsAny<object>(), It.IsAny<PublishOptions>(), It.IsAny<CancellationToken>()), Times.Never);
+        _messageSessionMock.Verify(m => m.Publish(It.IsAny<AddedAccountProviderEvent>(), It.IsAny<PublishOptions>(), It.IsAny<CancellationToken>()), Times.Never);
     }
 
     [Test]
@@ -122,7 +129,7 @@ public class WhenAccountLegalEntityDoesNotExist
         _sut = _fixture.Create<PostPermissionsCommandHandler>();
         await _sut.Handle(_command, _cancellationToken);
 
-        _accountProviderWriteRepositoryMock.Verify(a => a.CreateAccountProvider(It.IsAny<long>(), It.IsAny<long>(), It.IsAny<CancellationToken>()), Times.Once);
-        _messageSessionMock.Verify(m => m.Publish(It.IsAny<object>(), It.IsAny<PublishOptions>(), It.IsAny<CancellationToken>()), Times.Once);
+        _accountProviderWriteRepositoryMock.Verify(a => a.CreateAccountProvider(It.IsAny<long>(), It.IsAny<long>(), _cancellationToken), Times.Once);
+        _messageSessionMock.Verify(m => m.Publish(It.IsAny<AddedAccountProviderEvent>(), It.IsAny<PublishOptions>(), _cancellationToken), Times.Once);
     }
 }
