@@ -6,6 +6,7 @@ using SFA.DAS.PR.Data;
 using SFA.DAS.PR.Domain.Common;
 using SFA.DAS.PR.Domain.Entities;
 using SFA.DAS.PR.Domain.Interfaces;
+using SFA.DAS.ProviderRelationships.Messages.Events;
 using SFA.DAS.ProviderRelationships.Types.Models;
 using SFA.DAS.Testing.AutoFixture;
 
@@ -19,6 +20,7 @@ public class WhenAccountLegalEntityExists
         [Frozen] Mock<IPermissionsWriteRepository> permissionsWriteRepositoryMock,
         [Frozen] Mock<IProviderRelationshipsDataContext> providerRelationshipsDataContextMock,
         [Frozen] Mock<IPermissionsAuditWriteRepository> permissionsAuditWriteRepositoryMock,
+        [Frozen] Mock<IMessageSession> messageSessionMock,
         PostPermissionsCommandHandler sut,
         PostPermissionsCommand command,
         AccountProviderLegalEntity accountProviderLegalEntity,
@@ -45,6 +47,8 @@ public class WhenAccountLegalEntityExists
         permissionsAuditWriteRepositoryMock.Verify(a => a.RecordPermissionsAudit(It.Is<PermissionsAudit>(p => p.Ukprn == command.Ukprn && p.Action == PermissionAuditActions.PermissionUpdatedAction && p.AccountLegalEntityId == command.AccountLegalEntityId && p.EmployerUserRef == command.UserRef), cancellationToken), Times.Once);
 
         providerRelationshipsDataContextMock.Verify(d => d.SaveChangesAsync(cancellationToken), Times.Once);
+
+        messageSessionMock.Verify(m => m.Publish(It.IsAny<UpdatedPermissionsEvent>(), It.IsAny<PublishOptions>(), cancellationToken), Times.Once);
     }
 
     [Test, RecursiveMoqAutoData]
@@ -53,6 +57,7 @@ public class WhenAccountLegalEntityExists
         [Frozen] Mock<IPermissionsWriteRepository> permissionsWriteRepositoryMock,
         [Frozen] Mock<IPermissionsAuditWriteRepository> permissionsAuditWriteRepositoryMock,
         [Frozen] Mock<IProviderRelationshipsDataContext> _providerRelationshipsDataContextMock,
+        [Frozen] Mock<IMessageSession> messageSessionMock,
         PostPermissionsCommandHandler sut,
         PostPermissionsCommand command,
         AccountProviderLegalEntity accountProviderLegalEntity,
@@ -75,5 +80,7 @@ public class WhenAccountLegalEntityExists
         permissionsAuditWriteRepositoryMock.Verify(a => a.RecordPermissionsAudit(It.IsAny<PermissionsAudit>(), It.IsAny<CancellationToken>()), Times.Never);
 
         _providerRelationshipsDataContextMock.Verify(d => d.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Never);
+
+        messageSessionMock.Verify(m => m.Publish(It.IsAny<UpdatedPermissionsEvent>(), It.IsAny<PublishOptions>(), It.IsAny<CancellationToken>()), Times.Never);
     }
 }

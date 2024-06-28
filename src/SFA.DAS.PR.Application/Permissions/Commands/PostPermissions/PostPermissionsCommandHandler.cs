@@ -6,6 +6,7 @@ using SFA.DAS.PR.Domain.Common;
 using SFA.DAS.PR.Domain.Entities;
 using SFA.DAS.PR.Domain.Interfaces;
 using SFA.DAS.ProviderRelationships.Messages.Events;
+using SFA.DAS.ProviderRelationships.Types.Models;
 
 namespace SFA.DAS.PR.Application.Permissions.Commands.PostPermissions;
 
@@ -53,7 +54,7 @@ public class PostPermissionsCommandHandler(
             );
         }
 
-        AccountProviderLegalEntity newAccountProviderLegalEntity = await _accountProviderLegalEntitiesWriteRepository.CreateAccountProviderLegalEntity(
+        AccountProviderLegalEntity accountProviderLegalEntity = await _accountProviderLegalEntitiesWriteRepository.CreateAccountProviderLegalEntity(
             command.AccountLegalEntityId,
             accountProvider,
             cancellationToken
@@ -61,7 +62,7 @@ public class PostPermissionsCommandHandler(
 
         IEnumerable<Permission> permissions = command.Operations.Select(operation => new Permission()
         {
-            AccountProviderLegalEntity = newAccountProviderLegalEntity,
+            AccountProviderLegalEntity = accountProviderLegalEntity,
             Operation = operation
         });
 
@@ -72,8 +73,10 @@ public class PostPermissionsCommandHandler(
 
         if (hasAddedAccountProvider)
         {
-            await _messageSession.Publish(new AddedAccountProviderEvent(accountProvider.Id, accountId, accountProvider.ProviderUkprn, command.UserRef, DateTime.UtcNow, null));
+            await _messageSession.Publish(new AddedAccountProviderEvent(accountProvider.Id, accountId, accountProvider.ProviderUkprn, command.UserRef, DateTime.UtcNow, null), cancellationToken);
         }
+
+        await PublishEvent(accountProviderLegalEntity, command, Enumerable.Empty<Operation>(), cancellationToken);
 
         return new ValidatedResponse<PostPermissionsCommandResult>(new PostPermissionsCommandResult());
     }
@@ -87,14 +90,34 @@ public class PostPermissionsCommandHandler(
         {
             return new ValidatedResponse<PostPermissionsCommandResult>(new PostPermissionsCommandResult());
         }
-
         RemovePermissions(accountProviderLegalEntity.Permissions);
         AddPermissions(accountProviderLegalEntity.Id, command.Operations);
 
         await CreatePermissionsAudit(command, command.Operations, PermissionAuditActions.PermissionUpdatedAction, cancellationToken);
         await _providerRelationshipsDataContext.SaveChangesAsync(cancellationToken);
 
+        await PublishEvent(accountProviderLegalEntity, command, existingOperations, cancellationToken);
+
         return new ValidatedResponse<PostPermissionsCommandResult>(new PostPermissionsCommandResult());
+    }
+
+    private async Task PublishEvent(AccountProviderLegalEntity accountProviderLegalEntity, PostPermissionsCommand command, IEnumerable<Operation> existingPermissions, CancellationToken cancellationToken)
+    {
+        await _messageSession.Publish(
+            new UpdatedPermissionsEvent(
+                accountProviderLegalEntity.AccountProvider.AccountId,
+                accountProviderLegalEntity.AccountLegalEntityId,
+                accountProviderLegalEntity.AccountProvider.Id,
+                accountProviderLegalEntity.Id,
+                accountProviderLegalEntity.AccountProvider.ProviderUkprn,
+                command.UserRef,
+                command.UserEmail,
+                command.UserFirstName,
+                command.UserLastName,
+                command.Operations.ToHashSet(),
+                existingPermissions.ToHashSet(),
+                DateTime.UtcNow)
+            , cancellationToken);
     }
 
     private void AddPermissions(long accountProviderLegalEntityId, List<Operation> operationsToAdd)
