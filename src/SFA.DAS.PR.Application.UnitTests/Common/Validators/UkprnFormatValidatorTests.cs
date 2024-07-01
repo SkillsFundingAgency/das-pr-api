@@ -11,6 +11,11 @@ public class UkprnFormatValidatorTests
         public long? Ukprn { get; set; }
     }
 
+    public class TestNullableUkprnEntity : INullableUkprnEntity
+    {
+        public long? Ukprn { get; set; }
+    }
+
     [Test]
     public async Task ValidateUkrpn_Ukprn_ReturnsValid()
     {
@@ -41,5 +46,37 @@ public class UkprnFormatValidatorTests
             Assert.That(validationResult.IsValid, Is.False);
             Assert.That(validationResult.Errors[0].ErrorMessage, Is.EqualTo(UkprnFormatValidator.UkprnFormatValidationMessage));
         });        
+    }
+
+    [Test]
+    public async Task ValidateUkrpn_Ukprn_Nullable_ReturnsValid()
+    {
+        var entity = new TestNullableUkprnEntity { Ukprn = 10000003 };
+
+        var validator = new InlineValidator<TestNullableUkprnEntity>();
+        validator.RuleFor(x => x.Ukprn)
+                 .CheckNullableUkprnFormat();
+        
+        var validationResult = await validator.ValidateAsync(entity);
+        
+        Assert.That(validationResult.IsValid, Is.True);
+    }
+
+    [Test]
+    public async Task ValidateUkrpn_Ukprn_Nullable_ReturnsInvalid()
+    {
+        var entity = new TestNullableUkprnEntity { Ukprn = 1 };
+        
+        var validator = new InlineValidator<TestNullableUkprnEntity>();
+        validator.RuleFor(x => x.Ukprn)
+                 .CheckNullableUkprnFormat();
+        
+        var validationResult = await validator.ValidateAsync(entity);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(validationResult.IsValid, Is.False);
+            Assert.That(validationResult.Errors[0].ErrorMessage, Is.EqualTo(UkprnFormatValidator.UkprnFormatValidationMessage));
+        });
     }
 }
