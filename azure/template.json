@@ -63,6 +63,9 @@
         "utcValue": {
             "type": "string",
             "defaultValue": "[utcNow()]"
+        },
+        "serviceBusConnectionString": {
+            "type": "string"
         }
     },
     "variables": {
@@ -186,6 +189,10 @@
                             {
                               "name": "LoggingRedisKey",
                               "value": "[parameters('loggingRedisKey')]"
+                            },
+                            {
+                              "name": "AzureWebJobsServiceBus",
+                              "value": "[parameters('serviceBusConnectionString')]"
                             }
                           ]
                         }

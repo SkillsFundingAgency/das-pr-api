@@ -2,7 +2,6 @@
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Moq;
-using Newtonsoft.Json.Linq;
 using SFA.DAS.PR.Application.Mediatr.Responses;
 using SFA.DAS.PR.Application.Permissions.Commands.PostPermissions;
 using SFA.DAS.PR.Data;
@@ -11,41 +10,14 @@ using SFA.DAS.PR.Data.UnitTests.InMemoryDatabases;
 using SFA.DAS.PR.Data.UnitTests.Setup;
 using SFA.DAS.PR.Domain.Entities;
 using SFA.DAS.PR.Domain.Interfaces;
+using SFA.DAS.ProviderRelationships.Types.Models;
 using SFA.DAS.Testing.AutoFixture;
-using System.Runtime.Intrinsics.X86;
 
-namespace SFA.DAS.PR.Application.UnitTests.Permissions.Commands.PostPermissions;
+namespace SFA.DAS.PR.Application.UnitTests.Permissions.Commands.PostPermissions.PostPermissionsCommandHandlerTests;
 
-public class PostPermissionsCommandHandlerTests
+public class PostPermissionsCommandHandlerIntegrationTests
 {
     private readonly CancellationToken cancellationToken = CancellationToken.None;
-
-    [Test]
-    [RecursiveMoqAutoData]
-    public async Task Handle_PostPermissions_Null_Entities_Returns_PostPermissionsCommandResult(
-        [Frozen]Mock<IAccountProviderLegalEntitiesReadRepository> accountProviderLegalEntitiesReadRepository,
-        [Frozen]Mock<IAccountLegalEntityReadRepository> accountLegalEntityReadRepository,
-        PostPermissionsCommandHandler sut,
-        PostPermissionsCommand command,
-        CancellationToken cancellationToken
-    )
-    {
-        accountProviderLegalEntitiesReadRepository.Setup(a =>
-            a.GetAccountProviderLegalEntity(
-                command.Ukprn,
-                command.AccountLegalEntityId, 
-                It.IsAny<CancellationToken>()
-            )
-        ).ReturnsAsync((AccountProviderLegalEntity?)null);
-
-        accountLegalEntityReadRepository.Setup(a =>
-            a.GetAccountLegalEntity(command.AccountLegalEntityId, cancellationToken)
-        ).ReturnsAsync((AccountLegalEntity?)null);
-
-        ValidatedResponse<PostPermissionsCommandResult> result = await sut.Handle(command, cancellationToken);
-        result.Result.Should().NotBeNull();
-        result.Result.Should().BeOfType<PostPermissionsCommandResult>();
-    }
 
     [Test]
     [RecursiveMoqAutoData]
@@ -278,7 +250,8 @@ public class PostPermissionsCommandHandlerTests
             accountProviderLegalEntitiesWriteRepository,
             permissionsWriteRepository,
             permissionsAuditWriteRepository,
-            context
+            context,
+            Mock.Of<IMessageSession>()
         );
     }
 }

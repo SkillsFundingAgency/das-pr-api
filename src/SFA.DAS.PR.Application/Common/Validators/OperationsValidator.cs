@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
-using SFA.DAS.PR.Domain.Entities;
 using SFA.DAS.PR.Domain.Interfaces;
+using SFA.DAS.ProviderRelationships.Types.Models;
 
 namespace SFA.DAS.PR.Application.Common.Validators;
 public static class OperationsValidator
@@ -35,12 +35,12 @@ public static class OperationsValidator
 
     public static IRuleBuilder<T, List<Operation>> ValidateOperationCombinations<T>(this IRuleBuilderInitial<T, List<Operation>> ruleBuilder) where T : IOperationsEntity
     {
-       return ruleBuilder
-            .Cascade(CascadeMode.Stop)
-            .NotEmpty()
-            .WithMessage(OperationsFilterValidationMessage)
-            .Must(a => ContainValidCombinations(a))
-            .WithMessage(OperationsCombinationValidationMessage);
+        return ruleBuilder
+             .Cascade(CascadeMode.Stop)
+             .NotEmpty()
+             .WithMessage(OperationsFilterValidationMessage)
+             .Must(a => ContainValidCombinations(a))
+             .WithMessage(OperationsCombinationValidationMessage);
     }
 
     private static bool ContainValidCombinations(List<Operation> operations)
