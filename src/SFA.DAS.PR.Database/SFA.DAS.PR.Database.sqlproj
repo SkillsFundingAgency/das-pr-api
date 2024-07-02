@@ -9,8 +9,7 @@
     <ProjectGuid>{c6252020-b819-4120-9df6-1f852c9ae4dc}</ProjectGuid>
     <DSP>Microsoft.Data.Tools.Schema.Sql.SqlAzureV12DatabaseSchemaProvider</DSP>
     <OutputType>Database</OutputType>
-    <RootPath>
-    </RootPath>
+    <RootPath />
     <RootNamespace>SFA.DAS.PR.Database</RootNamespace>
     <AssemblyName>SFA.DAS.PR.Database</AssemblyName>
     <ModelCollation>1033, CI</ModelCollation>
@@ -48,7 +47,6 @@
   </PropertyGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">11.0</VisualStudioVersion>
-    <!-- Default to the v11.0 targets path if the targets file for the current VS version is not found -->
     <SSDTExists Condition="Exists('$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets')">True</SSDTExists>
     <VisualStudioVersion Condition="'$(SSDTExists)' == ''">11.0</VisualStudioVersion>
   </PropertyGroup>
@@ -67,5 +65,7 @@
     <Build Include="Tables\Providers.sql" />
     <Build Include="Tables\JobAudits.sql" />
     <Build Include="Tables\PermissionsAudit.sql" />
+    <Build Include="Tables\Requests.sql" />
+    <Build Include="Tables\PermissionRequests.sql" />
   </ItemGroup>
 </Project>
