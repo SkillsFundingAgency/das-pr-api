@@ -1,6 +1,8 @@
 ﻿using SFA.DAS.PR.Domain.Entities;
 using System.Diagnostics.CodeAnalysis;
 
+namespace SFA.DAS.PR.Domain.Entities;
+
 [ExcludeFromCodeCoverage]
 public class PermissionRequest
 {
