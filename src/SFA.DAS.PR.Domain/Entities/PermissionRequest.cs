@@ -1,5 +1,7 @@
 ﻿using SFA.DAS.PR.Domain.Entities;
+using System.Diagnostics.CodeAnalysis;
 
+[ExcludeFromCodeCoverage]
 public class PermissionRequest
 {
     public Guid Id { get; set; }

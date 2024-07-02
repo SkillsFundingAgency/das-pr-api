@@ -1,4 +1,8 @@
-﻿namespace SFA.DAS.PR.Domain.Entities;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace SFA.DAS.PR.Domain.Entities;
+
+[ExcludeFromCodeCoverage]
 public class PermissionsAudit
 {
     public Guid Id { get; set; }
