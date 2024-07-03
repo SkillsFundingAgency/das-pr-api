@@ -12,6 +12,7 @@ using SFA.DAS.PR.Api.Infrastructure;
 using SFA.DAS.PR.Application.Extensions;
 using SFA.DAS.PR.Data.Extensions;
 using SFA.DAS.Telemetry.Startup;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -31,4 +31,17 @@ public class AccountProviderLegalEntitiesReadRepository(IProviderRelationshipsDa
             cancellationToken
         );
     }
+
+    public async Task<AccountProviderLegalEntity?> GetAccountProviderLegalEntityByProvider(long ukprn, long accountLegalEntityId, CancellationToken cancellationToken)
+    {
+        return await _providerRelationshipsDataContext.AccountProviderLegalEntities
+            .Include(a => a.AccountProvider)
+                .ThenInclude(a => a.Provider)
+            .Include(a => a.AccountLegalEntity)
+            .Include(a => a.Permissions)
+        .FirstOrDefaultAsync(a =>
+            a.AccountProvider.ProviderUkprn == ukprn &&
+            a.AccountLegalEntityId == accountLegalEntityId
+        );
+    }
 }

@@ -1,7 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SFA.DAS.PR.Domain.Entities;
-using System.Diagnostics.CodeAnalysis;
 
 namespace SFA.DAS.PR.Data.EntityConfiguration;
 

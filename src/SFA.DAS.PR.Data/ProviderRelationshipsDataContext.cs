@@ -27,5 +27,6 @@ public class ProviderRelationshipsDataContext : DbContext, IProviderRelationship
     {
         base.OnModelCreating(modelBuilder);
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ProviderConfiguration).Assembly);
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(PermissionsAuditConfiguration).Assembly);
     }
 }

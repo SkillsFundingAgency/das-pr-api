@@ -1,10 +1,10 @@
-﻿using MediatR;
+﻿using System.Text.Json;
+using MediatR;
 using SFA.DAS.PR.Application.Mediatr.Responses;
 using SFA.DAS.PR.Data;
 using SFA.DAS.PR.Domain.Common;
 using SFA.DAS.PR.Domain.Entities;
 using SFA.DAS.PR.Domain.Interfaces;
-using System.Text.Json;
 
 namespace SFA.DAS.PR.Application.Permissions.Commands.PostPermissions;
 
@@ -59,10 +59,10 @@ public class PostPermissionsCommandHandler(
         );
 
         IEnumerable<Permission> permissions = command.Operations.Select(operation => new Permission()
-            {
-                AccountProviderLegalEntity = newAccountProviderLegalEntity,
-                Operation = operation
-            }
+        {
+            AccountProviderLegalEntity = newAccountProviderLegalEntity,
+            Operation = operation
+        }
         );
 
         _permissionsWriteRepository.CreatePermissions(permissions);
@@ -84,7 +84,7 @@ public class PostPermissionsCommandHandler(
 
         RemovePermissions(accountProviderLegalEntity.Permissions);
         AddPermissions(accountProviderLegalEntity.Id, command.Operations);
-        
+
         await CreatePermissionsAudit(command, command.Operations, PermissionAuditActions.PermissionUpdatedAction, cancellationToken);
         await _providerRelationshipsDataContext.SaveChangesAsync(cancellationToken);
 
