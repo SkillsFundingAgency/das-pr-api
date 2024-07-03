@@ -70,13 +70,6 @@ public class EmployerRelationshipsControllerTests
         result.As<OkObjectResult>().Value.Should().Be(response.Result);
     }
 
-
-
-
-
-
-
-
     [Test]
     [MoqAutoData]
     public async Task GetProviderEmployerRelationship_InvokesQueryHandler(
