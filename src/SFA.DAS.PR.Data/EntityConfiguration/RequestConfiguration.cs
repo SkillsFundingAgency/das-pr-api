@@ -16,23 +16,5 @@ public class RequestConfiguration : IEntityTypeConfiguration<Request>
                 .WithMany(p => p.Requests)
                 .HasForeignKey(e => e.Ukprn)
                 .HasPrincipalKey(p => p.Ukprn);
-
-        builder.Property(a => a.RequestType).HasMaxLength(10);
-
-        builder.Property(a => a.ProviderUserFullName).HasMaxLength(255);
-
-        builder.Property(a => a.RequestedBy).HasMaxLength(255);
-
-        builder.Property(a => a.EmployerOrganisationName).HasMaxLength(250);
-
-        builder.Property(a => a.EmployerContactFirstName).HasMaxLength(200);
-
-        builder.Property(a => a.EmployerContactLastName).HasMaxLength(200);
-
-        builder.Property(a => a.EmployerContactEmail).HasMaxLength(255);
-
-        builder.Property(a => a.EmployerPAYE).HasMaxLength(16);
-
-        builder.Property(a => a.EmployerAORN).HasMaxLength(25);
     }
 }
