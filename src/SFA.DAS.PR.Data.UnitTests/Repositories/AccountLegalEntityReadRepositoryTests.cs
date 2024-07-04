@@ -74,7 +74,7 @@ public class AccountLegalEntityReadRepositoryTests
 
             AccountLegalEntityReadRepository sut = new(context);
 
-            result = await sut.GetAccountLegalEntity(1, cancellationToken);
+            result = await sut.GetAccountLegalEntity(accountLegalEntity.Id, cancellationToken);
         }
 
         Assert.That(result, Is.Not.Null, "result should not be null");
