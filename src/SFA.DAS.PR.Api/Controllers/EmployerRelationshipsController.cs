@@ -21,11 +21,12 @@ public class EmployerRelationshipsController(IMediator _mediator) : ActionRespon
     [Authorize(Policy = Policies.Management)]
     [ProducesResponseType(typeof(GetProviderEmployerRelationshipQueryResult), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(List<ValidationError>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetProviderEmployerRelationship([FromQuery]long? ukprn, [FromQuery] long? accountLegalEntityId, CancellationToken cancellationToken)
     {
         GetProviderEmployerRelationshipQuery query = new(ukprn, accountLegalEntityId);
 
-        ValidatedResponse<GetProviderEmployerRelationshipQueryResult> result = await _mediator.Send(query, cancellationToken);
+        ValidatedResponse<GetProviderEmployerRelationshipQueryResult?> result = await _mediator.Send(query, cancellationToken);
 
         return GetResponse(result);
     }

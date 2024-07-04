@@ -96,7 +96,7 @@ public class EmployerRelationshipsControllerTests
         CancellationToken cancellationToken
     )
     {
-        var response = new ValidatedResponse<GetProviderEmployerRelationshipQueryResult>(queryResult);
+        var response = new ValidatedResponse<GetProviderEmployerRelationshipQueryResult?>(queryResult);
 
         mediatorMock.Setup(m =>
             m.Send(It.IsAny<GetProviderEmployerRelationshipQuery>(), cancellationToken)

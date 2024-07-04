@@ -6,15 +6,15 @@ using SFA.DAS.PR.Domain.Interfaces;
 
 namespace SFA.DAS.PR.Application.EmployerRelationships.Queries.GetProviderEmployerRelationship;
 
-public class GetProviderEmployerRelationshipQueryHandler(IAccountProviderLegalEntitiesReadRepository accountProviderLegalEntitiesReadRepository, IPermissionAuditReadRepository permissionAuditReadRepository, IRequestReadRepository requestReadRepository) : IRequestHandler<GetProviderEmployerRelationshipQuery, ValidatedResponse<GetProviderEmployerRelationshipQueryResult>>
+public class GetProviderEmployerRelationshipQueryHandler(IAccountProviderLegalEntitiesReadRepository accountProviderLegalEntitiesReadRepository, IPermissionAuditReadRepository permissionAuditReadRepository, IRequestReadRepository requestReadRepository) : IRequestHandler<GetProviderEmployerRelationshipQuery, ValidatedResponse<GetProviderEmployerRelationshipQueryResult?>>
 {
-    public async Task<ValidatedResponse<GetProviderEmployerRelationshipQueryResult>> Handle(GetProviderEmployerRelationshipQuery query, CancellationToken cancellationToken)
+    public async Task<ValidatedResponse<GetProviderEmployerRelationshipQueryResult?>> Handle(GetProviderEmployerRelationshipQuery query, CancellationToken cancellationToken)
     {
         AccountProviderLegalEntity? accountProviderLegalEntity = await accountProviderLegalEntitiesReadRepository.GetAccountProviderLegalEntityByProvider(query.Ukprn!.Value, query.AccountLegalEntityId!.Value, cancellationToken);
 
         if(accountProviderLegalEntity == null)
         {
-            return new ValidatedResponse<GetProviderEmployerRelationshipQueryResult>(new GetProviderEmployerRelationshipQueryResult());
+            return ValidatedResponse<GetProviderEmployerRelationshipQueryResult?>.EmptySuccessResponse();
         }
 
         GetProviderEmployerRelationshipQueryResult result = (GetProviderEmployerRelationshipQueryResult)accountProviderLegalEntity;
@@ -40,6 +40,6 @@ public class GetProviderEmployerRelationshipQueryHandler(IAccountProviderLegalEn
             result.LastRequestStatus = request.Status == null ? null : EnumExtensions.ToEnum<RequestStatus>(request.Status);
         }
 
-        return new ValidatedResponse<GetProviderEmployerRelationshipQueryResult>(result);
+        return new ValidatedResponse<GetProviderEmployerRelationshipQueryResult?>(result);
     }
 }

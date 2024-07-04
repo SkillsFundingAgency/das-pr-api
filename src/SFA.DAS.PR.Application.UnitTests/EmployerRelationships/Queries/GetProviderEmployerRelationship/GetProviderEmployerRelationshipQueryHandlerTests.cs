@@ -54,7 +54,7 @@ public class GetProviderEmployerRelationshipQueryHandlerTests
             )
         ).ReturnsAsync(request);
 
-        ValidatedResponse<GetProviderEmployerRelationshipQueryResult> result = await sut.Handle(query, cancellationToken);
+        ValidatedResponse<GetProviderEmployerRelationshipQueryResult?> result = await sut.Handle(query, cancellationToken);
 
         result.Result.Should().BeOfType<GetProviderEmployerRelationshipQueryResult>();
 
@@ -116,7 +116,7 @@ public class GetProviderEmployerRelationshipQueryHandlerTests
             )
         ).ReturnsAsync(request);
 
-        ValidatedResponse<GetProviderEmployerRelationshipQueryResult> result = await sut.Handle(query, cancellationToken);
+        ValidatedResponse<GetProviderEmployerRelationshipQueryResult?> result = await sut.Handle(query, cancellationToken);
 
         result.Result.Should().BeOfType<GetProviderEmployerRelationshipQueryResult>();
 
@@ -137,5 +137,31 @@ public class GetProviderEmployerRelationshipQueryHandlerTests
             Assert.That(result.Result!.LastRequestTime, Is.Null);
             Assert.That(result.Result!.LastRequestStatus, Is.Null);
         });
+    }
+
+    [Test]
+    [RecursiveMoqAutoData]
+    public async Task Handle_GetProviderEmployerRelationship_Null_AccountProviderLegalEntity_Returns_Null_GetProviderEmployerRelationshipQueryResult(
+        [Frozen] Mock<IAccountProviderLegalEntitiesReadRepository> accountProviderLegalEntitiesReadRepository,
+        [Frozen] Mock<IPermissionAuditReadRepository> permissionAuditReadRepository,
+        [Frozen] Mock<IRequestReadRepository> requestReadRepository,
+        GetProviderEmployerRelationshipQueryHandler sut,
+        GetProviderEmployerRelationshipQuery query
+    )
+    {
+        AccountProviderLegalEntity? accountProviderLegalEntity = null;
+
+        accountProviderLegalEntitiesReadRepository.Setup(a =>
+            a.GetAccountProviderLegalEntityByProvider(
+                query.Ukprn!.Value,
+                query.AccountLegalEntityId!.Value,
+                It.IsAny<CancellationToken>()
+            )
+        ).ReturnsAsync(accountProviderLegalEntity);
+
+        ValidatedResponse<GetProviderEmployerRelationshipQueryResult?> result = await sut.Handle(query, cancellationToken);
+
+        result.As<ValidatedResponse<GetProviderEmployerRelationshipQueryResult?>>().IsValidResponse.Should().BeTrue();
+        result.Result.Should().BeNull();
     }
 }
