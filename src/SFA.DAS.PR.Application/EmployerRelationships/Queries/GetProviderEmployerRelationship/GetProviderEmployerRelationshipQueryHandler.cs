@@ -28,7 +28,7 @@ public class GetProviderEmployerRelationshipQueryHandler(IAccountProviderLegalEn
         }
         else
         {
-            result.LastActionTime = accountProviderLegalEntity?.Updated ?? accountProviderLegalEntity?.Created;
+            result.LastActionTime = accountProviderLegalEntity.Updated ?? accountProviderLegalEntity.Created;
         }
 
         Request? request = await requestReadRepository.GetRequest(query.Ukprn!.Value, query!.AccountLegalEntityId.Value, cancellationToken);
@@ -37,7 +37,7 @@ public class GetProviderEmployerRelationshipQueryHandler(IAccountProviderLegalEn
         {
             result.LastRequestType = request.RequestType;
             result.LastRequestTime = request.UpdatedDate ?? request.RequestedDate;
-            result.LastRequestStatus = request.Status == null ? null : EnumExtensions.ToEnum<RequestStatus>(request.Status);
+            result.LastRequestStatus = EnumExtensions.ToEnum<RequestStatus>(request.Status);
         }
 
         return new ValidatedResponse<GetProviderEmployerRelationshipQueryResult?>(result);

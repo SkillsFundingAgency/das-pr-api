@@ -41,7 +41,8 @@ public class AccountProviderLegalEntitiesReadRepository(IProviderRelationshipsDa
             .Include(a => a.Permissions)
         .FirstOrDefaultAsync(a =>
             a.AccountProvider.ProviderUkprn == ukprn &&
-            a.AccountLegalEntityId == accountLegalEntityId
+            a.AccountLegalEntityId == accountLegalEntityId,
+            cancellationToken
         );
     }
 }
