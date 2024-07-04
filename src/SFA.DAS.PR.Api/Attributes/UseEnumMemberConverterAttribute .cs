@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace SFA.DAS.PR.Api.Attributes;
 
+[ExcludeFromCodeCoverage]
 public class UseEnumMemberConverterAttribute : ActionFilterAttribute
 {
     public override void OnActionExecuted(ActionExecutedContext context)

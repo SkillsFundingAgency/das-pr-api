@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using SFA.DAS.PR.Application.AccountProviderLegalEntities.Queries.GetAccountProviderLegalEntities;
 using SFA.DAS.PR.Application.Mediatr.Responses;
 using SFA.DAS.PR.Domain.Entities;
 using SFA.DAS.PR.Domain.Extensions;

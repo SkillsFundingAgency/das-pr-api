@@ -95,4 +95,41 @@ public class AccountProviderLegalEntitiesReadRepositoryTests
             Assert.That(result?.Permissions, Has.Exactly(1).Items);
         });
     }
+
+    [Test]
+    public async Task GetAccountProviderLegalEntityByProvider_Returns_Entity()
+    {
+        Account account = AccountTestData.CreateAccount(1004);
+
+        AccountProviderLegalEntity accountProviderLegalEntity =
+            AccountProviderLegalEntityTestData.CreateAccountProviderLegalEntity(account);
+
+        AccountProviderLegalEntity? result = new();
+
+        using (var context = InMemoryProviderRelationshipsDataContext.CreateInMemoryContext(
+            $"{nameof(InMemoryProviderRelationshipsDataContext)}_{nameof(GetAccountProviderLegalEntityByProvider_Returns_Entity)}")
+        )
+        {
+            await context.AddAsync(account);
+            await context.AddAsync(accountProviderLegalEntity);
+            await context.SaveChangesAsync(cancellationToken);
+
+            AccountProviderLegalEntitiesReadRepository sut = new(context);
+
+            result = await sut.GetAccountProviderLegalEntityByProvider(
+                accountProviderLegalEntity.AccountProvider.ProviderUkprn,
+                accountProviderLegalEntity.AccountLegalEntityId,
+                cancellationToken
+           );
+        }
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result?.AccountProvider, Is.Not.Null);
+            Assert.That(result?.AccountProvider.Provider, Is.Not.Null);
+            Assert.That(result?.AccountLegalEntity, Is.Not.Null);
+            Assert.That(result?.Permissions, Has.Exactly(1).Items);
+        });
+    }
 }
