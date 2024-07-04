@@ -13,5 +13,12 @@ namespace SFA.DAS.PR.Application.Common.Validators
                                .WithMessage(UkprnFormatValidationMessage)
                                .When(model => model.Ukprn.HasValue);
         }
+
+        public static IRuleBuilderOptions<T, long?> CheckNullableUkprnFormat<T>(this IRuleBuilder<T, long?> ruleBuilder) where T : INullableUkprnEntity
+        {
+            return ruleBuilder.Must(ukprn => ukprn.ToString()!.StartsWith('1') && ukprn.ToString()!.Length == 8)
+                               .WithMessage(UkprnFormatValidationMessage)
+                               .When(model => model.Ukprn.HasValue);
+        }
     }
 }
