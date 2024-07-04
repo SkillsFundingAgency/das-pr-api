@@ -1,18 +1,14 @@
 ﻿using AutoFixture;
 using AutoFixture.NUnit3;
 using FluentAssertions;
-using FluentValidation.Results;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using SFA.DAS.PR.Api.Controllers;
-using SFA.DAS.PR.Application.AccountProviders.Queries.GetAccountProviders;
-using SFA.DAS.PR.Application.EmployerRelationships.Queries.GetProviderEmployerRelationship;
 using SFA.DAS.PR.Application.Mediatr.Responses;
 using SFA.DAS.PR.Application.Permissions.Queries.GetEmployerRelationships;
 using SFA.DAS.PR.Domain.Entities;
 using SFA.DAS.Testing.AutoFixture;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace SFA.DAS.PR.Api.UnitTests.Controllers;
 
