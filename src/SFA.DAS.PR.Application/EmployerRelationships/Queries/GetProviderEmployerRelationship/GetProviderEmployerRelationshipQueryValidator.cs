@@ -1,5 +1,7 @@
 ﻿using FluentValidation;
 using SFA.DAS.PR.Application.Common.Validators;
+using SFA.DAS.PR.Data.Repositories;
+using SFA.DAS.PR.Domain.Interfaces;
 
 namespace SFA.DAS.PR.Application.EmployerRelationships.Queries.GetProviderEmployerRelationship;
 
@@ -7,18 +9,19 @@ public class GetProviderEmployerRelationshipQueryValidator : AbstractValidator<G
 {
     public const string UkprnValidationMessage = "A Ukprn must be supplied.";
     public const string AccountLegalEntityIdValidationMessage = "An AccountLegalEntityId must be supplied.";
-    public GetProviderEmployerRelationshipQueryValidator()
-    {
-        RuleFor(x => x.Ukprn)
-            .Cascade(CascadeMode.Stop)
-            .NotEmpty()
-            .WithMessage(UkprnValidationMessage);
 
+    public GetProviderEmployerRelationshipQueryValidator(
+        IProviderReadRepository providerReadRepository, 
+        IAccountLegalEntityReadRepository accountLegalEntityReadRepository
+    )
+    {
         RuleFor(x => x.Ukprn)
             .CheckUkprnFormat();
 
+        RuleFor(x => x.Ukprn)
+            .ValidatProviderExists(providerReadRepository);
+
         RuleFor(a => a.AccountLegalEntityId)
-            .NotEmpty()
-            .WithMessage(AccountLegalEntityIdValidationMessage);
+            .ValidateAccountLegalEntityExists(accountLegalEntityReadRepository);
     }
 }

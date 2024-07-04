@@ -5,7 +5,6 @@ using SFA.DAS.PR.Application.EmployerRelationships.Queries.GetProviderEmployerRe
 using SFA.DAS.PR.Application.Mediatr.Responses;
 using SFA.DAS.PR.Data.UnitTests.Setup;
 using SFA.DAS.PR.Domain.Entities;
-using SFA.DAS.PR.Domain.Extensions;
 using SFA.DAS.PR.Domain.Interfaces;
 using SFA.DAS.Testing.AutoFixture;
 
@@ -26,9 +25,9 @@ public class GetProviderEmployerRelationshipQueryHandlerTests
         GetProviderEmployerRelationshipQuery query
     )
     {
-        PermissionsAudit? audit = PermissionsAuditTestData.CreatePermissionsAudit(Guid.NewGuid());
+        PermissionsAudit? audit = PermissionsAuditTestData.Create(Guid.NewGuid());
 
-        Request? request = RequestTestData.CreateRequest(Guid.NewGuid());
+        Request? request = RequestTestData.Create(Guid.NewGuid());
 
         accountProviderLegalEntitiesReadRepository.Setup(a =>
             a.GetAccountProviderLegalEntityByProvider(
@@ -68,18 +67,18 @@ public class GetProviderEmployerRelationshipQueryHandlerTests
             Assert.That(result.Result!.Ukprn, Is.EqualTo(accountProviderLegalEntity.AccountProvider.ProviderUkprn), $"{result.Result!.Ukprn} should be equal to {accountProviderLegalEntity.AccountProvider.ProviderUkprn}.");
             Assert.That(result.Result!.ProviderName, Is.EqualTo(accountProviderLegalEntity.AccountProvider.Provider.Name), $"{result.Result!.ProviderName} should be equal to {accountProviderLegalEntity.AccountProvider.Provider.Name}.");
 
-            Assert.That(result.Result!.LastAction, Is.EqualTo(EnumExtensions.ToEnum<PermissionAction>(audit.Action)));
+            Assert.That(result.Result!.LastAction, Is.EqualTo(Enum.Parse<PermissionAction>(audit.Action)));
             Assert.That(result.Result!.LastActionTime, Is.EqualTo(audit.Eventtime));
 
             Assert.That(result.Result!.LastRequestType, Is.EqualTo(request!.RequestType));
             Assert.That(result.Result!.LastRequestTime, Is.EqualTo(request!.UpdatedDate));
-            Assert.That(result.Result!.LastRequestStatus, Is.EqualTo(EnumExtensions.ToEnum<RequestStatus>(request.Status!)));
+            Assert.That(result.Result!.LastRequestStatus, Is.EqualTo(Enum.Parse<RequestStatus>(request.Status!)));
         });
     }
 
     [Test]
     [RecursiveMoqAutoData]
-    public async Task Handle_GetProviderEmployerRelationship_Null_PermissionAudit_Returns_GetProviderEmployerRelationshipQueryResult(
+    public async Task Handle_GetProviderEmployerRelationship_Null_Permissions_Returns_GetProviderEmployerRelationshipQueryResult(
         [Frozen] Mock<IAccountProviderLegalEntitiesReadRepository> accountProviderLegalEntitiesReadRepository,
         [Frozen] Mock<IPermissionAuditReadRepository> permissionAuditReadRepository,
         [Frozen] Mock<IRequestReadRepository> requestReadRepository,

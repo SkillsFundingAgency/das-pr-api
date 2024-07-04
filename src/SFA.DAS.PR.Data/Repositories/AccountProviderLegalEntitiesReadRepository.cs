@@ -7,7 +7,7 @@ public class AccountProviderLegalEntitiesReadRepository(IProviderRelationshipsDa
 {
     public Task<List<AccountProviderLegalEntity>> GetAccountProviderLegalEntities(long? ukprn, string? accountHashId, List<Operation> operations, CancellationToken cancellationToken)
     {
-        return _providerRelationshipsDataContext.AccountProviderLegalEntities
+        return _providerRelationshipsDataContext.AccountProviderLegalEntities.AsNoTracking()
             .Include(a => a.AccountProvider)
                 .ThenInclude(a => a.Account)
             .Include(a => a.Permissions)
@@ -22,7 +22,7 @@ public class AccountProviderLegalEntitiesReadRepository(IProviderRelationshipsDa
 
     public async Task<AccountProviderLegalEntity?> GetAccountProviderLegalEntity(long? ukprn, long accountLegalEntityId, CancellationToken cancellationToken)
     {
-        return await _providerRelationshipsDataContext.AccountProviderLegalEntities
+        return await _providerRelationshipsDataContext.AccountProviderLegalEntities.AsNoTracking()
             .Include(a => a.AccountProvider)
             .Include(a => a.Permissions)
         .FirstOrDefaultAsync(a =>
@@ -34,7 +34,7 @@ public class AccountProviderLegalEntitiesReadRepository(IProviderRelationshipsDa
 
     public async Task<AccountProviderLegalEntity?> GetAccountProviderLegalEntityByProvider(long ukprn, long accountLegalEntityId, CancellationToken cancellationToken)
     {
-        return await _providerRelationshipsDataContext.AccountProviderLegalEntities
+        return await _providerRelationshipsDataContext.AccountProviderLegalEntities.AsNoTracking()
             .Include(a => a.AccountProvider)
                 .ThenInclude(a => a.Provider)
             .Include(a => a.AccountLegalEntity)

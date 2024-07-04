@@ -8,7 +8,7 @@ public class PermissionAuditReadRepository(IProviderRelationshipsDataContext pro
 {
     public async Task<PermissionsAudit?> GetMostRecentPermissionAudit(long Ukprn, long AccountLegalEntityId, CancellationToken cancellationToken)
     {
-        var query = providerRelationshipsDataContext.PermissionsAudit.Where(a => a.Ukprn == Ukprn && a.AccountLegalEntityId == AccountLegalEntityId);
+        var query = providerRelationshipsDataContext.PermissionsAudit.AsNoTracking().Where(a => a.Ukprn == Ukprn && a.AccountLegalEntityId == AccountLegalEntityId);
 
         return await query.OrderByDescending(a => a.Eventtime).FirstOrDefaultAsync(cancellationToken);
     }

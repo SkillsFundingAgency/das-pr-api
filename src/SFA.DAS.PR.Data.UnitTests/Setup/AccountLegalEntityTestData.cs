@@ -1,20 +1,14 @@
-﻿using SFA.DAS.PR.Domain.Entities;
+﻿using AutoFixture;
+using SFA.DAS.PR.Data.UnitTests.Helpers;
+using SFA.DAS.PR.Domain.Entities;
 
 namespace SFA.DAS.PR.Data.UnitTests.Setup;
 
-public class AccountLegalEntityTestData
+public static class AccountLegalEntityTestData
 {
-    public static AccountLegalEntity CreateAccountLegalEntity()
+    public static AccountLegalEntity Create()
     {
-        return new AccountLegalEntity()
-        {
-            Id = 1,
-            PublicHashedId = "Hash",
-            AccountId = 1,
-            Name = "AccountLegalEntityName",
-            Created = DateTime.UtcNow,
-            Updated = DateTime.UtcNow,
-            Deleted = DateTime.UtcNow
-        };
+        return TestHelpers.CreateFixture().Build<AccountLegalEntity>()
+                      .Create();
     }
 }

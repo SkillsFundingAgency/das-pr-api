@@ -61,7 +61,7 @@ public class AccountLegalEntityReadRepositoryTests
     [Test]
     public async Task GetAccountLegalEntity_Returns_AccountLegalEntity()
     {
-        AccountLegalEntity accountLegalEntity = AccountLegalEntityTestData.CreateAccountLegalEntity();
+        AccountLegalEntity accountLegalEntity = AccountLegalEntityTestData.Create();
 
         AccountLegalEntity? result = new();
 
@@ -100,7 +100,7 @@ public class AccountLegalEntityReadRepositoryTests
     [Test]
     public async Task AccountLegalEntityExists_Returns_True()
     {
-        AccountLegalEntity accountLegalEntity = AccountLegalEntityTestData.CreateAccountLegalEntity();
+        AccountLegalEntity accountLegalEntity = AccountLegalEntityTestData.Create();
 
         bool result = false;
 

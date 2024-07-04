@@ -1,27 +1,16 @@
-﻿using SFA.DAS.PR.Domain.Entities;
+﻿using AutoFixture;
+using SFA.DAS.PR.Data.UnitTests.Helpers;
+using SFA.DAS.PR.Domain.Entities;
 
 namespace SFA.DAS.PR.Data.UnitTests.Setup;
 
 public static class RequestTestData
 {
-    public static Request CreateRequest(Guid id)
-    {
-        return new()
-        {
-            Id = id,
-            RequestType = "RequestType",
-            Ukprn = 10000003,
-            RequestedBy = "RequestedBy",
-            RequestedDate = DateTime.Today,
-            AccountLegalEntityId = 3,
-            EmployerOrganisationName = "EmployerOrganisationName",
-            EmployerContactFirstName = "EmployerContactFirstName",
-            EmployerContactLastName = "EmployerContactLastName",
-            EmployerContactEmail = "EmployerContactEmail",
-            EmployerPAYE = "PAYE",
-            EmployerAORN = "AORN",
-            Status = "New",
-            UpdatedDate = DateTime.Today
-        };
-    }
+    public static Request Create(Guid id) => TestHelpers.CreateFixture().Build<Request>()
+       .With(a => a.Id, id)
+        .With(a => a.Ukprn, 10000003)
+        .With(a => a.AccountLegalEntityId, 3)
+        .With(a => a.RequestedDate, DateTime.Today)
+        .With(a => a.Status, "New")
+   .Create();
 }

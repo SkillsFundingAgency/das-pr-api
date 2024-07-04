@@ -207,7 +207,7 @@ public class PostPermissionsCommandHandlerTests
         PostPermissionsCommand command
     )
     {
-        AccountLegalEntity accountLegalEntity = AccountLegalEntityTestData.CreateAccountLegalEntity();
+        AccountLegalEntity accountLegalEntity = AccountLegalEntityTestData.Create();
         command.AccountLegalEntityId = accountLegalEntity.Id;
 
         accountProviderLegalEntitiesReadRepository.Setup(a =>

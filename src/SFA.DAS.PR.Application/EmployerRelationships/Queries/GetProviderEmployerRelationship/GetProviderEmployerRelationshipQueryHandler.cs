@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using SFA.DAS.PR.Application.Mediatr.Responses;
 using SFA.DAS.PR.Domain.Entities;
-using SFA.DAS.PR.Domain.Extensions;
 using SFA.DAS.PR.Domain.Interfaces;
 
 namespace SFA.DAS.PR.Application.EmployerRelationships.Queries.GetProviderEmployerRelationship;
@@ -23,7 +22,7 @@ public class GetProviderEmployerRelationshipQueryHandler(IAccountProviderLegalEn
 
         if(permissionAudit != null)
         {
-            result.LastAction = EnumExtensions.ToEnum<PermissionAction>(permissionAudit.Action);
+            result.LastAction = Enum.Parse<PermissionAction>(permissionAudit.Action);
             result.LastActionTime = permissionAudit.Eventtime;
         }
         else
@@ -37,7 +36,7 @@ public class GetProviderEmployerRelationshipQueryHandler(IAccountProviderLegalEn
         {
             result.LastRequestType = request.RequestType;
             result.LastRequestTime = request.UpdatedDate ?? request.RequestedDate;
-            result.LastRequestStatus = EnumExtensions.ToEnum<RequestStatus>(request.Status);
+            result.LastRequestStatus = Enum.Parse<RequestStatus>(request.Status);
         }
 
         return new ValidatedResponse<GetProviderEmployerRelationshipQueryResult?>(result);

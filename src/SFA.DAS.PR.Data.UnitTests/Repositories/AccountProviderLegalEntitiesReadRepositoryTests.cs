@@ -132,4 +132,21 @@ public class AccountProviderLegalEntitiesReadRepositoryTests
             Assert.That(result?.Permissions, Has.Exactly(1).Items);
         });
     }
+
+    [Test]
+    public async Task GetAccountProviderLegalEntityByProvider_Returns_Null()
+    {
+        AccountProviderLegalEntity? result = null;
+
+        using (var context = InMemoryProviderRelationshipsDataContext.CreateInMemoryContext(
+            $"{nameof(InMemoryProviderRelationshipsDataContext)}_{nameof(GetAccountProviderLegalEntityByProvider_Returns_Null)}")
+        )
+        {
+            AccountProviderLegalEntitiesReadRepository sut = new(context);
+
+            result = await sut.GetAccountProviderLegalEntityByProvider(10000001, 1, cancellationToken);
+        }
+
+        Assert.That(result, Is.Null, $"result should be null");
+    }
 }
