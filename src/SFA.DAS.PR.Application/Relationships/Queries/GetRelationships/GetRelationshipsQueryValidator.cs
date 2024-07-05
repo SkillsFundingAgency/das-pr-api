@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using SFA.DAS.PR.Application.Common.Validators;
-using SFA.DAS.PR.Data.Repositories;
 using SFA.DAS.PR.Domain.Interfaces;
 
 namespace SFA.DAS.PR.Application.Relationships.Queries.GetRelationships;
@@ -16,10 +15,11 @@ public class GetRelationshipsQueryValidator : AbstractValidator<GetRelationships
     )
     {
         RuleFor(x => x.Ukprn)
-            .CheckUkprnFormat();
+            .NotEmpty()
+            .WithMessage(UkprnValidationMessage);
 
         RuleFor(x => x.Ukprn)
-            .ValidatProviderExists(providerReadRepository);
+            .IsValidUkprn(providerReadRepository);
 
         RuleFor(a => a.AccountLegalEntityId)
             .ValidateAccountLegalEntityExists(accountLegalEntityReadRepository);

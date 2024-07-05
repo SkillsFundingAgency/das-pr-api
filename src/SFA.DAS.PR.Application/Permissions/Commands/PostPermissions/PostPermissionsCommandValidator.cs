@@ -12,19 +12,18 @@ public class PostPermissionsCommandValidator : AbstractValidator<PostPermissions
 
     public static readonly string AccountLegalEntityIdValidationMessage = "An AccountLegalEntityId must be provided.";
 
-    public PostPermissionsCommandValidator(IAccountLegalEntityReadRepository accountLegalEntityReadRepository)
+    public PostPermissionsCommandValidator(IAccountLegalEntityReadRepository accountLegalEntityReadRepository, IProviderReadRepository providerReadRepository)
     {
         RuleFor(a => a.UserRef)
             .NotEmpty()
             .WithMessage(UserRefValidationMessage);
 
         RuleFor(x => x.Ukprn)
-            .Cascade(CascadeMode.Stop)
             .NotEmpty()
             .WithMessage(UkprnValidationMessage);
 
         RuleFor(x => x.Ukprn)
-            .CheckUkprnFormat();
+            .IsValidUkprn(providerReadRepository);
 
         RuleFor(a => a.AccountLegalEntityId)
             .ValidateAccountLegalEntityExists(accountLegalEntityReadRepository);

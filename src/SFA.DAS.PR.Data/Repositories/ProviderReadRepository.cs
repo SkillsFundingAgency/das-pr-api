@@ -7,6 +7,8 @@ public class ProviderReadRepository(IProviderRelationshipsDataContext _providerR
 {
     public async Task<bool> ProviderExists(long ukprn, CancellationToken cancellationToken)
     {
-        return await _providerRelationshipsDataContext.Providers.AnyAsync(a => a.Ukprn == ukprn, cancellationToken);
+        return await _providerRelationshipsDataContext.Providers
+            .AsNoTracking()
+            .AnyAsync(a => a.Ukprn == ukprn, cancellationToken);
     }
 }

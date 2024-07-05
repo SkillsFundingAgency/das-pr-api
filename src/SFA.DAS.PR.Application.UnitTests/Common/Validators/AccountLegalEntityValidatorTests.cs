@@ -80,7 +80,7 @@ public class AccountLegalEntityValidatorTests
     }
 
     [Test]
-    public async Task ValidateAccountLegalEntityExists_ValidNullableEntity_ReturnsValid()
+    public async Task Validate_AccountLegalEntityFound_ReturnsValid()
     {
         var entity = new TestAccountLegalEntityNullableIdEntity { AccountLegalEntityId = 1 };
 
@@ -120,7 +120,7 @@ public class AccountLegalEntityValidatorTests
     }
 
     [Test]
-    public async Task ValidateAccountLegalEntity_AccountLegalEntityExists_Nullable_ReturnsInvalid()
+    public async Task Validate_AccountLegalEntityNotFound_RetrunsInvalid()
     {
         var entity = new TestAccountLegalEntityNullableIdEntity { AccountLegalEntityId = 1 };
 

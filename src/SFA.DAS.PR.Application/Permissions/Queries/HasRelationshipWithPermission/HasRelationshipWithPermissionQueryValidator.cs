@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using SFA.DAS.PR.Application.Common.Validators;
+using SFA.DAS.PR.Domain.Interfaces;
 
 namespace SFA.DAS.PR.Application.Permissions.Queries.HasRelationshipWithPermission;
 
@@ -7,14 +8,14 @@ public class HasRelationshipWithPermissionQueryValidator : AbstractValidator<Has
 {
     public const string UkprnValidationMessage = "A Ukprn must be supplied.";
 
-    public HasRelationshipWithPermissionQueryValidator()
+    public HasRelationshipWithPermissionQueryValidator(IProviderReadRepository providerReadRepository)
     {
-        RuleFor(a => a.Ukprn)
+        RuleFor(x => x.Ukprn)
             .NotEmpty()
             .WithMessage(UkprnValidationMessage);
 
         RuleFor(a => a.Ukprn)
-            .CheckUkprnFormat();
+            .IsValidUkprn(providerReadRepository);
 
         RuleFor(a => a.Operation).IsValidOperation();
     }

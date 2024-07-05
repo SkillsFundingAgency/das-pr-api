@@ -10,7 +10,7 @@ using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.PR.Application.UnitTests.Relationships.Queries.GetRelationships;
 
-public class GetProviderEmployerRelationshipQueryHandlerTests
+public class GetRelationshipsQueryHandlerTests
 {
     private readonly CancellationToken cancellationToken = CancellationToken.None;
 

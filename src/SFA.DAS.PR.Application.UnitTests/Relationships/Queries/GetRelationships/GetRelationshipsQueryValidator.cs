@@ -1,15 +1,12 @@
-﻿using AutoFixture;
-using FluentValidation.TestHelper;
+﻿using FluentValidation.TestHelper;
 using Moq;
 using SFA.DAS.PR.Application.Common.Validators;
 using SFA.DAS.PR.Application.Relationships.Queries.GetRelationships;
-using SFA.DAS.PR.Domain.Entities;
 using SFA.DAS.PR.Domain.Interfaces;
-using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.PR.Application.UnitTests.Relationships.Queries.GetRelationships;
 
-public class GetProviderEmployerRelationshipQueryValidatorTests
+public class GetRelationshipsQueryValidatorTests
 {
     private readonly CancellationToken cancellationToken = CancellationToken.None;
     private readonly Mock<IAccountLegalEntityReadRepository> _accountLegalEntityReadRepositoryMock = new Mock<IAccountLegalEntityReadRepository>();

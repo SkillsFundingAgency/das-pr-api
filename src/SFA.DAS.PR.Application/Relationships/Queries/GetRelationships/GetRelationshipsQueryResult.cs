@@ -3,7 +3,6 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace SFA.DAS.PR.Application.Relationships.Queries.GetRelationships;
 
-[ExcludeFromCodeCoverage]
 public class GetRelationshipsQueryResult
 {
     public long AccountLegalEntityId { get; set; }

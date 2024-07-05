@@ -9,12 +9,21 @@ namespace SFA.DAS.PR.Application.UnitTests.Permissions.Commands.PostPermissions;
 
 public class PostPermissionsCommandValidatorTest
 {
-    private readonly Mock<IAccountLegalEntityReadRepository> _accountLegalEntityReadRepositoryMock = new Mock<IAccountLegalEntityReadRepository>(); 
+    private readonly Mock<IAccountLegalEntityReadRepository> _accountLegalEntityReadRepositoryMock = new Mock<IAccountLegalEntityReadRepository>();
+
+    private Mock<IProviderReadRepository> _providerReadRepositoryMock;
+
+    [SetUp]
+    public void Setup()
+    {
+        _providerReadRepositoryMock = new Mock<IProviderReadRepository>();
+        _providerReadRepositoryMock.Setup(a => a.ProviderExists(It.IsAny<long>(), CancellationToken.None)).ReturnsAsync(true);
+    }
 
     [Test]
     public async Task Validate_UserRef_Valid_Command()
     {
-        var sut = new PostPermissionsCommandValidator(_accountLegalEntityReadRepositoryMock.Object);
+        var sut = new PostPermissionsCommandValidator(_accountLegalEntityReadRepositoryMock.Object, _providerReadRepositoryMock.Object);
         var result = await sut.TestValidateAsync(new PostPermissionsCommand { Ukprn = 10000003, AccountLegalEntityId = 1, Operations = new List<Operation> { Operation.CreateCohort }, UserRef = Guid.NewGuid() });
         result.ShouldNotHaveValidationErrorFor(query => query.UserRef);
     }
@@ -22,7 +31,7 @@ public class PostPermissionsCommandValidatorTest
     [Test]
     public async Task Validate_Operations_Valid_Command()
     {
-        var sut = new PostPermissionsCommandValidator(_accountLegalEntityReadRepositoryMock.Object);
+        var sut = new PostPermissionsCommandValidator(_accountLegalEntityReadRepositoryMock.Object, _providerReadRepositoryMock.Object);
         var result = await sut.TestValidateAsync(new PostPermissionsCommand { Ukprn = 10000003, AccountLegalEntityId = 1, Operations = new List<Operation> { Operation.CreateCohort }, UserRef = Guid.NewGuid() });
         result.ShouldNotHaveValidationErrorFor(query => query.Operations);
     }
@@ -30,7 +39,7 @@ public class PostPermissionsCommandValidatorTest
     [Test]
     public async Task Validate_Operations_Returns_InvalidCombination_ErrorMessage()
     {
-        var sut = new PostPermissionsCommandValidator(_accountLegalEntityReadRepositoryMock.Object);
+        var sut = new PostPermissionsCommandValidator(_accountLegalEntityReadRepositoryMock.Object, _providerReadRepositoryMock.Object);
         var result = await sut.TestValidateAsync(new PostPermissionsCommand { Ukprn = 10000003, AccountLegalEntityId = 1, Operations = new List<Operation> { Operation.CreateCohort, Operation.CreateCohort }, UserRef = Guid.NewGuid() });
         result.ShouldHaveValidationErrorFor(q => q.Operations)
                     .WithErrorMessage(OperationsValidator.OperationsCombinationValidationMessage);
