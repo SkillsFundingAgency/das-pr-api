@@ -35,8 +35,4 @@
     <ProjectReference Include="..\SFA.DAS.PR.Data.UnitTests\SFA.DAS.PR.Data.UnitTests.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="EmployerRelationships\Queries\GetProviderEmployerRelationship\" />
-  </ItemGroup>
-
 </Project>
