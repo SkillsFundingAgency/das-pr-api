@@ -1,8 +1,8 @@
-﻿using SFA.DAS.PR.Application.EmployerRelationships.Queries.GetProviderEmployerRelationship;
+﻿using SFA.DAS.PR.Application.Relationships.Queries.GetRelationships;
 using SFA.DAS.PR.Data.UnitTests.Setup;
 using SFA.DAS.PR.Domain.Entities;
 
-namespace SFA.DAS.PR.Application.UnitTests.EmployerRelationships.Queries.GetProviderEmployerRelationship;
+namespace SFA.DAS.PR.Application.UnitTests.Relationships.Queries.GetRelationships;
 
 public class GetProviderEmployerRelationshipQueryResultTests
 {
@@ -13,8 +13,8 @@ public class GetProviderEmployerRelationshipQueryResultTests
 
         AccountProviderLegalEntity accountProviderLegalEntity = AccountProviderLegalEntityTestData
             .CreateAccountProviderLegalEntity(account);
-         
-        GetProviderEmployerRelationshipQueryResult result = accountProviderLegalEntity;
+
+        GetRelationshipsQueryResult result = accountProviderLegalEntity;
 
         Assert.Multiple(() =>
         {

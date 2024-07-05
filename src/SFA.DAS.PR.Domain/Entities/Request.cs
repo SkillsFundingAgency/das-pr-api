@@ -35,4 +35,6 @@ public class Request
     public virtual Provider Provider { get; set; } = null!;
 
     public virtual AccountLegalEntity? AccountLegalEntity { get; set; }
+
+    public virtual List<PermissionRequest> PermissionRequests { get; set; } = [];
 }

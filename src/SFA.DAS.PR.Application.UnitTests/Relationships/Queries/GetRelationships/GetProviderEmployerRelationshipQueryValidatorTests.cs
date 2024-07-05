@@ -2,12 +2,12 @@
 using FluentValidation.TestHelper;
 using Moq;
 using SFA.DAS.PR.Application.Common.Validators;
-using SFA.DAS.PR.Application.EmployerRelationships.Queries.GetProviderEmployerRelationship;
+using SFA.DAS.PR.Application.Relationships.Queries.GetRelationships;
 using SFA.DAS.PR.Domain.Entities;
 using SFA.DAS.PR.Domain.Interfaces;
 using SFA.DAS.Testing.AutoFixture;
 
-namespace SFA.DAS.PR.Application.UnitTests.EmployerRelationships.Queries.GetProviderEmployerRelationship;
+namespace SFA.DAS.PR.Application.UnitTests.Relationships.Queries.GetRelationships;
 
 public class GetProviderEmployerRelationshipQueryValidatorTests
 {
@@ -22,25 +22,25 @@ public class GetProviderEmployerRelationshipQueryValidatorTests
 
         providerReadRepositoryMock.Setup(a => a.ProviderExists(It.IsAny<long>(), cancellationToken)).ReturnsAsync(true);
 
-        var sut = new GetProviderEmployerRelationshipQueryValidator(providerReadRepositoryMock.Object, _accountLegalEntityReadRepositoryMock.Object);
-        var result = await sut.TestValidateAsync(new GetProviderEmployerRelationshipQuery(10000003, 1));
+        var sut = new GetRelationshipsQueryValidator(providerReadRepositoryMock.Object, _accountLegalEntityReadRepositoryMock.Object);
+        var result = await sut.TestValidateAsync(new GetRelationshipsQuery(10000003, 1));
         result.ShouldNotHaveValidationErrorFor(query => query.Ukprn);
     }
 
     [Test]
     public async Task Validate_Ukprn_Returns_ErrorMessage()
     {
-        var sut = new GetProviderEmployerRelationshipQueryValidator(_providerReadRepositoryMock.Object, _accountLegalEntityReadRepositoryMock.Object);
-        var result = await sut.TestValidateAsync(new GetProviderEmployerRelationshipQuery(null, 1));
+        var sut = new GetRelationshipsQueryValidator(_providerReadRepositoryMock.Object, _accountLegalEntityReadRepositoryMock.Object);
+        var result = await sut.TestValidateAsync(new GetRelationshipsQuery(null, 1));
         result.ShouldHaveValidationErrorFor(q => q.Ukprn)
-                    .WithErrorMessage(GetProviderEmployerRelationshipQueryValidator.UkprnValidationMessage);
+                    .WithErrorMessage(GetRelationshipsQueryValidator.UkprnValidationMessage);
     }
 
     [Test]
     public async Task Validate_Ukprn_Returns_FormatErrorMessage()
     {
-        var sut = new GetProviderEmployerRelationshipQueryValidator(_providerReadRepositoryMock.Object, _accountLegalEntityReadRepositoryMock.Object);
-        var result = await sut.TestValidateAsync(new GetProviderEmployerRelationshipQuery(10003, 1));
+        var sut = new GetRelationshipsQueryValidator(_providerReadRepositoryMock.Object, _accountLegalEntityReadRepositoryMock.Object);
+        var result = await sut.TestValidateAsync(new GetRelationshipsQuery(10003, 1));
         result.ShouldHaveValidationErrorFor(q => q.Ukprn)
                     .WithErrorMessage(UkprnFormatValidator.UkprnFormatValidationMessage);
     }
@@ -52,17 +52,17 @@ public class GetProviderEmployerRelationshipQueryValidatorTests
 
         accountLegalEntityReadRepositoryMock.Setup(a => a.AccountLegalEntityExists(It.IsAny<long>(), cancellationToken)).ReturnsAsync(true);
 
-        var sut = new GetProviderEmployerRelationshipQueryValidator(_providerReadRepositoryMock.Object, accountLegalEntityReadRepositoryMock.Object);
-        var result = await sut.TestValidateAsync(new GetProviderEmployerRelationshipQuery(10000003, 1));
+        var sut = new GetRelationshipsQueryValidator(_providerReadRepositoryMock.Object, accountLegalEntityReadRepositoryMock.Object);
+        var result = await sut.TestValidateAsync(new GetRelationshipsQuery(10000003, 1));
         result.ShouldNotHaveValidationErrorFor(query => query.AccountLegalEntityId);
     }
 
     [Test]
     public async Task Validate_AccountLegalEntityId_Returns_ErrorMessage()
     {
-        var sut = new GetProviderEmployerRelationshipQueryValidator(_providerReadRepositoryMock.Object, _accountLegalEntityReadRepositoryMock.Object);
-        var result = await sut.TestValidateAsync(new GetProviderEmployerRelationshipQuery(10000003, null));
+        var sut = new GetRelationshipsQueryValidator(_providerReadRepositoryMock.Object, _accountLegalEntityReadRepositoryMock.Object);
+        var result = await sut.TestValidateAsync(new GetRelationshipsQuery(10000003, null));
         result.ShouldHaveValidationErrorFor(q => q.AccountLegalEntityId)
-                    .WithErrorMessage(GetProviderEmployerRelationshipQueryValidator.AccountLegalEntityIdValidationMessage);
+                    .WithErrorMessage(GetRelationshipsQueryValidator.AccountLegalEntityIdValidationMessage);
     }
 }

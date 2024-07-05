@@ -3,24 +3,24 @@ using SFA.DAS.PR.Application.Mediatr.Responses;
 using SFA.DAS.PR.Domain.Entities;
 using SFA.DAS.PR.Domain.Interfaces;
 
-namespace SFA.DAS.PR.Application.EmployerRelationships.Queries.GetProviderEmployerRelationship;
+namespace SFA.DAS.PR.Application.Relationships.Queries.GetRelationships;
 
-public class GetProviderEmployerRelationshipQueryHandler(IAccountProviderLegalEntitiesReadRepository accountProviderLegalEntitiesReadRepository, IPermissionAuditReadRepository permissionAuditReadRepository, IRequestReadRepository requestReadRepository) : IRequestHandler<GetProviderEmployerRelationshipQuery, ValidatedResponse<GetProviderEmployerRelationshipQueryResult?>>
+public class GetRelationshipsQueryHandler(IAccountProviderLegalEntitiesReadRepository accountProviderLegalEntitiesReadRepository, IPermissionAuditReadRepository permissionAuditReadRepository, IRequestReadRepository requestReadRepository) : IRequestHandler<GetRelationshipsQuery, ValidatedResponse<GetRelationshipsQueryResult?>>
 {
-    public async Task<ValidatedResponse<GetProviderEmployerRelationshipQueryResult?>> Handle(GetProviderEmployerRelationshipQuery query, CancellationToken cancellationToken)
+    public async Task<ValidatedResponse<GetRelationshipsQueryResult?>> Handle(GetRelationshipsQuery query, CancellationToken cancellationToken)
     {
         AccountProviderLegalEntity? accountProviderLegalEntity = await accountProviderLegalEntitiesReadRepository.GetAccountProviderLegalEntityByProvider(query.Ukprn!.Value, query.AccountLegalEntityId!.Value, cancellationToken);
 
-        if(accountProviderLegalEntity == null)
+        if (accountProviderLegalEntity == null)
         {
-            return ValidatedResponse<GetProviderEmployerRelationshipQueryResult?>.EmptySuccessResponse();
+            return ValidatedResponse<GetRelationshipsQueryResult?>.EmptySuccessResponse();
         }
 
-        GetProviderEmployerRelationshipQueryResult result = (GetProviderEmployerRelationshipQueryResult)accountProviderLegalEntity;
+        GetRelationshipsQueryResult result = (GetRelationshipsQueryResult)accountProviderLegalEntity;
 
         PermissionsAudit? permissionAudit = await permissionAuditReadRepository.GetMostRecentPermissionAudit(query.Ukprn!.Value, query.AccountLegalEntityId!.Value, cancellationToken);
 
-        if(permissionAudit != null)
+        if (permissionAudit != null)
         {
             result.LastAction = Enum.Parse<PermissionAction>(permissionAudit.Action);
             result.LastActionTime = permissionAudit.Eventtime;
@@ -37,8 +37,9 @@ public class GetProviderEmployerRelationshipQueryHandler(IAccountProviderLegalEn
             result.LastRequestType = request.RequestType;
             result.LastRequestTime = request.UpdatedDate ?? request.RequestedDate;
             result.LastRequestStatus = Enum.Parse<RequestStatus>(request.Status);
+            result.LastRequestOperations = request.PermissionRequests.Select(a => (Operation)a.Operation).ToArray();
         }
 
-        return new ValidatedResponse<GetProviderEmployerRelationshipQueryResult?>(result);
+        return new ValidatedResponse<GetRelationshipsQueryResult?>(result);
     }
 }

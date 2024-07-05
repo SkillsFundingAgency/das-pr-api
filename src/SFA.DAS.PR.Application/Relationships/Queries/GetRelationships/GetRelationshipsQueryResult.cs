@@ -1,10 +1,10 @@
 ﻿using SFA.DAS.PR.Domain.Entities;
 using System.Diagnostics.CodeAnalysis;
 
-namespace SFA.DAS.PR.Application.EmployerRelationships.Queries.GetProviderEmployerRelationship;
+namespace SFA.DAS.PR.Application.Relationships.Queries.GetRelationships;
 
 [ExcludeFromCodeCoverage]
-public class GetProviderEmployerRelationshipQueryResult
+public class GetRelationshipsQueryResult
 {
     public long AccountLegalEntityId { get; set; }
 
@@ -22,15 +22,17 @@ public class GetProviderEmployerRelationshipQueryResult
 
     public PermissionAction? LastAction { get; set; }
 
-    public DateTime? LastActionTime {  get; set; }
+    public DateTime? LastActionTime { get; set; }
 
     public string? LastRequestType { get; set; }
 
-    public DateTime? LastRequestTime {  get; set; }
+    public DateTime? LastRequestTime { get; set; }
 
-    public RequestStatus? LastRequestStatus {  get; set; }
+    public RequestStatus? LastRequestStatus { get; set; }
 
-    public static implicit operator GetProviderEmployerRelationshipQueryResult(AccountProviderLegalEntity source) => new()
+    public Operation[]? LastRequestOperations { get; set; }
+
+    public static implicit operator GetRelationshipsQueryResult(AccountProviderLegalEntity source) => new()
     {
         AccountLegalEntityId = source.AccountLegalEntityId,
         AccountLegalEntitypublicHashedId = source.AccountLegalEntity.PublicHashedId,

@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.PR.Api.Attributes;
 using SFA.DAS.PR.Api.Authorization;
 using SFA.DAS.PR.Api.Common;
-using SFA.DAS.PR.Application.EmployerRelationships.Queries.GetProviderEmployerRelationship;
 using SFA.DAS.PR.Application.Mediatr.Responses;
+using SFA.DAS.PR.Application.Relationships.Queries.GetRelationships;
 
 namespace SFA.DAS.PR.Api.Controllers;
 
@@ -18,14 +18,14 @@ public class RelationshipsController(IMediator _mediator) : ActionResponseContro
     [HttpGet]
     [UseEnumMemberConverter]
     [Authorize(Policy = Policies.Management)]
-    [ProducesResponseType(typeof(GetProviderEmployerRelationshipQueryResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(GetRelationshipsQueryResult), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(List<ValidationError>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetProviderEmployerRelationship([FromQuery] long? ukprn, [FromQuery] long? accountLegalEntityId, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetRelationships([FromQuery] long? ukprn, [FromQuery] long? accountLegalEntityId, CancellationToken cancellationToken)
     {
-        GetProviderEmployerRelationshipQuery query = new(ukprn, accountLegalEntityId);
+        GetRelationshipsQuery query = new(ukprn, accountLegalEntityId);
 
-        ValidatedResponse<GetProviderEmployerRelationshipQueryResult?> result = await _mediator.Send(query, cancellationToken);
+        ValidatedResponse<GetRelationshipsQueryResult?> result = await _mediator.Send(query, cancellationToken);
 
         return GetResponse(result);
     }

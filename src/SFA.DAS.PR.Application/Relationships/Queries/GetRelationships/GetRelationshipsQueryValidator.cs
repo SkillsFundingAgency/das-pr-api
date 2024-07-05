@@ -3,15 +3,15 @@ using SFA.DAS.PR.Application.Common.Validators;
 using SFA.DAS.PR.Data.Repositories;
 using SFA.DAS.PR.Domain.Interfaces;
 
-namespace SFA.DAS.PR.Application.EmployerRelationships.Queries.GetProviderEmployerRelationship;
+namespace SFA.DAS.PR.Application.Relationships.Queries.GetRelationships;
 
-public class GetProviderEmployerRelationshipQueryValidator : AbstractValidator<GetProviderEmployerRelationshipQuery>
+public class GetRelationshipsQueryValidator : AbstractValidator<GetRelationshipsQuery>
 {
     public const string UkprnValidationMessage = "A Ukprn must be supplied.";
     public const string AccountLegalEntityIdValidationMessage = "An AccountLegalEntityId must be supplied.";
 
-    public GetProviderEmployerRelationshipQueryValidator(
-        IProviderReadRepository providerReadRepository, 
+    public GetRelationshipsQueryValidator(
+        IProviderReadRepository providerReadRepository,
         IAccountLegalEntityReadRepository accountLegalEntityReadRepository
     )
     {

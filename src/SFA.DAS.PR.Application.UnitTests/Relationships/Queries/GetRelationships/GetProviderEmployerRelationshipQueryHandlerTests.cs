@@ -1,14 +1,14 @@
 ﻿using AutoFixture.NUnit3;
 using FluentAssertions;
 using Moq;
-using SFA.DAS.PR.Application.EmployerRelationships.Queries.GetProviderEmployerRelationship;
 using SFA.DAS.PR.Application.Mediatr.Responses;
+using SFA.DAS.PR.Application.Relationships.Queries.GetRelationships;
 using SFA.DAS.PR.Data.UnitTests.Setup;
 using SFA.DAS.PR.Domain.Entities;
 using SFA.DAS.PR.Domain.Interfaces;
 using SFA.DAS.Testing.AutoFixture;
 
-namespace SFA.DAS.PR.Application.UnitTests.EmployerRelationships.Queries.GetProviderEmployerRelationship;
+namespace SFA.DAS.PR.Application.UnitTests.Relationships.Queries.GetRelationships;
 
 public class GetProviderEmployerRelationshipQueryHandlerTests
 {
@@ -16,13 +16,13 @@ public class GetProviderEmployerRelationshipQueryHandlerTests
 
     [Test]
     [RecursiveMoqAutoData]
-    public async Task Handle_GetProviderEmployerRelationship_Returns_GetProviderEmployerRelationshipQueryResult(
-        [Frozen] Mock<IAccountProviderLegalEntitiesReadRepository> accountProviderLegalEntitiesReadRepository, 
-        [Frozen] Mock<IPermissionAuditReadRepository> permissionAuditReadRepository, 
+    public async Task Handle_GetRelationships_Returns_GetProviderEmployerRelationshipQueryResult(
+        [Frozen] Mock<IAccountProviderLegalEntitiesReadRepository> accountProviderLegalEntitiesReadRepository,
+        [Frozen] Mock<IPermissionAuditReadRepository> permissionAuditReadRepository,
         [Frozen] Mock<IRequestReadRepository> requestReadRepository,
-        GetProviderEmployerRelationshipQueryHandler sut,
+        GetRelationshipsQueryHandler sut,
         AccountProviderLegalEntity accountProviderLegalEntity,
-        GetProviderEmployerRelationshipQuery query
+        GetRelationshipsQuery query
     )
     {
         PermissionsAudit? audit = PermissionsAuditTestData.Create(Guid.NewGuid());
@@ -53,9 +53,9 @@ public class GetProviderEmployerRelationshipQueryHandlerTests
             )
         ).ReturnsAsync(request);
 
-        ValidatedResponse<GetProviderEmployerRelationshipQueryResult?> result = await sut.Handle(query, cancellationToken);
+        ValidatedResponse<GetRelationshipsQueryResult?> result = await sut.Handle(query, cancellationToken);
 
-        result.Result.Should().BeOfType<GetProviderEmployerRelationshipQueryResult>();
+        result.Result.Should().BeOfType<GetRelationshipsQueryResult>();
 
         Assert.Multiple(() =>
         {
@@ -66,6 +66,7 @@ public class GetProviderEmployerRelationshipQueryHandlerTests
             Assert.That(result.Result!.AccountId, Is.EqualTo(accountProviderLegalEntity.AccountLegalEntity.AccountId), $"{result.Result!.AccountId} should be equal to {accountProviderLegalEntity.AccountLegalEntity.AccountId}.");
             Assert.That(result.Result!.Ukprn, Is.EqualTo(accountProviderLegalEntity.AccountProvider.ProviderUkprn), $"{result.Result!.Ukprn} should be equal to {accountProviderLegalEntity.AccountProvider.ProviderUkprn}.");
             Assert.That(result.Result!.ProviderName, Is.EqualTo(accountProviderLegalEntity.AccountProvider.Provider.Name), $"{result.Result!.ProviderName} should be equal to {accountProviderLegalEntity.AccountProvider.Provider.Name}.");
+            Assert.That(result.Result!.Operations, Is.EquivalentTo(accountProviderLegalEntity.Permissions.Select(a => a.Operation).ToArray()));
 
             Assert.That(result.Result!.LastAction, Is.EqualTo(Enum.Parse<PermissionAction>(audit.Action)));
             Assert.That(result.Result!.LastActionTime, Is.EqualTo(audit.Eventtime));
@@ -73,18 +74,19 @@ public class GetProviderEmployerRelationshipQueryHandlerTests
             Assert.That(result.Result!.LastRequestType, Is.EqualTo(request!.RequestType));
             Assert.That(result.Result!.LastRequestTime, Is.EqualTo(request!.UpdatedDate));
             Assert.That(result.Result!.LastRequestStatus, Is.EqualTo(Enum.Parse<RequestStatus>(request.Status!)));
+            Assert.That(result.Result!.LastRequestOperations, Is.EquivalentTo(request.PermissionRequests.Select(a => (Operation)a.Operation).ToArray()));
         });
     }
 
     [Test]
     [RecursiveMoqAutoData]
-    public async Task Handle_GetProviderEmployerRelationship_Null_Permissions_Returns_GetProviderEmployerRelationshipQueryResult(
+    public async Task Handle_GetRelationships_Null_Permissions_Returns_GetProviderEmployerRelationshipQueryResult(
         [Frozen] Mock<IAccountProviderLegalEntitiesReadRepository> accountProviderLegalEntitiesReadRepository,
         [Frozen] Mock<IPermissionAuditReadRepository> permissionAuditReadRepository,
         [Frozen] Mock<IRequestReadRepository> requestReadRepository,
-        GetProviderEmployerRelationshipQueryHandler sut,
+        GetRelationshipsQueryHandler sut,
         AccountProviderLegalEntity accountProviderLegalEntity,
-        GetProviderEmployerRelationshipQuery query
+        GetRelationshipsQuery query
     )
     {
         PermissionsAudit? audit = null;
@@ -115,9 +117,9 @@ public class GetProviderEmployerRelationshipQueryHandlerTests
             )
         ).ReturnsAsync(request);
 
-        ValidatedResponse<GetProviderEmployerRelationshipQueryResult?> result = await sut.Handle(query, cancellationToken);
+        ValidatedResponse<GetRelationshipsQueryResult?> result = await sut.Handle(query, cancellationToken);
 
-        result.Result.Should().BeOfType<GetProviderEmployerRelationshipQueryResult>();
+        result.Result.Should().BeOfType<GetRelationshipsQueryResult>();
 
         Assert.Multiple(() =>
         {
@@ -128,6 +130,7 @@ public class GetProviderEmployerRelationshipQueryHandlerTests
             Assert.That(result.Result!.AccountId, Is.EqualTo(accountProviderLegalEntity.AccountLegalEntity.AccountId), $"{result.Result!.AccountId} should be equal to {accountProviderLegalEntity.AccountLegalEntity.AccountId}.");
             Assert.That(result.Result!.Ukprn, Is.EqualTo(accountProviderLegalEntity.AccountProvider.ProviderUkprn), $"{result.Result!.Ukprn} should be equal to {accountProviderLegalEntity.AccountProvider.ProviderUkprn}.");
             Assert.That(result.Result!.ProviderName, Is.EqualTo(accountProviderLegalEntity.AccountProvider.Provider.Name), $"{result.Result!.ProviderName} should be equal to {accountProviderLegalEntity.AccountProvider.Provider.Name}.");
+            Assert.That(result.Result!.Operations, Is.EquivalentTo(accountProviderLegalEntity.Permissions.Select(a => a.Operation).ToArray()));
 
             Assert.That(result.Result!.LastAction, Is.Null);
             Assert.That(result.Result!.LastActionTime, Is.EqualTo(accountProviderLegalEntity.Updated));
@@ -135,17 +138,18 @@ public class GetProviderEmployerRelationshipQueryHandlerTests
             Assert.That(result.Result!.LastRequestType, Is.Null);
             Assert.That(result.Result!.LastRequestTime, Is.Null);
             Assert.That(result.Result!.LastRequestStatus, Is.Null);
+            Assert.That(result.Result!.LastRequestOperations, Is.Null);
         });
     }
 
     [Test]
     [RecursiveMoqAutoData]
-    public async Task Handle_GetProviderEmployerRelationship_Null_AccountProviderLegalEntity_Returns_Null_GetProviderEmployerRelationshipQueryResult(
+    public async Task Handle_GetRelationships_Null_AccountProviderLegalEntity_Returns_Null_GetProviderEmployerRelationshipQueryResult(
         [Frozen] Mock<IAccountProviderLegalEntitiesReadRepository> accountProviderLegalEntitiesReadRepository,
         [Frozen] Mock<IPermissionAuditReadRepository> permissionAuditReadRepository,
         [Frozen] Mock<IRequestReadRepository> requestReadRepository,
-        GetProviderEmployerRelationshipQueryHandler sut,
-        GetProviderEmployerRelationshipQuery query
+        GetRelationshipsQueryHandler sut,
+        GetRelationshipsQuery query
     )
     {
         AccountProviderLegalEntity? accountProviderLegalEntity = null;
@@ -158,9 +162,9 @@ public class GetProviderEmployerRelationshipQueryHandlerTests
             )
         ).ReturnsAsync(accountProviderLegalEntity);
 
-        ValidatedResponse<GetProviderEmployerRelationshipQueryResult?> result = await sut.Handle(query, cancellationToken);
+        ValidatedResponse<GetRelationshipsQueryResult?> result = await sut.Handle(query, cancellationToken);
 
-        result.As<ValidatedResponse<GetProviderEmployerRelationshipQueryResult?>>().IsValidResponse.Should().BeTrue();
+        result.As<ValidatedResponse<GetRelationshipsQueryResult?>>().IsValidResponse.Should().BeTrue();
         result.Result.Should().BeNull();
     }
 }
