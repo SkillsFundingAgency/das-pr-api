@@ -22,7 +22,7 @@ public class GetAccountProviderLegalEntitiesQueryValidatorTests
         var sut = new GetAccountProviderLegalEntitiesQueryValidator(_providerReadRepositoryMock.Object);
         var result = await sut.TestValidateAsync(query);
         result.ShouldHaveValidationErrorFor(q => q.Ukprn)
-                    .WithErrorMessage(UkprnFormatValidator.UkprnFormatValidationMessage);
+                    .WithErrorMessage(UkprnValidator.UkprnFormatValidationMessage);
     }
 
     [Test]

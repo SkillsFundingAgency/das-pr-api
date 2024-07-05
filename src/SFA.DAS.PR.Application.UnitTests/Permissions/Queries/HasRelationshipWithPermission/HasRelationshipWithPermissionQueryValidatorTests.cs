@@ -40,7 +40,7 @@ public class HasRelationshipWithPermissionQueryValidatorTests
         var sut = new HasRelationshipWithPermissionQueryValidator(_providerReadRepositoryMock.Object);
         var result = await sut.TestValidateAsync(new HasRelationshipWithPermissionQuery() { Ukprn = 10002, Operation = null });
         result.ShouldHaveValidationErrorFor(q => q.Ukprn)
-                    .WithErrorMessage(UkprnFormatValidator.UkprnFormatValidationMessage);
+                    .WithErrorMessage(UkprnValidator.UkprnFormatValidationMessage);
     }
 
     [Test]

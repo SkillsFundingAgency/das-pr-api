@@ -45,7 +45,7 @@ public class UkprnFormatValidatorTests
         Assert.Multiple(() =>
         {
             Assert.That(validationResult.IsValid, Is.False);
-            Assert.That(validationResult.Errors[0].ErrorMessage, Is.EqualTo(UkprnFormatValidator.UkprnFormatValidationMessage));
+            Assert.That(validationResult.Errors[0].ErrorMessage, Is.EqualTo(UkprnValidator.UkprnFormatValidationMessage));
         });        
     }
 
@@ -66,7 +66,7 @@ public class UkprnFormatValidatorTests
         Assert.Multiple(() =>
         {
             Assert.That(validationResult.IsValid, Is.False);
-            Assert.That(validationResult.Errors[0].ErrorMessage, Is.EqualTo(UkprnFormatValidator.ProviderEntityExistValidationMessage));
+            Assert.That(validationResult.Errors[0].ErrorMessage, Is.EqualTo(UkprnValidator.ProviderEntityExistValidationMessage));
         });
     }
 }

@@ -45,7 +45,7 @@ public class GetHasPermissionsQueryValidatorTests
         var sut = new GetHasPermissionsQueryValidator(_providerReadRepositoryFalseMock.Object);
         var result = await sut.TestValidateAsync(new GetHasPermissionsQuery { Ukprn = 10002, AccountLegalEntityId = 1, Operations = new List<Operation> { Operation.CreateCohort } });
         result.ShouldHaveValidationErrorFor(q => q.Ukprn)
-                    .WithErrorMessage(UkprnFormatValidator.UkprnFormatValidationMessage);
+                    .WithErrorMessage(UkprnValidator.UkprnFormatValidationMessage);
     }
 
     [Test]

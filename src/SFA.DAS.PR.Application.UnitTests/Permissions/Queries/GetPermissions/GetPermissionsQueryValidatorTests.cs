@@ -57,7 +57,7 @@ public class GetPermissionsQueryValidatorTests
         var result = await sut.TestValidateAsync(query);
 
         result.ShouldHaveValidationErrorFor(q => q.Ukprn)
-            .WithErrorMessage(UkprnFormatValidator.UkprnFormatValidationMessage);
+            .WithErrorMessage(UkprnValidator.UkprnFormatValidationMessage);
     }
 
     [Test]

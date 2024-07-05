@@ -39,7 +39,7 @@ public class GetRelationshipsQueryValidatorTests
         var sut = new GetRelationshipsQueryValidator(_providerReadRepositoryMock.Object, _accountLegalEntityReadRepositoryMock.Object);
         var result = await sut.TestValidateAsync(new GetRelationshipsQuery(10003, 1));
         result.ShouldHaveValidationErrorFor(q => q.Ukprn)
-                    .WithErrorMessage(UkprnFormatValidator.UkprnFormatValidationMessage);
+                    .WithErrorMessage(UkprnValidator.UkprnFormatValidationMessage);
     }
 
     [Test]
