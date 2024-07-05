@@ -15,7 +15,7 @@ public class RelationshipsController(IMediator _mediator) : ActionResponseContro
 {
     public override string ControllerName => "Relationships";
 
-    [HttpGet("relationships")]
+    [HttpGet]
     [UseEnumMemberConverter]
     [Authorize(Policy = Policies.Management)]
     [ProducesResponseType(typeof(GetProviderEmployerRelationshipQueryResult), StatusCodes.Status200OK)]
