@@ -1,8 +1,8 @@
 ﻿using FluentAssertions;
 using SFA.DAS.PR.Application.EmployerRelationships.Queries.GetProviderRelationships;
 using SFA.DAS.PR.Domain.Entities;
+using SFA.DAS.ProviderRelationships.Types.Models;
 using SFA.DAS.Testing.AutoFixture;
-
 namespace SFA.DAS.PR.Application.UnitTests.EmployerRelationships.Queries.GetEmployerRelationships;
 public class ProviderPermissionsModelTests
 {
