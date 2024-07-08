@@ -16,7 +16,7 @@ public class PostNotificationsCommandHandler(INotificationsWriteRepository _noti
         return ValidatedResponse<PostNotificationsCommandResult>.EmptySuccessResponse();
     }
 
-    private IEnumerable<Notification> CreateNotifications(NotificationModel[] notifications)
+    private static IEnumerable<Notification> CreateNotifications(NotificationModel[] notifications)
     {
         return notifications.Select(a => new Notification()
         {

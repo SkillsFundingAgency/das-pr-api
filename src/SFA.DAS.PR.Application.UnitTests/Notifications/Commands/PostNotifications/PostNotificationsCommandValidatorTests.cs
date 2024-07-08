@@ -82,7 +82,7 @@ public class PostNotificationsCommandValidatorTests
         result.ShouldHaveValidationErrorFor("Notifications[0].NotificationType");
     }
 
-    private NotificationModel CreateNotificationModel(string email, long ukprn, string notificationType)
+    private static NotificationModel CreateNotificationModel(string email, long ukprn, string notificationType)
     {
         return new ()
         {

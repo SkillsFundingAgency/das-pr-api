@@ -39,6 +39,6 @@ public class PostNotificationsCommandHandlerTests
         }
 
         result.IsValidResponse.Should().BeTrue();
-        Assert.That(command.Notifications.Length, Is.EqualTo(notificationCount), $"{command.Notifications.Length} Notifications must have been created.");
+        Assert.That(command.Notifications, Has.Length.EqualTo(notificationCount), $"{command.Notifications.Length} Notifications must have been created.");
     }
 }
