@@ -132,7 +132,7 @@ public class PostPermissionsCommandHandlerTests
         Assert.Multiple(() =>
         {
             Assert.That(audit, Is.Not.Null, "Audit must have been recorded.");
-            Assert.That(audit?.Action, Is.EqualTo("Updated"), "Audit action must equal updated.");
+            Assert.That(audit?.Action, Is.EqualTo(nameof(PermissionAction.PermissionUpdated)), "Audit action must equal updated.");
             Assert.That(command.Operations, Has.Count.EqualTo(permissionCount), "Permissions after removal should be equal to the passed permissions count.");
         });
     }
@@ -194,7 +194,7 @@ public class PostPermissionsCommandHandlerTests
         Assert.Multiple(() =>
         {
             Assert.That(audit, Is.Not.Null, "Audit must have been recorded.");
-            Assert.That(audit?.Action, Is.EqualTo("Updated"), "Audit action must equal updated.");
+            Assert.That(audit?.Action, Is.EqualTo(nameof(PermissionAction.PermissionUpdated)), "Audit action must equal updated.");
             Assert.That(command.Operations, Has.Count.EqualTo(permissionCount), "Added permissions should be equal to the passed permissions count.");
         });
     }
@@ -255,7 +255,7 @@ public class PostPermissionsCommandHandlerTests
         Assert.Multiple(() =>
         {
             Assert.That(audit, Is.Not.Null, "Audit must have been recorded.");
-            Assert.That(audit?.Action, Is.EqualTo("Created"), "Audit action must equal created.");
+            Assert.That(audit?.Action, Is.EqualTo(nameof(PermissionAction.PermissionCreated)), "Audit action must equal created.");
             Assert.That(command.Operations, Has.Count.EqualTo(permissionCount), "Added permissions should be equal to the passed permissions count.");
         });
     }

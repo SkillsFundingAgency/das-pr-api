@@ -2,7 +2,6 @@
 using MediatR;
 using SFA.DAS.PR.Application.Mediatr.Responses;
 using SFA.DAS.PR.Data;
-using SFA.DAS.PR.Domain.Common;
 using SFA.DAS.PR.Domain.Entities;
 using SFA.DAS.PR.Domain.Interfaces;
 
@@ -66,7 +65,7 @@ public class PostPermissionsCommandHandler(
         );
 
         _permissionsWriteRepository.CreatePermissions(permissions);
-        await CreatePermissionsAudit(command, command.Operations, PermissionAuditActions.PermissionCreatedAction, cancellationToken);
+        await CreatePermissionsAudit(command, command.Operations, PermissionAction.PermissionCreated, cancellationToken);
         await _providerRelationshipsDataContext.SaveChangesAsync(cancellationToken);
 
         return new ValidatedResponse<PostPermissionsCommandResult>(new PostPermissionsCommandResult());
@@ -85,7 +84,7 @@ public class PostPermissionsCommandHandler(
         RemovePermissions(accountProviderLegalEntity.Permissions);
         AddPermissions(accountProviderLegalEntity.Id, command.Operations);
 
-        await CreatePermissionsAudit(command, command.Operations, PermissionAuditActions.PermissionUpdatedAction, cancellationToken);
+        await CreatePermissionsAudit(command, command.Operations, PermissionAction.PermissionUpdated, cancellationToken);
         await _providerRelationshipsDataContext.SaveChangesAsync(cancellationToken);
 
         return new ValidatedResponse<PostPermissionsCommandResult>(new PostPermissionsCommandResult());
@@ -113,12 +112,12 @@ public class PostPermissionsCommandHandler(
         }
     }
 
-    private async Task CreatePermissionsAudit(PostPermissionsCommand command, List<Operation> operations, string action, CancellationToken cancellationToken)
+    private async Task CreatePermissionsAudit(PostPermissionsCommand command, List<Operation> operations, PermissionAction action, CancellationToken cancellationToken)
     {
         PermissionsAudit permissionsAudit = new()
         {
             Eventtime = DateTime.UtcNow,
-            Action = action,
+            Action = action.ToString(),
             Ukprn = command.Ukprn!.Value,
             AccountLegalEntityId = command.AccountLegalEntityId,
             EmployerUserRef = command.UserRef,
