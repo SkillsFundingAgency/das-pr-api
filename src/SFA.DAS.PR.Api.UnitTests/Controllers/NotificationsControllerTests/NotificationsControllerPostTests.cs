@@ -32,16 +32,14 @@ public class NotificationsControllerPostTests
 
     [Test]
     [MoqAutoData]
-    public async Task PostNotifications_HandlerReturnsData_ReturnsOkResponse(
+    public async Task PostNotifications_HandlerReturnsData_ReturnsCreatedResponse(
         [Frozen] Mock<IMediator> mediatorMock,
         [Greedy] NotificationsController sut,
         PostNotificationsCommand command,
         CancellationToken cancellationToken
     )
     {
-        var unitResult = Unit.Value;
-
-        var response = new ValidatedResponse<Unit>(unitResult);
+        var response = new ValidatedResponse<Unit>(Unit.Value);
 
         mediatorMock.Setup(m => m.Send(
             It.IsAny<PostNotificationsCommand>(),
@@ -49,8 +47,7 @@ public class NotificationsControllerPostTests
         ).ReturnsAsync(response);
 
         var result = await sut.PostNotifications(command, cancellationToken);
-        result.As<OkObjectResult>().Should().NotBeNull();
-        result.As<OkObjectResult>().Value.Should().Be(unitResult);
+        result.Should().BeOfType<CreatedResult>();
     }
 
     [Test]

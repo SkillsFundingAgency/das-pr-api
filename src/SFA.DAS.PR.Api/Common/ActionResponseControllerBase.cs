@@ -29,11 +29,11 @@ namespace SFA.DAS.PR.Api.Common
             return new BadRequestObjectResult(FormatErrors(response.Errors));
         }
 
-        protected IActionResult GetPostResponse<T>(ValidatedResponse<T> response, object? routeParameters) where T : class
+        protected IActionResult GetPostResponse<T>(ValidatedResponse<T> response)
         {
             if (response.IsValidResponse)
             {
-                return new CreatedAtActionResult(GetMethodName, ControllerName, routeParameters, response.Result);
+                return Created();
             }
 
             return new BadRequestObjectResult(FormatErrors(response.Errors));
