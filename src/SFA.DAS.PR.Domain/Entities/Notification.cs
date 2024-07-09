@@ -22,7 +22,7 @@ public class Notification
     public static implicit operator Notification(NotificationModel source) => new()
     {
         TemplateName = source.TemplateName,
-        NotificationType = source.NotificationType.ToString(),
+        NotificationType = source.NotificationType,
         Ukprn = source.Ukprn!.Value,
         EmailAddress = source.EmailAddress,
         Contact = source.Contact,
