@@ -1,5 +1,5 @@
 ﻿using SFA.DAS.PR.Domain.Entities;
-using System.Diagnostics.CodeAnalysis;
+using SFA.DAS.ProviderRelationships.Types.Models;
 
 namespace SFA.DAS.PR.Application.Relationships.Queries.GetRelationships;
 

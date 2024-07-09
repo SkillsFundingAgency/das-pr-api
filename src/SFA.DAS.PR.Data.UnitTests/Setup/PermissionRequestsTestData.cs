@@ -1,5 +1,6 @@
 ﻿using AutoFixture;
 using SFA.DAS.PR.Domain.Entities;
+using SFA.DAS.ProviderRelationships.Types.Models;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.PR.Data.UnitTests.Setup;
