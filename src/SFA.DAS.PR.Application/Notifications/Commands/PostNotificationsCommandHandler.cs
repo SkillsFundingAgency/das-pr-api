@@ -6,14 +6,14 @@ using SFA.DAS.PR.Domain.Interfaces;
 
 namespace SFA.DAS.PR.Application.Notifications.Commands;
 
-public class PostNotificationsCommandHandler(INotificationsWriteRepository _notificationsWriteRepository, IProviderRelationshipsDataContext _providerRelationshipsDataContext) : IRequestHandler<PostNotificationsCommand, ValidatedResponse<PostNotificationsCommandResult>>
+public class PostNotificationsCommandHandler(INotificationsWriteRepository _notificationsWriteRepository, IProviderRelationshipsDataContext _providerRelationshipsDataContext) : IRequestHandler<PostNotificationsCommand, ValidatedResponse<Unit>>
 {
-    public async Task<ValidatedResponse<PostNotificationsCommandResult>> Handle(PostNotificationsCommand command, CancellationToken cancellationToken)
+    public async Task<ValidatedResponse<Unit>> Handle(PostNotificationsCommand command, CancellationToken cancellationToken)
     {
         await _notificationsWriteRepository.CreateNotifications(CreateNotifications(command.Notifications), cancellationToken);
         await _providerRelationshipsDataContext.SaveChangesAsync(cancellationToken);
 
-        return ValidatedResponse<PostNotificationsCommandResult>.EmptySuccessResponse();
+        return ValidatedResponse<Unit>.EmptySuccessResponse();
     }
 
     private static IEnumerable<Notification> CreateNotifications(NotificationModel[] notifications)
@@ -26,7 +26,7 @@ public class PostNotificationsCommandHandler(INotificationsWriteRepository _noti
             EmailAddress = a.EmailAddress,
             Contact = a.Contact,
             EmployerName = a.EmployerName,
-            RequestsId = a.requestsId,
+            RequestId = a.RequestId,
             AccountLegalEntityId = a.AccountLegalEntityId,
             PermitApprovals = a.PermitApprovals,
             PermitRecruit = a.PermitRecruit,

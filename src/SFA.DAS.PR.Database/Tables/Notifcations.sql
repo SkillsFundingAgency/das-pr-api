@@ -7,7 +7,7 @@
     [EmailAddress] NVARCHAR(255) NULL,
     [Contact] NVARCHAR(400) NULL,
     [EmployerName] NVARCHAR(250) NULL,
-    [RequestsId] UNIQUEIDENTIFIER NULL,
+    [RequestId] UNIQUEIDENTIFIER NULL,
     [AccountLegalEntityId] BIGINT NULL,
     [PermitApprovals] SMALLINT NULL,
     [PermitRecruit] SMALLINT NULL,

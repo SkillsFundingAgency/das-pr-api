@@ -10,7 +10,7 @@ public class NotificationModel : IUkprnEntity
     public string? EmailAddress { get; set; }
     public string? Contact { get; set; }
     public string? EmployerName { get; set; }
-    public Guid? requestsId { get; set; }
+    public Guid? RequestId { get; set; }
     public long? AccountLegalEntityId { get; set; }
     public int? PermitApprovals { get; set; }
     public int? PermitRecruit { get; set; }

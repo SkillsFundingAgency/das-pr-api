@@ -1,5 +1,6 @@
 ﻿using AutoFixture.NUnit3;
 using FluentAssertions;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using SFA.DAS.PR.Application.Mediatr.Responses;
@@ -21,7 +22,7 @@ public class PostNotificationsCommandHandlerTests
     [RecursiveMoqAutoData]
     public async Task Handle_PostNotificationCommand_Creates_Notification_Returns_PostNotificationsCommandResult(PostNotificationsCommand command)
     {
-        ValidatedResponse<PostNotificationsCommandResult> result = null!;
+        ValidatedResponse<Unit> result = null!;
 
         int notificationCount = 0;
 

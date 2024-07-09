@@ -36,11 +36,12 @@ public class NotificationsControllerPostTests
         [Frozen] Mock<IMediator> mediatorMock,
         [Greedy] NotificationsController sut,
         PostNotificationsCommand command,
-        PostNotificationsCommandResult postNotificationsCommandResult,
         CancellationToken cancellationToken
     )
     {
-        var response = new ValidatedResponse<PostNotificationsCommandResult>(postNotificationsCommandResult);
+        var unitResult = Unit.Value;
+
+        var response = new ValidatedResponse<Unit>(unitResult);
 
         mediatorMock.Setup(m => m.Send(
             It.IsAny<PostNotificationsCommand>(),
@@ -48,8 +49,8 @@ public class NotificationsControllerPostTests
         ).ReturnsAsync(response);
 
         var result = await sut.PostNotifications(command, cancellationToken);
-        result.As<CreatedAtActionResult>().Should().NotBeNull();
-        result.As<CreatedAtActionResult>().Value.Should().Be(postNotificationsCommandResult);
+        result.As<OkObjectResult>().Should().NotBeNull();
+        result.As<OkObjectResult>().Value.Should().Be(unitResult);
     }
 
     [Test]
@@ -62,7 +63,7 @@ public class NotificationsControllerPostTests
         CancellationToken cancellationToken
     )
     {
-        var response = new ValidatedResponse<PostNotificationsCommandResult>(validationErrors);
+        var response = new ValidatedResponse<Unit>(validationErrors);
 
         mediatorMock.Setup(m => m.Send(
             It.IsAny<PostNotificationsCommand>(),

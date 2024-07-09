@@ -16,11 +16,11 @@ public class NotificationsController(IMediator _mediator) : ActionResponseContro
 
     [HttpPost]
     [Authorize(Policy = Policies.Management)]
-    [ProducesResponseType(typeof(PostNotificationsCommandResult), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(Unit), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(List<ValidationError>), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> PostNotifications([FromBody] PostNotificationsCommand command, CancellationToken cancellationToken)
     {
-        ValidatedResponse<PostNotificationsCommandResult> result = await _mediator.Send(command, cancellationToken);
-        return GetPostResponse(result, nameof(PostNotifications), command);
+        ValidatedResponse<Unit> result = await _mediator.Send(command, cancellationToken);
+        return GetResponse(result);
     }
 }

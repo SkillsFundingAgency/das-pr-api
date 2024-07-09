@@ -69,6 +69,9 @@
     <Build Include="Tables\PermissionsAudit.sql" />
     <Build Include="Tables\PermissionRequests.sql" />
     <Build Include="Tables\Requests.sql" />
-    <Build Include="Tables\Notfcations.sql" />
+    <Build Include="Tables\Notifcations.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <RefactorLog Include="SFA.DAS.PR.Database.refactorlog" />
   </ItemGroup>
 </Project>
