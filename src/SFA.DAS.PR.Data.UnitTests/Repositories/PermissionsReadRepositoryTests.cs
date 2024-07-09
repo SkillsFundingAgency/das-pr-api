@@ -47,4 +47,25 @@ public class PermissionsReadRepositoryTests
             Assert.That(accountProviderLegalEntity!.Permissions.Count, Is.EqualTo(1), "One permission should exst");
         });
     }
+
+    [Test]
+    [MoqAutoData]
+    public async Task GetRelationship_Returns_Null(long ukprn, int accountLegalEntityId)
+    {
+        AccountProviderLegalEntity? accountProviderLegalEntity = null;
+
+        using (var context = InMemoryProviderRelationshipsDataContext.CreateInMemoryContext(
+            $"{nameof(InMemoryProviderRelationshipsDataContext)}_{nameof(GetRelationship_Returns_Success)}")
+        )
+        {
+            PermissionsReadRepository sut = new(context);
+            accountProviderLegalEntity = await sut.GetRelationship(
+                ukprn,
+                accountLegalEntityId,
+                cancellationToken
+            );
+        }
+
+        Assert.That(accountProviderLegalEntity, Is.Null, "AccountProviderLegalEntity should be null");
+    }
 }
