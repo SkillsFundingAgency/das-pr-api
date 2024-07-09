@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using Newtonsoft.Json.Linq;
+using NUnit.Framework;
 using SFA.DAS.PR.Data.Repositories;
 using SFA.DAS.PR.Data.UnitTests.InMemoryDatabases;
 using SFA.DAS.PR.Data.UnitTests.Setup;
@@ -44,7 +45,7 @@ public class PermissionsReadRepositoryTests
             Assert.That(accountProviderLegalEntity!.AccountLegalEntity, Is.Not.Null, "AccountLegalEntity should not be null");
             Assert.That(accountProviderLegalEntity!.AccountLegalEntity.Id, Is.EqualTo(accountProviderLegalEntitiesToAdd.AccountLegalEntity.Id), $"{accountProviderLegalEntity!.AccountLegalEntity.Id} should equal {accountProviderLegalEntitiesToAdd.AccountLegalEntity.Id}");
             Assert.That(accountProviderLegalEntity!.AccountLegalEntity.Deleted, Is.Null, "AccountLegalEntity should not be deleted");
-            Assert.That(accountProviderLegalEntity!.Permissions.Count, Is.EqualTo(1), "One permission should exst");
+            Assert.That(accountProviderLegalEntity!.Permissions, Has.Count.EqualTo(1), "One permission should exst");
         });
     }
 
