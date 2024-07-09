@@ -53,9 +53,10 @@ public class PostPermissionsCommandValidatorTest
     }
 
     [Test]
-    public async Task Validate_Operations_Returns_InvalidCombination_ErrorMessage()
+    [AutoData]
+    public async Task Validate_Operations_Returns_InvalidCombination_ErrorMessage(PostPermissionsCommand command)
     {
-        var command = new PostPermissionsCommand { Ukprn = 10000003, AccountLegalEntityId = 1, Operations = new List<Operation> { Operation.CreateCohort, Operation.CreateCohort }, UserRef = Guid.NewGuid() };
+        command.Operations = new List<Operation> { Operation.CreateCohort, Operation.CreateCohort };
         var sut = new PostPermissionsCommandValidator(_accountLegalEntityReadRepositoryMock.Object, _providerReadRepositoryMock.Object);
         var result = await sut.TestValidateAsync(command);
         result.ShouldHaveValidationErrorFor(q => q.Operations).WithErrorMessage(OperationsValidator.OperationsCombinationValidationMessage);
