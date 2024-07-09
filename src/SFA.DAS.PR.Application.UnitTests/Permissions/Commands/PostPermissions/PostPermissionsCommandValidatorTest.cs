@@ -12,12 +12,21 @@ public class PostPermissionsCommandValidatorTest
 {
     private readonly Mock<IAccountLegalEntityReadRepository> _accountLegalEntityReadRepositoryMock = new Mock<IAccountLegalEntityReadRepository>();
 
+    private Mock<IProviderReadRepository> _providerReadRepositoryMock;
+
+    [SetUp]
+    public void Setup()
+    {
+        _providerReadRepositoryMock = new Mock<IProviderReadRepository>();
+        _providerReadRepositoryMock.Setup(a => a.ProviderExists(It.IsAny<long>(), CancellationToken.None)).ReturnsAsync(true);
+    }
+
     [InlineAutoData("5d143e25-79a9-4f45-996b-0df709fca713", true)]
     [InlineAutoData("00000000-0000-0000-0000-000000000000", false)]
     public async Task Validate_UserRef_Valid_Command(string userRef, bool isExpectedToBeValid, PostPermissionsCommand command)
     {
         command.UserRef = Guid.Parse(userRef);
-        var sut = new PostPermissionsCommandValidator(_accountLegalEntityReadRepositoryMock.Object);
+        var sut = new PostPermissionsCommandValidator(_accountLegalEntityReadRepositoryMock.Object, _providerReadRepositoryMock.Object);
 
         var result = await sut.TestValidateAsync(command);
 
@@ -37,7 +46,6 @@ public class PostPermissionsCommandValidatorTest
     {
         var sut = new PostPermissionsCommandValidator(_accountLegalEntityReadRepositoryMock.Object, _providerReadRepositoryMock.Object);
         command.Operations = new List<Operation> { Operation.CreateCohort };
-        var sut = new PostPermissionsCommandValidator(_accountLegalEntityReadRepositoryMock.Object);
 
         var result = await sut.TestValidateAsync(command);
 
@@ -47,11 +55,9 @@ public class PostPermissionsCommandValidatorTest
     [Test]
     public async Task Validate_Operations_Returns_InvalidCombination_ErrorMessage()
     {
-        command.Operations = new List<Operation> { Operation.CreateCohort, Operation.CreateCohort };
-        var sut = new PostPermissionsCommandValidator(_accountLegalEntityReadRepositoryMock.Object);
-
+        var command = new PostPermissionsCommand { Ukprn = 10000003, AccountLegalEntityId = 1, Operations = new List<Operation> { Operation.CreateCohort, Operation.CreateCohort }, UserRef = Guid.NewGuid() };
+        var sut = new PostPermissionsCommandValidator(_accountLegalEntityReadRepositoryMock.Object, _providerReadRepositoryMock.Object);
         var result = await sut.TestValidateAsync(command);
-
         result.ShouldHaveValidationErrorFor(q => q.Operations).WithErrorMessage(OperationsValidator.OperationsCombinationValidationMessage);
     }
 
@@ -59,7 +65,7 @@ public class PostPermissionsCommandValidatorTest
     [TestCase("", false)]
     public async Task Validate_UserFirstName(string firstName, bool isExpectedToBeValid)
     {
-        PostPermissionsCommandValidator sut = new(Mock.Of<IAccountLegalEntityReadRepository>());
+        PostPermissionsCommandValidator sut = new(_accountLegalEntityReadRepositoryMock.Object, _providerReadRepositoryMock.Object);
         var result = await sut.TestValidateAsync(new PostPermissionsCommand { UserFirstName = firstName });
 
         if (isExpectedToBeValid)
@@ -76,7 +82,7 @@ public class PostPermissionsCommandValidatorTest
     [TestCase("", false)]
     public async Task Validate_UserLastName(string lastName, bool isExpectedToBeValid)
     {
-        PostPermissionsCommandValidator sut = new(Mock.Of<IAccountLegalEntityReadRepository>());
+        PostPermissionsCommandValidator sut = new(_accountLegalEntityReadRepositoryMock.Object, _providerReadRepositoryMock.Object);
         var result = await sut.TestValidateAsync(new PostPermissionsCommand { UserLastName = lastName });
 
         if (isExpectedToBeValid)
@@ -93,7 +99,7 @@ public class PostPermissionsCommandValidatorTest
     [TestCase("", false)]
     public async Task Validate_UserEmail(string email, bool isExpectedToBeValid)
     {
-        PostPermissionsCommandValidator sut = new(Mock.Of<IAccountLegalEntityReadRepository>());
+        PostPermissionsCommandValidator sut = new(_accountLegalEntityReadRepositoryMock.Object, _providerReadRepositoryMock.Object);
         var result = await sut.TestValidateAsync(new PostPermissionsCommand { UserEmail = email });
 
         if (isExpectedToBeValid)

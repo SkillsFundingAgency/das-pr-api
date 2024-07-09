@@ -2,6 +2,7 @@
 using Moq;
 using SFA.DAS.PR.Application.AccountProviderLegalEntities.Queries.GetAccountProviderLegalEntities;
 using SFA.DAS.PR.Application.Common.Validators;
+using SFA.DAS.PR.Domain.Interfaces;
 using SFA.DAS.ProviderRelationships.Types.Models;
 
 namespace SFA.DAS.PR.Application.UnitTests.AccountProviderLegalEntities.Queries.GetAccountProviderLegalEntities;
