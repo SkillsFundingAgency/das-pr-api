@@ -2,6 +2,7 @@
 using FluentValidation.Validators;
 using SFA.DAS.PR.Application.Common.Validators;
 using SFA.DAS.PR.Domain.Interfaces;
+using SFA.DAS.PR.Domain.Models;
 
 namespace SFA.DAS.PR.Application.Notifications.Commands;
 

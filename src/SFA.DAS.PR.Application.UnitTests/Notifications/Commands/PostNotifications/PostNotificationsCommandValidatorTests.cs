@@ -3,6 +3,7 @@ using Moq;
 using SFA.DAS.PR.Application.Notifications.Commands;
 using SFA.DAS.PR.Domain.Common;
 using SFA.DAS.PR.Domain.Interfaces;
+using SFA.DAS.PR.Domain.Models;
 
 namespace SFA.DAS.PR.Application.UnitTests.Notifications.Commands.PostNotifications;
 

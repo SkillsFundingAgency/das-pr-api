@@ -1,6 +1,6 @@
 ﻿using SFA.DAS.PR.Domain.Interfaces;
 
-namespace SFA.DAS.PR.Application.Notifications.Commands;
+namespace SFA.DAS.PR.Domain.Models;
 
 public class NotificationModel : IUkprnEntity
 {

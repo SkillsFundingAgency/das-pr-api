@@ -1,4 +1,6 @@
-﻿namespace SFA.DAS.PR.Domain.Entities;
+﻿using SFA.DAS.PR.Domain.Models;
+
+namespace SFA.DAS.PR.Domain.Entities;
 
 public class Notification
 {
@@ -16,4 +18,20 @@ public class Notification
     public required string CreatedBy { get; set; }
     public DateTime CreatedDate { get; set; }
     public DateTime? SentTime { get; set; }
+
+    public static implicit operator Notification(NotificationModel source) => new()
+    {
+        TemplateName = source.TemplateName,
+        NotificationType = source.NotificationType.ToString(),
+        Ukprn = source.Ukprn!.Value,
+        EmailAddress = source.EmailAddress,
+        Contact = source.Contact,
+        EmployerName = source.EmployerName,
+        RequestId = source.RequestId,
+        AccountLegalEntityId = source.AccountLegalEntityId,
+        PermitApprovals = source.PermitApprovals,
+        PermitRecruit = source.PermitRecruit,
+        CreatedBy = source.CreatedBy,
+        CreatedDate = DateTime.UtcNow
+    };
 }
