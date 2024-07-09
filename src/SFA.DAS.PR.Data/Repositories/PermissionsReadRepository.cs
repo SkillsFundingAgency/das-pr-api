@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SFA.DAS.PR.Domain.Entities;
 using SFA.DAS.PR.Domain.Interfaces;
 using SFA.DAS.ProviderRelationships.Types.Models;
 
@@ -25,6 +26,20 @@ public class PermissionsReadRepository(IProviderRelationshipsDataContext _provid
                         && x.AccountProviderLegalEntity.AccountLegalEntity.Id == accountLegalEntityId
                         && x.AccountProviderLegalEntity.AccountLegalEntity.Deleted == null)
             .Select(x => x.Operation)
-            .ToListAsync(cancellationToken);
+        .ToListAsync(cancellationToken);
+    }
+
+    public async Task<AccountProviderLegalEntity?> GetRelationship(long ukprn, long accountLegalEntityId, CancellationToken cancellationToken)
+    {
+        return await _providerRelationshipsDataContext.AccountProviderLegalEntities.AsNoTracking()
+                .Include(a => a.AccountProvider)
+                .Include(a => a.AccountLegalEntity)
+                .Include(a => a.Permissions)
+            .FirstOrDefaultAsync(a =>
+                a.AccountProvider.ProviderUkprn == ukprn &&
+                a.AccountLegalEntity.Id == accountLegalEntityId &&
+                a.AccountLegalEntity.Deleted == null,
+                cancellationToken
+        );
     }
 }

@@ -40,7 +40,7 @@ public class PermissionsControllerGetTests
         CancellationToken cancellationToken
     )
     {
-        var response = new ValidatedResponse<GetPermissionsQueryResult>(getPermissionsResult);
+        var response = new ValidatedResponse<GetPermissionsQueryResult?>(getPermissionsResult);
 
         mediatorMock.Setup(m =>
                 m.Send(It.Is<GetPermissionsQuery>(q =>
@@ -63,7 +63,7 @@ public class PermissionsControllerGetTests
         CancellationToken cancellationToken
     )
     {
-        var errorResponse = new ValidatedResponse<GetPermissionsQueryResult>(errors);
+        var errorResponse = new ValidatedResponse<GetPermissionsQueryResult?>(errors);
 
         mediatorMock.Setup(m =>
             m.Send(It.IsAny<GetPermissionsQuery>(),

@@ -32,14 +32,13 @@ public class PermissionsController(IMediator _mediator) : ActionResponseControll
 
     [HttpGet]
     [Authorize(Policy = Policies.Management)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(GetPermissionsQueryResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(List<ValidationError>), StatusCodes.Status400BadRequest)]
     [SwaggerRequestExample(typeof(GetPermissionsQueryResult), typeof(GetPermissionsQueryResultExample))]
     public async Task<IActionResult> GetPermissions([FromQuery] GetPermissionsQuery query, CancellationToken cancellationToken)
     {
-        ValidatedResponse<GetPermissionsQueryResult> result = await _mediator.Send(query, cancellationToken);
-
+        ValidatedResponse<GetPermissionsQueryResult?> result = await _mediator.Send(query, cancellationToken);
         return GetResponse(result);
     }
 
