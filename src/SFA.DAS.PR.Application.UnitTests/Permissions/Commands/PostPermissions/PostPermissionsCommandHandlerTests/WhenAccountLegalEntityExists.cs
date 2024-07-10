@@ -3,7 +3,6 @@ using FluentAssertions;
 using Moq;
 using SFA.DAS.PR.Application.Permissions.Commands.PostPermissions;
 using SFA.DAS.PR.Data;
-using SFA.DAS.PR.Domain.Common;
 using SFA.DAS.PR.Domain.Entities;
 using SFA.DAS.PR.Domain.Interfaces;
 using SFA.DAS.ProviderRelationships.Messages.Events;
@@ -44,7 +43,7 @@ public class WhenAccountLegalEntityExists
 
         permissionsWriteRepositoryMock.Verify(p => p.CreatePermissions(It.Is<IEnumerable<Permission>>(x => x.Count() == 1 && x.First().Operation == Operation.CreateCohort)), Times.Once);
 
-        permissionsAuditWriteRepositoryMock.Verify(a => a.RecordPermissionsAudit(It.Is<PermissionsAudit>(p => p.Ukprn == command.Ukprn && p.Action == PermissionAuditActions.PermissionUpdatedAction && p.AccountLegalEntityId == command.AccountLegalEntityId && p.EmployerUserRef == command.UserRef), cancellationToken), Times.Once);
+        permissionsAuditWriteRepositoryMock.Verify(a => a.RecordPermissionsAudit(It.Is<PermissionsAudit>(p => p.Ukprn == command.Ukprn && p.Action == nameof(PermissionAction.PermissionUpdated) && p.AccountLegalEntityId == command.AccountLegalEntityId && p.EmployerUserRef == command.UserRef), cancellationToken), Times.Once);
 
         providerRelationshipsDataContextMock.Verify(d => d.SaveChangesAsync(cancellationToken), Times.Once);
 

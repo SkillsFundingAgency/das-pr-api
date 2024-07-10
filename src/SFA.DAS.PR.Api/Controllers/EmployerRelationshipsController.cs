@@ -14,8 +14,8 @@ public class EmployerRelationshipsController(IMediator _mediator) : ActionRespon
 {
     public override string ControllerName => "EmployerRelationships";
 
-    [HttpGet("employeraccount/{accountHashedId}")]
     [Authorize(Policy = Policies.Management)]
+    [HttpGet("employeraccount/{accountHashedId}")]
     [ProducesResponseType(typeof(GetEmployerRelationshipsQueryResult), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetEmployerRelationships(string accountHashedId, CancellationToken cancellationToken)
     {

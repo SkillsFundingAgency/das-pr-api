@@ -2,7 +2,6 @@
 using Moq;
 using SFA.DAS.PR.Application.Permissions.Commands.PostPermissions;
 using SFA.DAS.PR.Data;
-using SFA.DAS.PR.Domain.Common;
 using SFA.DAS.PR.Domain.Entities;
 using SFA.DAS.PR.Domain.Interfaces;
 using SFA.DAS.ProviderRelationships.Messages.Events;
@@ -88,7 +87,7 @@ public class WhenAccountLegalEntityDoesNotExist
     {
         _permissionsAuditWriteRepositoryMock.Verify(a => a.RecordPermissionsAudit(
             It.Is<PermissionsAudit>(p =>
-                p.Action == PermissionAuditActions.PermissionCreatedAction &&
+                p.Action == nameof(PermissionAction.PermissionCreated) &&
                 p.Ukprn == _command.Ukprn &&
                 p.AccountLegalEntityId == _command.AccountLegalEntityId &&
                 p.EmployerUserRef == _command.UserRef),

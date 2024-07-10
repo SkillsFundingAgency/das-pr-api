@@ -61,7 +61,7 @@ public class AccountLegalEntityReadRepositoryTests
     [Test]
     public async Task GetAccountLegalEntity_Returns_AccountLegalEntity()
     {
-        AccountLegalEntity accountLegalEntity = AccountLegalEntityTestData.CreateAccountLegalEntity();
+        AccountLegalEntity accountLegalEntity = AccountLegalEntityTestData.Create();
 
         AccountLegalEntity? result = new();
 
@@ -74,7 +74,7 @@ public class AccountLegalEntityReadRepositoryTests
 
             AccountLegalEntityReadRepository sut = new(context);
 
-            result = await sut.GetAccountLegalEntity(1, cancellationToken);
+            result = await sut.GetAccountLegalEntity(accountLegalEntity.Id, cancellationToken);
         }
 
         Assert.That(result, Is.Not.Null, "result should not be null");
@@ -100,7 +100,7 @@ public class AccountLegalEntityReadRepositoryTests
     [Test]
     public async Task AccountLegalEntityExists_Returns_True()
     {
-        AccountLegalEntity accountLegalEntity = AccountLegalEntityTestData.CreateAccountLegalEntity();
+        AccountLegalEntity accountLegalEntity = AccountLegalEntityTestData.Create();
 
         bool result = false;
 
