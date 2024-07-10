@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http.Json;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
@@ -22,7 +23,8 @@ public class UseEnumMemberConverterAttribute : ActionFilterAttribute
                 WriteIndented = true
             };
 
-            objectResult.Value = JsonSerializer.Serialize(objectResult.Value, options);
+            var jsonString = JsonSerializer.Serialize(objectResult.Value, options);
+            objectResult.Value = JsonSerializer.Deserialize<object>(jsonString, options);
         }
         base.OnActionExecuted(context);
     }
