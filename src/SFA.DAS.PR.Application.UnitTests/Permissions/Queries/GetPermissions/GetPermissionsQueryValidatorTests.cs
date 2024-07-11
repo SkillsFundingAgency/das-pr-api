@@ -7,37 +7,48 @@ using SFA.DAS.PR.Domain.Interfaces;
 namespace SFA.DAS.PR.Application.UnitTests.Permissions.Queries.GetPermissions;
 public class GetPermissionsQueryValidatorTests
 {
-    private Mock<IProviderReadRepository> _providerReadRepositoryMock;
-
+    Mock<IProviderReadRepository> _mockProviderExistsReadRepository = new Mock<IProviderReadRepository>();
+    Mock<IProviderReadRepository> _mockProviderNotExistsReadRepository = new Mock<IProviderReadRepository>();
     [SetUp]
     public void Setup()
     {
-        _providerReadRepositoryMock = new Mock<IProviderReadRepository>();
-        _providerReadRepositoryMock.Setup(a => a.ProviderExists(It.IsAny<long>(), CancellationToken.None)).ReturnsAsync(true);
+        _mockProviderExistsReadRepository.Setup(a =>
+            a.ProviderExists(
+                It.IsAny<long>(),
+                It.IsAny<CancellationToken>()
+            )
+        ).ReturnsAsync(true);
+
+        _mockProviderNotExistsReadRepository.Setup(a =>
+            a.ProviderExists(
+                It.IsAny<long>(),
+                It.IsAny<CancellationToken>()
+            )
+        ).ReturnsAsync(false);
     }
 
     [Test]
     public async Task Validate_AccountHashedIdEmpty_Returns_ErrorMessage()
     {
-        var sut = new GetPermissionsQueryValidator(_providerReadRepositoryMock.Object);
+        var sut = new GetPermissionsQueryValidator(_mockProviderExistsReadRepository.Object);
         GetPermissionsQuery query = GetConstructedGetPermissionsQuery();
         query.accountLegalEntityId = null;
 
         var result = await sut.TestValidateAsync(query);
         result.ShouldHaveValidationErrorFor(q => q.accountLegalEntityId)
-            .WithErrorMessage(GetPermissionsQueryValidator.LegalEntityIdNotSuppliedValidationMessage);
+            .WithErrorMessage(GetPermissionsQueryValidator.AccountLegalEntityIdValidationMessage);
     }
 
     [Test]
     public async Task Validate_UkprnEmpty_Returns_ErrorMessage()
     {
-        var sut = new GetPermissionsQueryValidator(_providerReadRepositoryMock.Object);
+        var sut = new GetPermissionsQueryValidator(_mockProviderExistsReadRepository.Object);
         GetPermissionsQuery query = GetConstructedGetPermissionsQuery();
         query.Ukprn = null;
         var result = await sut.TestValidateAsync(query);
 
         result.ShouldHaveValidationErrorFor(q => q.Ukprn)
-            .WithErrorMessage(GetPermissionsQueryValidator.UkprnNotSuppliedValidationMessage);
+            .WithErrorMessage(GetPermissionsQueryValidator.UkprnValidationMessage);
     }
 
     [TestCase(1)]
@@ -51,7 +62,7 @@ public class GetPermissionsQueryValidatorTests
     [TestCase(211111111)]
     public async Task Validate_UkprnWrongFormat_Returns_ErrorMessage(long ukprn)
     {
-        var sut = new GetPermissionsQueryValidator(_providerReadRepositoryMock.Object);
+        var sut = new GetPermissionsQueryValidator(_mockProviderExistsReadRepository.Object);
         GetPermissionsQuery query = GetConstructedGetPermissionsQuery();
         query.Ukprn = ukprn;
         var result = await sut.TestValidateAsync(query);
@@ -63,7 +74,7 @@ public class GetPermissionsQueryValidatorTests
     [Test]
     public async Task Validate_Valid_Query()
     {
-        var sut = new GetPermissionsQueryValidator(_providerReadRepositoryMock.Object);
+        var sut = new GetPermissionsQueryValidator(_mockProviderExistsReadRepository.Object);
         GetPermissionsQuery query = GetConstructedGetPermissionsQuery();
         var result = await sut.TestValidateAsync(query);
 
