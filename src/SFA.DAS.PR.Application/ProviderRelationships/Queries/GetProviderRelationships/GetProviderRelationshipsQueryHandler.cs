@@ -7,6 +7,7 @@ namespace SFA.DAS.PR.Application.ProviderRelationships.Queries.GetProviderRelati
 
 public class GetProviderRelationshipsQueryHandler(IProviderRelationshipsReadRepository _providerRelationshipsReadRepository) : IRequestHandler<GetProviderRelationshipsQuery, ValidatedResponse<GetProviderRelationshipsQueryResult>>
 {
+    const int defaultPageSize = 15;
     public async Task<ValidatedResponse<GetProviderRelationshipsQueryResult>> Handle(GetProviderRelationshipsQuery request, CancellationToken cancellationToken)
     {
         GetProviderRelationshipsQueryResult result = new();
@@ -26,8 +27,8 @@ public class GetProviderRelationshipsQueryHandler(IProviderRelationshipsReadRepo
     private ProviderRelationshipsQueryOptions GetOptions(GetProviderRelationshipsQuery request)
         => new()
         {
-            PageSize = request.PageSize <= 0 ? 15 : request.PageSize,
-            PageNumber = request.PageNumber <= 0 ? 0 : request.PageNumber - 1,
+            PageSize = request.PageSize <= 0 ? defaultPageSize : request.PageSize,
+            PageNumber = request.PageNumber <= 1 ? 0 : request.PageNumber - 1,
             HasPendingRequest = request.HasPendingRequest,
             HasCreateCohortPermission = request.HasCreateCohortPermission,
             HasCreateAdvertWithReviewPermission = request.HasCreateAdvertWithReviewPermission,

@@ -60,12 +60,15 @@ public class GetProviderRelationshipsQueryHandlerTests
         GetProviderRelationshipsQuery query,
         CancellationToken cancellationToken)
     {
+        query.PageNumber = 1;
+        query.PageSize = 10;
+
         await sut.Handle(query, cancellationToken);
 
         mockRepo.Verify(m => m.GetProviderRelationships(
                 It.Is<ProviderRelationshipsQueryOptions>(o =>
                     o.PageSize == query.PageSize
-                    && o.PageNumber == query.PageNumber
+                    && o.PageNumber == 0
                     && o.HasPendingRequest == query.HasPendingRequest
                     && o.HasCreateCohortPermission == query.HasCreateCohortPermission
                     && o.HasCreateAdvertWithReviewPermission == query.HasCreateAdvertWithReviewPermission
