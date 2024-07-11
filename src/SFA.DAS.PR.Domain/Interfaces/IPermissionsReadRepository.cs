@@ -7,5 +7,4 @@ public interface IPermissionsReadRepository
 {
     Task<bool> HasPermissionWithRelationship(long ukprn, Operation operation, CancellationToken cancellationToken);
     Task<List<Operation>> GetOperations(long ukprn, long accountLegalEntityId, CancellationToken cancellationToken);
-    Task<AccountProviderLegalEntity?> GetRelationship(long ukprn, long accountLegalEntityId, CancellationToken cancellationToken);
 }
