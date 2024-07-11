@@ -31,6 +31,13 @@
     <PackageReference Include="SFA.DAS.Testing.AutoFixture" Version="17.1.103" />
   </ItemGroup>
 
+  <!--Transitive Packages-->
+  <ItemGroup>
+    <PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
+    <PackageReference Include="System.Text.Json" Version="8.0.4" />
+    <PackageReference Include="System.Formats.Asn1" Version="8.0.1" />
+  </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\SFA.DAS.PR.Application\SFA.DAS.PR.Application.csproj" />
     <ProjectReference Include="..\SFA.DAS.PR.Data.UnitTests\SFA.DAS.PR.Data.UnitTests.csproj" />
