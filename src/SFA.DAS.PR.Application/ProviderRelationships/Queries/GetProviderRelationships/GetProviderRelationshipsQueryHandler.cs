@@ -1,0 +1,38 @@
+﻿using MediatR;
+using SFA.DAS.PR.Application.Mediatr.Responses;
+using SFA.DAS.PR.Domain.Interfaces;
+using SFA.DAS.PR.Domain.QueryFilters;
+
+namespace SFA.DAS.PR.Application.ProviderRelationships.Queries.GetProviderRelationships;
+
+public class GetProviderRelationshipsQueryHandler(IProviderRelationshipsReadRepository _providerRelationshipsReadRepository) : IRequestHandler<GetProviderRelationshipsQuery, ValidatedResponse<GetProviderRelationshipsQueryResult>>
+{
+    public async Task<ValidatedResponse<GetProviderRelationshipsQueryResult>> Handle(GetProviderRelationshipsQuery request, CancellationToken cancellationToken)
+    {
+        GetProviderRelationshipsQueryResult result = new();
+
+        ProviderRelationshipsQueryOptions options = GetOptions(request);
+
+        var (relationships, totalCount) = await _providerRelationshipsReadRepository.GetProviderRelationships(options, cancellationToken);
+
+        result.Employers = relationships.Select(r => (ProviderRelationshipModel)r);
+        result.TotalCount = totalCount;
+        result.PageNumber = options.PageNumber + 1;
+        result.PageSize = options.PageSize;
+
+        return new ValidatedResponse<GetProviderRelationshipsQueryResult>(result);
+    }
+
+    private ProviderRelationshipsQueryOptions GetOptions(GetProviderRelationshipsQuery request)
+        => new()
+        {
+            PageSize = request.PageSize <= 0 ? 15 : request.PageSize,
+            PageNumber = request.PageNumber <= 0 ? 0 : request.PageNumber - 1,
+            HasPendingRequest = request.HasPendingRequest,
+            HasCreateCohortPermission = request.HasCreateCohortPermission,
+            HasCreateAdvertWithReviewPermission = request.HasCreateAdvertWithReviewPermission,
+            EmployerName = request.EmployerName,
+            HasCreateAdvertPermission = request.HasCreateAdvertPermission,
+            Ukprn = request.Ukprn
+        };
+}
