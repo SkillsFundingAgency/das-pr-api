@@ -9,7 +9,7 @@ namespace SFA.DAS.PR.Data.Repositories;
 [ExcludeFromCodeCoverage]
 public class ProviderRelationshipsReadRepository(IProviderRelationshipsDataContext _providerRelationshipsDataContext) : IProviderRelationshipsReadRepository
 {
-    public async Task<List<ProviderRelationship>> GetProviderRelationships(ProviderRelationshipsQueryOptions providerRelationshipsQueryOptions, CancellationToken cancellationToken)
+    public async Task<(List<ProviderRelationship>, int)> GetProviderRelationships(ProviderRelationshipsQueryOptions providerRelationshipsQueryOptions, CancellationToken cancellationToken)
     {
         var query = _providerRelationshipsDataContext.ProviderRelationships.Where(p => p.Ukprn == providerRelationshipsQueryOptions.Ukprn);
 
@@ -21,8 +21,12 @@ public class ProviderRelationshipsReadRepository(IProviderRelationshipsDataConte
         if (providerRelationshipsQueryOptions.HasCreateAdvertPermission == true) query = query.Where(p => p.HasCreateAdvertPermission == true);
         if (providerRelationshipsQueryOptions.HasCreateAdvertWithReviewPermission == true) query = query.Where(p => p.HasCreateAdvertWithReviewPermission == true);
 
+        var count = await query.CountAsync();
+
         query = query.OrderBy(p => p.EmployerName).Skip(providerRelationshipsQueryOptions.PageSize * (providerRelationshipsQueryOptions.PageNumber)).Take(providerRelationshipsQueryOptions.PageSize);
 
-        return await query.ToListAsync(cancellationToken);
+        var result = await query.ToListAsync(cancellationToken);
+
+        return (result, count);
     }
 }

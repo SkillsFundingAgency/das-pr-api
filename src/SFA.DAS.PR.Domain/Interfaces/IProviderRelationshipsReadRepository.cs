@@ -5,5 +5,5 @@ namespace SFA.DAS.PR.Domain.Interfaces;
 
 public interface IProviderRelationshipsReadRepository
 {
-    Task<List<ProviderRelationship>> GetProviderRelationships(ProviderRelationshipsQueryOptions providerRelationshipsQueryOptions, CancellationToken cancellationToken);
+    Task<(List<ProviderRelationship>, int)> GetProviderRelationships(ProviderRelationshipsQueryOptions providerRelationshipsQueryOptions, CancellationToken cancellationToken);
 }

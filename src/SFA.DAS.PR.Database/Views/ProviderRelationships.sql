@@ -20,9 +20,9 @@ FROM [dbo].[AccountProviderLegalEntities] aple
       AND req.[Status] IN ('New','Sent')
   LEFT JOIN (
       SELECT [AccountProviderLegalEntityId],
-        MAX(CASE WHEN [operation] = 0 THEN 1 ELSE 0 END) Operation0,
-        MAX(CASE WHEN [operation] = 1 THEN 1 ELSE 0 END) Operation1,
-        MAX(CASE WHEN [operation] = 2 THEN 1 ELSE 0 END) Operation2
+        MAX(CASE WHEN [Operation] = 0 THEN 1 ELSE 0 END) Operation0,
+        MAX(CASE WHEN [Operation] = 1 THEN 1 ELSE 0 END) Operation1,
+        MAX(CASE WHEN [Operation] = 2 THEN 1 ELSE 0 END) Operation2
       FROM [dbo].[Permissions] 
       GROUP BY [AccountProviderLegalEntityId]
       ) per on aple.Id = per.AccountProviderLegalEntityId
