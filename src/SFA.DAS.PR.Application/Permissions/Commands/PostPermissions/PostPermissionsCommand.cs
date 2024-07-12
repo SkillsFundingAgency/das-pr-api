@@ -8,9 +8,6 @@ namespace SFA.DAS.PR.Application.Permissions.Commands.PostPermissions;
 public class PostPermissionsCommand : IRequest<ValidatedResponse<PostPermissionsCommandResult>>, IUkprnEntity, IOperationsEntity, IAccountLegalEntityIdEntity
 {
     public Guid UserRef { get; set; }
-    public string UserEmail { get; set; } = null!;
-    public string UserFirstName { get; set; } = null!;
-    public string UserLastName { get; set; } = null!;
 
     public long? Ukprn { get; set; }
 

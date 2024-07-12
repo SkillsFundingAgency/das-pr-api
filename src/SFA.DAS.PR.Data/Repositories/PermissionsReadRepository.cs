@@ -25,6 +25,6 @@ public class PermissionsReadRepository(IProviderRelationshipsDataContext _provid
                         && x.AccountProviderLegalEntity.AccountLegalEntity.Id == accountLegalEntityId
                         && x.AccountProviderLegalEntity.AccountLegalEntity.Deleted == null)
             .Select(x => x.Operation)
-            .ToListAsync(cancellationToken);
+        .ToListAsync(cancellationToken);
     }
 }

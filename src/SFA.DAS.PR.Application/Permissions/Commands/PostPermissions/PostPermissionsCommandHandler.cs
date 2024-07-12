@@ -110,9 +110,9 @@ public class PostPermissionsCommandHandler(
                 accountProviderLegalEntity.Id,
                 accountProviderLegalEntity.AccountProvider.ProviderUkprn,
                 command.UserRef,
-                command.UserEmail,
-                command.UserFirstName,
-                command.UserLastName,
+                string.Empty,
+                string.Empty,
+                string.Empty,
                 command.Operations.ToHashSet(),
                 existingPermissions.ToHashSet(),
                 DateTime.UtcNow)

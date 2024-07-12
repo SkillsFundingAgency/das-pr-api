@@ -26,9 +26,11 @@ public class AccountProviderLegalEntitiesReadRepository(IProviderRelationshipsDa
         return await _providerRelationshipsDataContext.AccountProviderLegalEntities.AsNoTracking()
             .Include(a => a.AccountProvider)
             .Include(a => a.Permissions)
+            .Include(a => a.AccountLegalEntity)
         .FirstOrDefaultAsync(a =>
             a.AccountLegalEntityId == accountLegalEntityId &&
-            a.AccountProvider.ProviderUkprn == ukprn,
+            a.AccountProvider.ProviderUkprn == ukprn &&
+            a.AccountLegalEntity.Deleted == null,
             cancellationToken
         );
     }
