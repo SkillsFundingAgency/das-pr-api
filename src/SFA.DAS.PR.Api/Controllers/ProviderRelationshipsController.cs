@@ -26,7 +26,7 @@ public class ProviderRelationshipsController(IMediator _mediator) : ActionRespon
         return GetResponse(result);
     }
 
-    private GetProviderRelationshipsQuery GetQuery(long ukprn, ProviderRelationshipsRequestModel filters)
+    private static GetProviderRelationshipsQuery GetQuery(long ukprn, ProviderRelationshipsRequestModel filters)
         => new()
         {
             Ukprn = ukprn,
@@ -34,8 +34,8 @@ public class ProviderRelationshipsController(IMediator _mediator) : ActionRespon
             HasCreateAdvertPermission = filters.HasCreateAdvertPermission,
             HasCreateAdvertWithReviewPermission = filters.HasCreateAdvertWithReviewPermission,
             HasCreateCohortPermission = filters.HasCreateCohortPermission,
-            HasPendingRequest = filters.HasPendingRequest,
-            PageNumber = filters.PageNumber,
-            PageSize = filters.PageSize,
+            HasPendingRequest = filters.HasPendingRequest.GetValueOrDefault(),
+            PageNumber = filters.PageNumber.GetValueOrDefault(),
+            PageSize = filters.PageSize.GetValueOrDefault(),
         };
 }

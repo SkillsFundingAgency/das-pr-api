@@ -24,7 +24,7 @@ public class GetProviderRelationshipsQueryHandler(IProviderRelationshipsReadRepo
         return new ValidatedResponse<GetProviderRelationshipsQueryResult>(result);
     }
 
-    private ProviderRelationshipsQueryOptions GetOptions(GetProviderRelationshipsQuery request)
+    private static ProviderRelationshipsQueryOptions GetOptions(GetProviderRelationshipsQuery request)
         => new()
         {
             PageSize = request.PageSize <= 0 ? defaultPageSize : request.PageSize,

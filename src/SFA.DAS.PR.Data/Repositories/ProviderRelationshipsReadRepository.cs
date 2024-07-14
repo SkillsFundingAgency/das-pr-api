@@ -21,7 +21,7 @@ public class ProviderRelationshipsReadRepository(IProviderRelationshipsDataConte
         if (providerRelationshipsQueryOptions.HasCreateAdvertPermission == true) query = query.Where(p => p.HasCreateAdvertPermission == true);
         if (providerRelationshipsQueryOptions.HasCreateAdvertWithReviewPermission == true) query = query.Where(p => p.HasCreateAdvertWithReviewPermission == true);
 
-        var count = await query.CountAsync();
+        var count = await query.CountAsync(cancellationToken);
 
         query = query.OrderBy(p => p.EmployerName).Skip(providerRelationshipsQueryOptions.PageSize * (providerRelationshipsQueryOptions.PageNumber)).Take(providerRelationshipsQueryOptions.PageSize);
 
