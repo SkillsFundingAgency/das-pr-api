@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.PR.Api.Authorization;
 using SFA.DAS.PR.Api.Common;
+using SFA.DAS.PR.Api.Models;
 using SFA.DAS.PR.Application.ProviderRelationships.Queries.GetProviderRelationships;
-using SFA.DAS.PR.Domain.QueryFilters;
 
 namespace SFA.DAS.PR.Api.Controllers;
 

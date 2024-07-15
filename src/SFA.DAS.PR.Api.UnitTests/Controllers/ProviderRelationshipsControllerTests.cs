@@ -6,9 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using SFA.DAS.PR.Api.Common;
 using SFA.DAS.PR.Api.Controllers;
+using SFA.DAS.PR.Api.Models;
 using SFA.DAS.PR.Application.Mediatr.Responses;
 using SFA.DAS.PR.Application.ProviderRelationships.Queries.GetProviderRelationships;
-using SFA.DAS.PR.Domain.QueryFilters;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.PR.Api.UnitTests.Controllers;
