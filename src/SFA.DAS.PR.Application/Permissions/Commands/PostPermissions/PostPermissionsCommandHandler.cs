@@ -95,7 +95,7 @@ public class PostPermissionsCommandHandler(
         await CreatePermissionsAudit(command, command.Operations, PermissionAction.PermissionUpdated, cancellationToken);
         await _providerRelationshipsDataContext.SaveChangesAsync(cancellationToken);
 
-        //await PublishEvent(accountProviderLegalEntity, command, existingOperations, cancellationToken);
+        await PublishEvent(accountProviderLegalEntity, command, existingOperations, cancellationToken);
 
         return new ValidatedResponse<PostPermissionsCommandResult>(new PostPermissionsCommandResult());
     }
