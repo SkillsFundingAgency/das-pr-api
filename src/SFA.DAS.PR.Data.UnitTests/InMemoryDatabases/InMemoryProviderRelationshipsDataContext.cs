@@ -1,4 +1,6 @@
-﻿namespace SFA.DAS.PR.Data.UnitTests.InMemoryDatabases;
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace SFA.DAS.PR.Data.UnitTests.InMemoryDatabases;
 
 public static class InMemoryProviderRelationshipsDataContext
 {

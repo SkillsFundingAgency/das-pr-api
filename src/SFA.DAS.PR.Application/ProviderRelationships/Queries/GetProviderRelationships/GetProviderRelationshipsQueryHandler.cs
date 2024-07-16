@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using SFA.DAS.PR.Application.Mediatr.Responses;
 using SFA.DAS.PR.Domain.Interfaces;
-using SFA.DAS.PR.Domain.QueryFilters;
+using SFA.DAS.PR.Domain.Models;
 
 namespace SFA.DAS.PR.Application.ProviderRelationships.Queries.GetProviderRelationships;
 
@@ -12,7 +12,7 @@ public class GetProviderRelationshipsQueryHandler(IProviderRelationshipsReadRepo
     {
         GetProviderRelationshipsQueryResult result = new();
 
-        ProviderRelationshipsQueryOptions options = GetOptions(request);
+        ProviderRelationshipsQueryFilters options = GetOptions(request);
 
         var (relationships, totalCount) = await _providerRelationshipsReadRepository.GetProviderRelationships(options, cancellationToken);
 
@@ -24,16 +24,17 @@ public class GetProviderRelationshipsQueryHandler(IProviderRelationshipsReadRepo
         return new ValidatedResponse<GetProviderRelationshipsQueryResult>(result);
     }
 
-    private static ProviderRelationshipsQueryOptions GetOptions(GetProviderRelationshipsQuery request)
+    private static ProviderRelationshipsQueryFilters GetOptions(GetProviderRelationshipsQuery request)
         => new()
         {
-            PageSize = request.PageSize <= 0 ? defaultPageSize : request.PageSize,
-            PageNumber = request.PageNumber <= 1 ? 0 : request.PageNumber - 1,
+            Ukprn = request.Ukprn,
+            EmployerName = request.EmployerName,
             HasPendingRequest = request.HasPendingRequest,
             HasCreateCohortPermission = request.HasCreateCohortPermission,
-            HasCreateAdvertWithReviewPermission = request.HasCreateAdvertWithReviewPermission,
-            EmployerName = request.EmployerName,
-            HasCreateAdvertPermission = request.HasCreateAdvertPermission,
-            Ukprn = request.Ukprn
+            HasRecruitWithReviewPermission = request.HasRecruitWithReviewPermission,
+            HasRecruitPermission = request.HasRecruitPermission,
+            HasNoRecruitPermissions = request.HasNoRecruitPermissions,
+            PageSize = request.PageSize <= 0 ? defaultPageSize : request.PageSize,
+            PageNumber = request.PageNumber <= 1 ? 0 : request.PageNumber - 1,
         };
 }

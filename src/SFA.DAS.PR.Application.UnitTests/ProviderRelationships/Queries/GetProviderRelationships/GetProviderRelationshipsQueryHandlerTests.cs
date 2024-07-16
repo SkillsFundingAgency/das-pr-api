@@ -4,7 +4,7 @@ using Moq;
 using SFA.DAS.PR.Application.ProviderRelationships.Queries.GetProviderRelationships;
 using SFA.DAS.PR.Domain.Entities;
 using SFA.DAS.PR.Domain.Interfaces;
-using SFA.DAS.PR.Domain.QueryFilters;
+using SFA.DAS.PR.Domain.Models;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.PR.Application.UnitTests.ProviderRelationships.Queries.GetProviderRelationships;
@@ -27,7 +27,7 @@ public class GetProviderRelationshipsQueryHandlerTests
         await sut.Handle(query, cancellationToken);
 
         mockRepo.Verify(m => m.GetProviderRelationships(
-                It.Is<ProviderRelationshipsQueryOptions>(o => o.PageNumber == expectedPageNumber),
+                It.Is<ProviderRelationshipsQueryFilters>(o => o.PageNumber == expectedPageNumber),
                 cancellationToken),
             Times.Once);
     }
@@ -48,7 +48,7 @@ public class GetProviderRelationshipsQueryHandlerTests
         await sut.Handle(query, cancellationToken);
 
         mockRepo.Verify(m => m.GetProviderRelationships(
-                It.Is<ProviderRelationshipsQueryOptions>(o => o.PageSize == expectedPageSize),
+                It.Is<ProviderRelationshipsQueryFilters>(o => o.PageSize == expectedPageSize),
                 cancellationToken),
             Times.Once);
     }
@@ -66,14 +66,15 @@ public class GetProviderRelationshipsQueryHandlerTests
         await sut.Handle(query, cancellationToken);
 
         mockRepo.Verify(m => m.GetProviderRelationships(
-                It.Is<ProviderRelationshipsQueryOptions>(o =>
+                It.Is<ProviderRelationshipsQueryFilters>(o =>
                     o.PageSize == query.PageSize
                     && o.PageNumber == 0
                     && o.HasPendingRequest == query.HasPendingRequest
                     && o.HasCreateCohortPermission == query.HasCreateCohortPermission
-                    && o.HasCreateAdvertWithReviewPermission == query.HasCreateAdvertWithReviewPermission
+                    && o.HasRecruitWithReviewPermission == query.HasRecruitWithReviewPermission
                     && o.EmployerName == query.EmployerName
-                    && o.HasCreateAdvertPermission == query.HasCreateAdvertPermission
+                    && o.HasRecruitPermission == query.HasRecruitPermission
+                    && o.HasNoRecruitPermissions == query.HasNoRecruitPermissions
                     && o.Ukprn == query.Ukprn),
                 cancellationToken),
             Times.Once);
@@ -90,7 +91,7 @@ public class GetProviderRelationshipsQueryHandlerTests
     {
         query.PageNumber = 3;
         query.PageSize = 100;
-        mockRepo.Setup(r => r.GetProviderRelationships(It.IsAny<ProviderRelationshipsQueryOptions>(), cancellationToken)).ReturnsAsync((searchResult, totalCount));
+        mockRepo.Setup(r => r.GetProviderRelationships(It.IsAny<ProviderRelationshipsQueryFilters>(), cancellationToken)).ReturnsAsync((searchResult, totalCount));
 
         var result = await sut.Handle(query, cancellationToken);
 

@@ -29,10 +29,11 @@ public class ProviderRelationshipsControllerTests
             It.Is<GetProviderRelationshipsQuery>(q =>
                 q.Ukprn == ukprn
                 && q.EmployerName == requestModel.EmployerName
-                && q.HasCreateAdvertPermission == requestModel.HasCreateAdvertPermission
-                && q.HasCreateAdvertWithReviewPermission == requestModel.HasCreateAdvertWithReviewPermission
+                && q.HasRecruitPermission == requestModel.HasRecruitPermission
+                && q.HasRecruitWithReviewPermission == requestModel.HasRecruitWithReviewPermission
                 && q.HasCreateCohortPermission == requestModel.HasCreateCohortPermission
                 && q.HasPendingRequest == requestModel.HasPendingRequest
+                && q.HasNoRecruitPermissions == requestModel.HasNoRecruitPermissions
                 && q.PageNumber == requestModel.PageNumber
                 && q.PageSize == requestModel.PageSize),
             cancellationToken));

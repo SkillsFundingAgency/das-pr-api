@@ -8,7 +8,7 @@ public class ProviderRelationship
     public long? AccountProviderLegalEntityId { get; set; }
     public Guid? RequestId { get; set; }
     public string EmployerName { get; set; } = null!;
-    public bool? HasCreateCohortPermission { get; set; }
-    public bool? HasCreateAdvertPermission { get; set; }
-    public bool? HasCreateAdvertWithReviewPermission { get; set; }
+    public bool HasCreateCohortPermission { get; set; }
+    public bool HasCreateAdvertPermission { get; set; }
+    public bool HasCreateAdvertWithReviewPermission { get; set; }
 }
