@@ -34,9 +34,9 @@ public class RemovePermissionsCommandHandler(
 
     private async Task<ValidatedResponse<SuccessCommandResult>> RemoveAndAuditPermissions(AccountProviderLegalEntity accountProviderLegalEntity, RemovePermissionsCommand command, CancellationToken cancellationToken)
     {
-        var operationsToRemove = accountProviderLegalEntity.Permissions.Select(permission => permission.Operation).ToList();
+        var operationsToRemove = accountProviderLegalEntity.Permissions.Select(permission => permission.Operation);
 
-        RemovePermissions(accountProviderLegalEntity.Permissions.ToList());
+        RemovePermissions(accountProviderLegalEntity.Permissions);
 
         await DeletePermissionsAudit(command, PermissionAction.PermissionDeleted.ToString(), operationsToRemove, cancellationToken);
         await _providerRelationshipsDataContext.SaveChangesAsync(cancellationToken);
@@ -44,7 +44,7 @@ public class RemovePermissionsCommandHandler(
         return new ValidatedResponse<SuccessCommandResult>();
     }
 
-    private void RemovePermissions(List<Permission>? permissions)
+    private void RemovePermissions(List<Permission> permissions)
     {
         if (permissions is { Count: > 0 })
         {
@@ -52,7 +52,7 @@ public class RemovePermissionsCommandHandler(
         }
     }
 
-    private async Task DeletePermissionsAudit(RemovePermissionsCommand command, string action, List<Operation> operationsToRemove, CancellationToken cancellationToken)
+    private async Task DeletePermissionsAudit(RemovePermissionsCommand command, string action, IEnumerable<Operation> operationsToRemove, CancellationToken cancellationToken)
     {
         PermissionsAudit permissionsAudit = new PermissionsAudit
         {
