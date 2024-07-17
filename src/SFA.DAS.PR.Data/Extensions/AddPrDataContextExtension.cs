@@ -70,5 +70,6 @@ public static class AddPrDataContextExtension
         services.AddTransient<IRequestReadRepository, RequestReadRepository>();
         services.AddTransient<IPermissionAuditReadRepository, PermissionAuditReadRepository>();
         services.AddTransient<IProviderReadRepository, ProviderReadRepository>();
+        services.AddTransient<INotificationsWriteRepository, NotificationsWriteRepository>();
     }
 }

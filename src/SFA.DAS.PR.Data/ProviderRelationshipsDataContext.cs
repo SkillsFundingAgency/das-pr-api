@@ -17,6 +17,7 @@ public class ProviderRelationshipsDataContext : DbContext, IProviderRelationship
     public DbSet<PermissionsAudit> PermissionsAudit => Set<PermissionsAudit>();
     public DbSet<Request> Requests => Set<Request>();
     public DbSet<PermissionRequest> PermissionRequests => Set<PermissionRequest>();
+    public DbSet<Notification> Notifications => Set<Notification>();
 
     public ProviderRelationshipsDataContext(DbContextOptions<ProviderRelationshipsDataContext> options)
         : base(options)
