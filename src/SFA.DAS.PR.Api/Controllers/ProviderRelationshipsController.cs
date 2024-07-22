@@ -31,10 +31,9 @@ public class ProviderRelationshipsController(IMediator _mediator) : ActionRespon
         {
             Ukprn = ukprn,
             EmployerName = filters.EmployerName,
-            HasRecruitPermission = filters.HasRecruitPermission,
-            HasRecruitWithReviewPermission = filters.HasRecruitWithReviewPermission,
+            HasRecruitPermission = filters.HasRecruitmentPermission,
+            HasRecruitWithReviewPermission = filters.HasRecruitmentWithReviewPermission,
             HasCreateCohortPermission = filters.HasCreateCohortPermission,
-            HasNoRecruitPermissions = filters.HasNoRecruitPermissions,
             HasPendingRequest = filters.HasPendingRequest.GetValueOrDefault(),
             PageNumber = filters.PageNumber.GetValueOrDefault(),
             PageSize = filters.PageSize.GetValueOrDefault(),

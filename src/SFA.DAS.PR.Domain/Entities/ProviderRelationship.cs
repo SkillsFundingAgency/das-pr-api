@@ -9,6 +9,6 @@ public class ProviderRelationship
     public Guid? RequestId { get; set; }
     public string EmployerName { get; set; } = null!;
     public bool HasCreateCohortPermission { get; set; }
-    public bool HasCreateAdvertPermission { get; set; }
-    public bool HasCreateAdvertWithReviewPermission { get; set; }
+    public bool HasRecruitmentPermission { get; set; }
+    public bool HasRecruitmentWithReviewPermission { get; set; }
 }

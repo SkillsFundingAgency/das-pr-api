@@ -9,8 +9,8 @@ SELECT
   ale.[Name] EmployerName, 
   req.Id RequestId, 
   CAST(ISNULL(per.Operation0, 0) AS BIT) HasCreateCohortPermission, 
-  CAST(ISNULL(per.Operation1, 0) AS BIT) HasCreateAdvertPermission, 
-  CAST(ISNULL(per.Operation2, 0) AS BIT) HasCreateAdvertWithReviewPermission
+  CAST(ISNULL(per.Operation1, 0) AS BIT) HasRecruitmentPermission, 
+  CAST(ISNULL(per.Operation2, 0) AS BIT) HasRecruitmentWithReviewPermission
 FROM [dbo].[AccountProviderLegalEntities] aple
   JOIN [dbo].[AccountLegalEntities] ale on ale.[Id] = aple.[AccountLegalEntityId]
   JOIN [dbo].[AccountProviders] apv on apv.[Id] = aple.[AccountProviderId]
@@ -37,8 +37,8 @@ SELECT
   ISNULL(req.EmployerOrganisationName, ale.Name) EmployerName, 
   req.Id RequestId,  
   CAST(0 AS BIT) HasCreateCohortPermission, 
-  CAST(0 AS BIT) HasCreateAdvertPermission, 
-  CAST(0 AS BIT) HasCreateAdvertWithReviewPermission
+  CAST(0 AS BIT) HasRecruitmentPermission, 
+  CAST(0 AS BIT) HasRecruitmentWithReviewPermission
 FROM [dbo].[Requests] req
   LEFT JOIN [dbo].[AccountProviders] apv on req.Ukprn = apv.ProviderUkprn
   LEFT JOIN [dbo].[AccountLegalEntities] ale on ale.[Id] = req.[AccountLegalEntityId]

@@ -31,9 +31,8 @@ public class GetProviderRelationshipsQueryHandler(IProviderRelationshipsReadRepo
             EmployerName = request.EmployerName,
             HasPendingRequest = request.HasPendingRequest,
             HasCreateCohortPermission = request.HasCreateCohortPermission,
-            HasRecruitWithReviewPermission = request.HasRecruitWithReviewPermission,
-            HasRecruitPermission = request.HasRecruitPermission,
-            HasNoRecruitPermissions = request.HasNoRecruitPermissions,
+            HasRecruitmentWithReviewPermission = request.HasRecruitWithReviewPermission,
+            HasRecruitmentPermission = request.HasRecruitPermission,
             PageSize = request.PageSize <= 0 ? defaultPageSize : request.PageSize,
             PageNumber = request.PageNumber <= 1 ? 0 : request.PageNumber - 1,
         };

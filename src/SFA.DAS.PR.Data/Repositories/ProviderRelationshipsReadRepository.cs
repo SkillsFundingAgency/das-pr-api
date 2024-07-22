@@ -34,21 +34,21 @@ public class ProviderRelationshipsReadRepository(IProviderRelationshipsDataConte
 
         if (filters.HasCreateCohortPermission.HasValue) predicate = predicate.And(p => p.HasCreateCohortPermission == filters.HasCreateCohortPermission);
 
-        if (filters.HasNoRecruitPermissions.GetValueOrDefault())
+        if (filters.HasRecruitmentPermission == true && filters.HasRecruitmentWithReviewPermission == true)
         {
-            predicate = predicate.And(p => !p.HasCreateAdvertPermission && !p.HasCreateAdvertWithReviewPermission);
+            predicate = predicate.And(p => p.HasRecruitmentPermission || p.HasRecruitmentWithReviewPermission);
         }
-        else if (filters.HasRecruitPermission == true && filters.HasRecruitWithReviewPermission == true)
+        else
         {
-            predicate = predicate.And(p => p.HasCreateAdvertPermission || p.HasCreateAdvertWithReviewPermission);
-        }
-        else if (filters.HasRecruitPermission == true)
-        {
-            predicate = predicate.And(p => p.HasCreateAdvertPermission);
-        }
-        else if (filters.HasRecruitWithReviewPermission == true)
-        {
-            predicate = predicate.And(p => p.HasCreateAdvertWithReviewPermission);
+            if (filters.HasRecruitmentPermission.HasValue)
+            {
+                predicate = predicate.And(p => p.HasRecruitmentPermission == filters.HasRecruitmentPermission);
+            }
+
+            if (filters.HasRecruitmentWithReviewPermission.HasValue)
+            {
+                predicate = predicate.And(p => p.HasRecruitmentWithReviewPermission == filters.HasRecruitmentWithReviewPermission);
+            }
         }
         return predicate;
     }

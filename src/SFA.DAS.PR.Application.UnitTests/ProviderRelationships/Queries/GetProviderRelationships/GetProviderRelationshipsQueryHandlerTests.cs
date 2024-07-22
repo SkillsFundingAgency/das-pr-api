@@ -71,10 +71,9 @@ public class GetProviderRelationshipsQueryHandlerTests
                     && o.PageNumber == 0
                     && o.HasPendingRequest == query.HasPendingRequest
                     && o.HasCreateCohortPermission == query.HasCreateCohortPermission
-                    && o.HasRecruitWithReviewPermission == query.HasRecruitWithReviewPermission
+                    && o.HasRecruitmentWithReviewPermission == query.HasRecruitWithReviewPermission
                     && o.EmployerName == query.EmployerName
-                    && o.HasRecruitPermission == query.HasRecruitPermission
-                    && o.HasNoRecruitPermissions == query.HasNoRecruitPermissions
+                    && o.HasRecruitmentPermission == query.HasRecruitPermission
                     && o.Ukprn == query.Ukprn),
                 cancellationToken),
             Times.Once);

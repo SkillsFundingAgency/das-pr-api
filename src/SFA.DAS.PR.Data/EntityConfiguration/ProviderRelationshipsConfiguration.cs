@@ -17,11 +17,11 @@ public class ProviderRelationshipsConfiguration : IEntityTypeConfiguration<Provi
             .HasColumnType("bit");
 
         builder
-            .Property(p => p.HasCreateAdvertPermission)
+            .Property(p => p.HasRecruitmentPermission)
             .HasColumnType("bit");
 
         builder
-            .Property(p => p.HasCreateAdvertWithReviewPermission)
+            .Property(p => p.HasRecruitmentWithReviewPermission)
             .HasColumnType("bit");
     }
 }

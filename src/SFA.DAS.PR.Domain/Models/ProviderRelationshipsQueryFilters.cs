@@ -7,8 +7,7 @@ public class ProviderRelationshipsQueryFilters
     public bool HasPendingRequest { get; set; }
     public int PageSize { get; set; }
     public int PageNumber { get; set; }
-    public bool? HasRecruitWithReviewPermission { get; set; }
-    public bool? HasRecruitPermission { get; set; }
+    public bool? HasRecruitmentWithReviewPermission { get; set; }
+    public bool? HasRecruitmentPermission { get; set; }
     public bool? HasCreateCohortPermission { get; set; }
-    public bool? HasNoRecruitPermissions { get; set; }
 }
