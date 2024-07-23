@@ -30,6 +30,6 @@ public class RequestWriteRepositoryTests
         }
 
         Assert.That(persistedRequest, Is.Not.Null, $"request should not be null");
-        Assert.That(persistedRequest.PermissionRequests.Count, Is.EqualTo(request.PermissionRequests.Count), $"permission requests count should not be {request.PermissionRequests.Count}");
+        Assert.That(persistedRequest.PermissionRequests, Has.Count.EqualTo(request.PermissionRequests.Count), $"permission requests count should not be {request.PermissionRequests.Count}");
     }
 }
