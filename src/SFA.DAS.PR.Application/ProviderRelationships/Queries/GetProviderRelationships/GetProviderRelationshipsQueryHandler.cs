@@ -28,7 +28,7 @@ public class GetProviderRelationshipsQueryHandler(IProviderRelationshipsReadRepo
         => new()
         {
             Ukprn = request.Ukprn,
-            EmployerName = request.EmployerName,
+            SearchTerm = request.SearchTerm,
             HasPendingRequest = request.HasPendingRequest,
             HasCreateCohortPermission = request.HasCreateCohortPermission,
             HasRecruitmentWithReviewPermission = request.HasRecruitWithReviewPermission,

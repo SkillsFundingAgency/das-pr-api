@@ -30,7 +30,7 @@ public class ProviderRelationshipsController(IMediator _mediator) : ActionRespon
         => new()
         {
             Ukprn = ukprn,
-            EmployerName = filters.EmployerName,
+            SearchTerm = filters.SearchTerm,
             HasRecruitPermission = filters.HasRecruitmentPermission,
             HasRecruitWithReviewPermission = filters.HasRecruitmentWithReviewPermission,
             HasCreateCohortPermission = filters.HasCreateCohortPermission,

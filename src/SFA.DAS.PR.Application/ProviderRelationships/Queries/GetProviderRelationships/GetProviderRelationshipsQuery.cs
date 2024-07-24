@@ -7,7 +7,7 @@ namespace SFA.DAS.PR.Application.ProviderRelationships.Queries.GetProviderRelati
 public class GetProviderRelationshipsQuery : IUkprnEntity, IRequest<ValidatedResponse<GetProviderRelationshipsQueryResult>>
 {
     public long? Ukprn { get; set; }
-    public string? EmployerName { get; set; }
+    public string? SearchTerm { get; set; }
     public bool HasPendingRequest { get; set; }
     public int PageSize { get; set; }
     public int PageNumber { get; set; }

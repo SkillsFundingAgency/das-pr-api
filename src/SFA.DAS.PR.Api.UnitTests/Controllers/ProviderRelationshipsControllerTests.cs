@@ -28,7 +28,7 @@ public class ProviderRelationshipsControllerTests
         mockMediator.Verify(m => m.Send(
             It.Is<GetProviderRelationshipsQuery>(q =>
                 q.Ukprn == ukprn
-                && q.EmployerName == requestModel.EmployerName
+                && q.SearchTerm == requestModel.SearchTerm
                 && q.HasRecruitPermission == requestModel.HasRecruitmentPermission
                 && q.HasRecruitWithReviewPermission == requestModel.HasRecruitmentWithReviewPermission
                 && q.HasCreateCohortPermission == requestModel.HasCreateCohortPermission
