@@ -9,6 +9,7 @@ using SFA.DAS.PR.Api.Common;
 using SFA.DAS.PR.Api.Controllers;
 using SFA.DAS.PR.Application.Mediatr.Responses;
 using SFA.DAS.PR.Application.Requests.Commands.CreateAddAccountRequest;
+using SFA.DAS.PR.Application.Requests.Commands.CreatePermissionRequest;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.PR.Api.UnitTests.Controllers;
@@ -67,6 +68,54 @@ public class RequestsControllerTests
                 Operations = [], 
                 RequestedBy = Guid.NewGuid().ToString() 
             }, 
+            cancellationToken
+        );
+        result.As<BadRequestObjectResult>().Should().NotBeNull();
+        result.As<BadRequestObjectResult>().Value.As<List<ValidationError>>().Count.Should().Be(errors.Count);
+    }
+
+    [Test]
+    [MoqAutoData]
+    public async Task CreatePermissionRequest_InvokesQueryHandler(
+       [Frozen] Mock<IMediator> mediatorMock,
+       [Greedy] RequestsController sut,
+       CreatePermissionRequestCommand command,
+       CancellationToken cancellationToken
+    )
+    {
+        await sut.CreatePermissionRequest(command, cancellationToken);
+
+        mediatorMock.Verify(m =>
+            m.Send(It.IsAny<CreatePermissionRequestCommand>(), It.IsAny<CancellationToken>())
+        );
+    }
+
+    [Test]
+    [MoqAutoData]
+    public async Task CreatePermissionRequest_InvalidRequest_ReturnsBadRequestResponse(
+        [Frozen] Mock<IMediator> mediatorMock,
+        [Greedy] RequestsController sut,
+        List<ValidationFailure> errors,
+        CancellationToken cancellationToken
+    )
+    {
+        var errorResponse = new ValidatedResponse<CreatePermissionRequestCommandResult>(errors);
+
+        mediatorMock.Setup(m =>
+            m.Send(
+                It.IsAny<CreatePermissionRequestCommand>(),
+                It.IsAny<CancellationToken>()
+            )
+        ).ReturnsAsync(errorResponse);
+
+        var result = await sut.CreatePermissionRequest(
+            new CreatePermissionRequestCommand()
+            {
+                AccountLegalEntityId = 1,
+                Ukprn = 1,
+                Operations = [],
+                RequestedBy = Guid.NewGuid().ToString()
+            },
             cancellationToken
         );
         result.As<BadRequestObjectResult>().Should().NotBeNull();
