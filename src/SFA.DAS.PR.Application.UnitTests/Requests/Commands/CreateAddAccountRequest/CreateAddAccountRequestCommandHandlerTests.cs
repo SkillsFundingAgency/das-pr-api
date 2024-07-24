@@ -12,7 +12,7 @@ using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.PR.Application.UnitTests.Requests.Commands.CreateAddAccountRequest;
 
-public class CreatePermissionRequestCommandHandlerTests
+public class CreateAddAccountRequestCommandHandlerTests
 {
     [Test]
     [RecursiveMoqAutoData]
@@ -40,7 +40,7 @@ public class CreatePermissionRequestCommandHandlerTests
         {
             RequestWriteRepository requestWriteRepository = new(context);
 
-            CreateAddAccountRequestCommandHandler sut = new(
+            CreateAddAccountRequestCommandHandler sut = new (
                context,
                requestWriteRepository,
                accountLegalEntityReadRepository.Object

@@ -7,7 +7,7 @@ using SFA.DAS.ProviderRelationships.Types.Models;
 
 namespace SFA.DAS.PR.Application.UnitTests.Requests.Commands.CreateAddAccountRequest;
 
-public class CreatePermissionRequestCommandValidatorTests
+public class CreateAddAccountRequestCommandValidatorTests
 {
     private readonly Mock<IAccountLegalEntityReadRepository> _accountLegalEntityReadRepositoryValidMock = new Mock<IAccountLegalEntityReadRepository>();
     private readonly Mock<IProviderReadRepository> _providersReadRepositoryValidMock = new Mock<IProviderReadRepository>();
