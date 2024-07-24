@@ -3,23 +3,23 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using SFA.DAS.PR.Application.Mediatr.Responses;
-using SFA.DAS.PR.Application.Requests.Commands.CreateAddAccountRequest;
+using SFA.DAS.PR.Application.Requests.Commands.CreatePermissionRequest;
 using SFA.DAS.PR.Data.Repositories;
 using SFA.DAS.PR.Data.UnitTests.InMemoryDatabases;
 using SFA.DAS.PR.Domain.Entities;
 using SFA.DAS.PR.Domain.Interfaces;
 using SFA.DAS.Testing.AutoFixture;
 
-namespace SFA.DAS.PR.Application.UnitTests.Requests.Commands.CreateAddAccountRequest;
+namespace SFA.DAS.PR.Application.UnitTests.Requests.Commands.CreatePermissionRequest;
 
 public class CreatePermissionRequestCommandHandlerTests
 {
     [Test]
     [RecursiveMoqAutoData]
-    public async Task Handle_CreateAddAccountRequest_Successful(
+    public async Task Handle_CreatePermissionRequest_Successful(
         [Frozen] Mock<IAccountLegalEntityReadRepository> accountLegalEntityReadRepository,
         AccountLegalEntity accountLegalEntity,
-        CreateAddAccountRequestCommand command
+        CreatePermissionRequestCommand command
     )
     {
         accountLegalEntityReadRepository.Setup(a =>
@@ -29,18 +29,18 @@ public class CreatePermissionRequestCommandHandlerTests
             )
         ).ReturnsAsync(accountLegalEntity);
 
-        ValidatedResponse<CreateAddAccountRequestCommandResult> result = null!;
+        ValidatedResponse<CreatePermissionRequestCommandResult> result = null!;
 
 
         Request? persistedRequest = null;
 
         using (var context = InMemoryProviderRelationshipsDataContext.CreateInMemoryContext(
-            $"{nameof(InMemoryProviderRelationshipsDataContext)}_{nameof(Handle_CreateAddAccountRequest_Successful)}")
+            $"{nameof(InMemoryProviderRelationshipsDataContext)}_{nameof(Handle_CreatePermissionRequest_Successful)}")
         )
         {
             RequestWriteRepository requestWriteRepository = new(context);
 
-            CreateAddAccountRequestCommandHandler sut = new(
+            CreatePermissionRequestCommandHandler sut = new (
                context,
                requestWriteRepository,
                accountLegalEntityReadRepository.Object

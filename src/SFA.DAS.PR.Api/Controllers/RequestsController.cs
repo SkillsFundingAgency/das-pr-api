@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.PR.Api.Authorization;
 using SFA.DAS.PR.Api.Common;
 using SFA.DAS.PR.Application.Requests.Commands.CreateAddAccountRequest;
+using SFA.DAS.PR.Application.Requests.Commands.CreatePermissionRequest;
 
 namespace SFA.DAS.PR.Api.Controllers;
 
@@ -16,7 +17,18 @@ public class RequestsController(IMediator _mediator) : ActionResponseControllerB
     [HttpPost("addaccount")]
     [Authorize(Policy = Policies.Management)]
     [ProducesResponseType(typeof(CreateAddAccountRequestCommandResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(List<ValidationError>), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> CreateAddAccountRequest([FromBody]CreateAddAccountRequestCommand command, CancellationToken cancellationToken)
+    {
+        var result = await _mediator.Send(command, cancellationToken);
+        return GetResponse(result);
+    }
+
+    [HttpPost("permission")]
+    [Authorize(Policy = Policies.Management)]
+    [ProducesResponseType(typeof(CreatePermissionRequestCommandResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(List<ValidationError>), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> CreatePermissionRequest([FromBody] CreatePermissionRequestCommand command, CancellationToken cancellationToken)
     {
         var result = await _mediator.Send(command, cancellationToken);
         return GetResponse(result);
