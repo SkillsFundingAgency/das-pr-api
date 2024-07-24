@@ -18,6 +18,7 @@ public class ProviderRelationshipsDataContext : DbContext, IProviderRelationship
     public DbSet<Request> Requests => Set<Request>();
     public DbSet<PermissionRequest> PermissionRequests => Set<PermissionRequest>();
     public DbSet<Notification> Notifications => Set<Notification>();
+    public DbSet<ProviderRelationship> ProviderRelationships => Set<ProviderRelationship>();
 
     public ProviderRelationshipsDataContext(DbContextOptions<ProviderRelationshipsDataContext> options)
         : base(options)

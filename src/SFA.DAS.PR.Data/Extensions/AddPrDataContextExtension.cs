@@ -14,7 +14,7 @@ public static class AddPrDataContextExtension
 {
     private static readonly string AzureResource = "https://database.windows.net/";
 
-    private static readonly ChainedTokenCredential AzureTokenProvider = new ChainedTokenCredential(
+    private static readonly ChainedTokenCredential AzureTokenProvider = new(
         new ManagedIdentityCredential(),
         new AzureCliCredential(),
         new VisualStudioCodeCredential(),
@@ -32,7 +32,7 @@ public static class AddPrDataContextExtension
                 connection = new SqlConnection
                 {
                     ConnectionString = connectionString,
-                    AccessToken = AzureTokenProvider.GetToken(new TokenRequestContext(scopes: new string[] { AzureResource })).Token
+                    AccessToken = AzureTokenProvider.GetToken(new TokenRequestContext(scopes: [AzureResource])).Token
                 };
             }
             else
@@ -70,5 +70,6 @@ public static class AddPrDataContextExtension
         services.AddTransient<IPermissionAuditReadRepository, PermissionAuditReadRepository>();
         services.AddTransient<IProviderReadRepository, ProviderReadRepository>();
         services.AddTransient<INotificationsWriteRepository, NotificationsWriteRepository>();
+        services.AddTransient<IProviderRelationshipsReadRepository, ProviderRelationshipsReadRepository>();
     }
 }
