@@ -34,7 +34,7 @@ public class ProviderRelationshipsController(IMediator _mediator) : ActionRespon
             HasRecruitPermission = filters.HasRecruitmentPermission,
             HasRecruitWithReviewPermission = filters.HasRecruitmentWithReviewPermission,
             HasCreateCohortPermission = filters.HasCreateCohortPermission,
-            HasPendingRequest = filters.HasPendingRequest.GetValueOrDefault(),
+            HasPendingRequest = filters.HasPendingRequest,
             PageNumber = filters.PageNumber.GetValueOrDefault(),
             PageSize = filters.PageSize.GetValueOrDefault(),
         };
