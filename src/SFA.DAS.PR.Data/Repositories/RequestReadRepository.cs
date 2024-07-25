@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SFA.DAS.PR.Domain.Entities;
-using SFA.DAS.PR.Domain.Extensions;
 using SFA.DAS.PR.Domain.Interfaces;
 
 namespace SFA.DAS.PR.Data.Repositories;
@@ -19,8 +18,8 @@ public class RequestReadRepository(IProviderRelationshipsDataContext providerRel
 
     public async Task<bool> RequestExists(long Ukprn, long AccountLegalEntityId, CancellationToken cancellationToken)
     {
-        string statusSent = RequestStatus.Sent.ToLowerString();
-        string statusNew = RequestStatus.New.ToLowerString();
+        string statusSent = RequestStatus.Sent.ToString();
+        string statusNew = RequestStatus.New.ToString();
 
         return await providerRelationshipsDataContext.Requests
             .AsNoTracking()

@@ -11,7 +11,8 @@ public class CreatePermissionRequestCommandValidator : AbstractValidator<CreateP
     public CreatePermissionRequestCommandValidator(
         IRequestReadRepository requestReadRepository,
         IProviderReadRepository providerReadRepository,
-        IAccountLegalEntityReadRepository accountLegalEntityReadRepository
+        IAccountLegalEntityReadRepository accountLegalEntityReadRepository,
+        IAccountProviderLegalEntitiesReadRepository accountProviderLegalEntitiesReadRepository
     )
     {
         RuleFor(x => x.Ukprn)
@@ -23,6 +24,9 @@ public class CreatePermissionRequestCommandValidator : AbstractValidator<CreateP
 
         RuleFor(a => a.AccountLegalEntityId)
             .ValidateAccountLegalEntityExists(accountLegalEntityReadRepository);
+
+        RuleFor(a => new AccountProviderLegalEntityValidationObject { Ukprn = a.Ukprn, AccountLegalEntityId = a.AccountLegalEntityId })
+            .ValidateAccountProviderLegalEntityExists(accountProviderLegalEntitiesReadRepository);
 
         RuleFor(a => new RequestValidationObject() { Ukprn = a.Ukprn, AccountLegalEntityId = a.AccountLegalEntityId })
             .ValidateRequest(requestReadRepository);

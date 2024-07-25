@@ -3,7 +3,6 @@ using SFA.DAS.PR.Data.Repositories;
 using SFA.DAS.PR.Data.UnitTests.InMemoryDatabases;
 using SFA.DAS.PR.Data.UnitTests.Setup;
 using SFA.DAS.PR.Domain.Entities;
-using SFA.DAS.PR.Domain.Extensions;
 
 namespace SFA.DAS.PR.Data.UnitTests.Repositories;
 
@@ -53,7 +52,7 @@ public class RequestReadRepositoryTests
     [Test]
     public async Task RequestExists_RequestStatusNew_Returns_True()
     {
-        Request request = RequestTestData.Create(Guid.NewGuid(), RequestStatus.New.ToLowerString());
+        Request request = RequestTestData.Create(Guid.NewGuid(), RequestStatus.New.ToString());
 
         bool? result = null;
 
@@ -75,7 +74,7 @@ public class RequestReadRepositoryTests
     [Test]
     public async Task RequestExists_RequestStatusSent_Returns_True()
     {
-        Request request = RequestTestData.Create(Guid.NewGuid(), RequestStatus.Sent.ToLowerString());
+        Request request = RequestTestData.Create(Guid.NewGuid(), RequestStatus.Sent.ToString());
 
         bool? result = null;
 

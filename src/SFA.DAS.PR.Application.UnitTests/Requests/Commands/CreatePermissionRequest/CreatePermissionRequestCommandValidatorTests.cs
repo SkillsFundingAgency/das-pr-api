@@ -12,7 +12,7 @@ public class CreatePermissionRequestCommandValidatorTests
     private readonly Mock<IAccountLegalEntityReadRepository> _accountLegalEntityReadRepositoryValidMock = new Mock<IAccountLegalEntityReadRepository>();
     private readonly Mock<IProviderReadRepository> _providersReadRepositoryValidMock = new Mock<IProviderReadRepository>();
     private readonly Mock<IRequestReadRepository> _requestReadRepositoryValidMock = new Mock<IRequestReadRepository>();
-
+    private readonly Mock<IAccountProviderLegalEntitiesReadRepository> _accountProviderLegalEntitiesReadRepositoryValidMock = new Mock<IAccountProviderLegalEntitiesReadRepository>();
     private readonly Mock<IAccountLegalEntityReadRepository> _accountLegalEntityReadRepositoryInvalidMock = new Mock<IAccountLegalEntityReadRepository>();
 
     [SetUp]
@@ -21,6 +21,7 @@ public class CreatePermissionRequestCommandValidatorTests
         _requestReadRepositoryValidMock.Setup(a => a.RequestExists(It.IsAny<long>(), It.IsAny<long>(), It.IsAny<CancellationToken>())).ReturnsAsync(false);
         _providersReadRepositoryValidMock.Setup(a => a.ProviderExists(It.IsAny<long>(), It.IsAny<CancellationToken>())).ReturnsAsync(true);
         _accountLegalEntityReadRepositoryValidMock.Setup(a => a.AccountLegalEntityExists(It.IsAny<long>(), It.IsAny<CancellationToken>())).ReturnsAsync(true);
+        _accountProviderLegalEntitiesReadRepositoryValidMock.Setup(a => a.AccountProviderLegalEntityExists(It.IsAny<long>(), It.IsAny<long>(), It.IsAny<CancellationToken>())).ReturnsAsync(true);
 
         _accountLegalEntityReadRepositoryInvalidMock.Setup(a => a.AccountLegalEntityExists(It.IsAny<long>(), It.IsAny<CancellationToken>())).ReturnsAsync(false);
     }
@@ -31,7 +32,8 @@ public class CreatePermissionRequestCommandValidatorTests
         var sut = new CreatePermissionRequestCommandValidator(
             _requestReadRepositoryValidMock.Object,
             _providersReadRepositoryValidMock.Object,
-            _accountLegalEntityReadRepositoryValidMock.Object
+            _accountLegalEntityReadRepositoryValidMock.Object,
+            _accountProviderLegalEntitiesReadRepositoryValidMock.Object
         );
         var result = await sut.TestValidateAsync(new CreatePermissionRequestCommand { Ukprn = 10000003, AccountLegalEntityId = 1, RequestedBy = Guid.NewGuid().ToString(), Operations = [Operation.CreateCohort] });
         result.ShouldNotHaveValidationErrorFor(query => query.Ukprn);
@@ -45,7 +47,8 @@ public class CreatePermissionRequestCommandValidatorTests
         var sut = new CreatePermissionRequestCommandValidator(
             _requestReadRepositoryValidMock.Object,
             _providersReadRepositoryValidMock.Object,
-            _accountLegalEntityReadRepositoryValidMock.Object
+            _accountLegalEntityReadRepositoryValidMock.Object,
+            _accountProviderLegalEntitiesReadRepositoryValidMock.Object
         );
         var result = await sut.TestValidateAsync(new CreatePermissionRequestCommand { Ukprn = 1000000, AccountLegalEntityId = 1, RequestedBy = Guid.NewGuid().ToString(), Operations = [Operation.CreateCohort] });
         result.ShouldHaveValidationErrorFor(q => q.Ukprn)
@@ -58,7 +61,8 @@ public class CreatePermissionRequestCommandValidatorTests
         var sut = new CreatePermissionRequestCommandValidator(
             _requestReadRepositoryValidMock.Object,
             _providersReadRepositoryValidMock.Object,
-            _accountLegalEntityReadRepositoryInvalidMock.Object
+            _accountLegalEntityReadRepositoryInvalidMock.Object,
+            _accountProviderLegalEntitiesReadRepositoryValidMock.Object
         );
         var result = await sut.TestValidateAsync(new CreatePermissionRequestCommand { Ukprn = 10000002, AccountLegalEntityId = 0, RequestedBy = Guid.NewGuid().ToString(), Operations = [Operation.CreateCohort] });
         result.ShouldHaveValidationErrorFor(q => q.AccountLegalEntityId)

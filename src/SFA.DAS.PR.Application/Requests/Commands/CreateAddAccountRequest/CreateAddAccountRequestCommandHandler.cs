@@ -2,7 +2,6 @@
 using SFA.DAS.PR.Application.Mediatr.Responses;
 using SFA.DAS.PR.Data;
 using SFA.DAS.PR.Domain.Entities;
-using SFA.DAS.PR.Domain.Extensions;
 using SFA.DAS.PR.Domain.Interfaces;
 
 namespace SFA.DAS.PR.Application.Requests.Commands.CreateAddAccountRequest;
@@ -32,8 +31,8 @@ public class CreateAddAccountRequestCommandHandler(
             RequestedBy = command.RequestedBy,
             RequestedDate = DateTime.UtcNow,
             AccountLegalEntityId = command.AccountLegalEntityId,
-            RequestType = RequestType.AddAccount.ToLowerString(),
-            Status = RequestStatus.New.ToLowerString(),
+            RequestType = RequestType.AddAccount.ToString(),
+            Status = RequestStatus.New.ToString(),
             EmployerOrganisationName = accountLegalEntity.Name,
             EmployerContactEmail = command.EmployerContactEmail,
             PermissionRequests = command.Operations.Select(a => new PermissionRequest()
