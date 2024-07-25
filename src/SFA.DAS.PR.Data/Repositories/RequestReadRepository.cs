@@ -6,6 +6,17 @@ namespace SFA.DAS.PR.Data.Repositories;
 
 public class RequestReadRepository(IProviderRelationshipsDataContext providerRelationshipsDataContext) : IRequestReadRepository
 {
+    public async Task<Request?> GetRequest(Guid requestId, CancellationToken cancellationToken)
+    {
+        var requestQuery = providerRelationshipsDataContext.Requests
+            .Include(a => a.PermissionRequests)
+            .Include(a => a.Provider)
+        .AsNoTracking()
+        .Where(a => a.Id == requestId);
+
+        return await requestQuery.OrderByDescending(a => a.RequestedDate).FirstOrDefaultAsync(cancellationToken);
+    }
+
     public async Task<Request?> GetRequest(long Ukprn, long AccountLegalEntityId, CancellationToken cancellationToken)
     {
         var requestQuery = providerRelationshipsDataContext.Requests
