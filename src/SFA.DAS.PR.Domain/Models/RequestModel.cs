@@ -27,7 +27,7 @@ public class RequestModel
         return new RequestModel()
         {
             RequestId = source.Id,
-            RequestType = source.RequestType,
+            RequestType = source.RequestType.ToString(),
             Ukprn = source.Ukprn,
             ProviderName = source.Provider.Name,
             RequestedBy = source.RequestedBy,
@@ -39,7 +39,7 @@ public class RequestModel
             EmployerContactEmail = source.EmployerContactEmail,
             EmployerPAYE = source.EmployerPAYE,
             EmployerAORN = source.EmployerAORN,
-            Status = source.Status,
+            Status = source.Status.ToString(),
             UpdatedDate = source.UpdatedDate,
             Operations = source.PermissionRequests.Select(a => (Operation)a.Operation).ToArray()
         };
