@@ -31,15 +31,14 @@ public class CreateAddAccountRequestCommandHandler(
             RequestedBy = command.RequestedBy,
             RequestedDate = DateTime.UtcNow,
             AccountLegalEntityId = command.AccountLegalEntityId,
-            RequestType = RequestType.AddAccount.ToString(),
-            Status = RequestStatus.New.ToString(),
+            RequestType = RequestType.AddAccount,
+            Status = RequestStatus.New,
             EmployerOrganisationName = accountLegalEntity.Name,
             EmployerContactEmail = command.EmployerContactEmail,
             PermissionRequests = command.Operations.Select(a => new PermissionRequest()
             {
-                Operation = (int)a
+                Operation = (short)a
             }).ToList()
         };
     }
 }
-    

@@ -11,6 +11,28 @@ public class RequestReadRepositoryTests
     private readonly CancellationToken cancellationToken = CancellationToken.None;
 
     [Test]
+    public async Task GetRequestById_Returns_Success()
+    {
+        Request request = RequestTestData.Create(Guid.NewGuid());
+
+        Request? result = null;
+
+        using (var context = InMemoryProviderRelationshipsDataContext.CreateInMemoryContext(
+            $"{nameof(InMemoryProviderRelationshipsDataContext)}_{nameof(GetRequestById_Returns_Success)}")
+        )
+        {
+            await context.AddAsync(request);
+            await context.SaveChangesAsync(cancellationToken);
+
+            RequestReadRepository sut = new(context);
+
+            result = await sut.GetRequest(request.Id, cancellationToken);
+        }
+
+        Assert.That(result, Is.Not.Null, $"result should not be null");
+    }
+
+    [Test]
     public async Task GetRequest_Returns_Success()
     {
         Request request = RequestTestData.Create(Guid.NewGuid());
@@ -52,7 +74,7 @@ public class RequestReadRepositoryTests
     [Test]
     public async Task RequestExists_RequestStatusNew_Returns_True()
     {
-        Request request = RequestTestData.Create(Guid.NewGuid(), RequestStatus.New.ToString());
+        Request request = RequestTestData.Create(Guid.NewGuid());
 
         bool? result = null;
 
@@ -74,7 +96,7 @@ public class RequestReadRepositoryTests
     [Test]
     public async Task RequestExists_RequestStatusSent_Returns_True()
     {
-        Request request = RequestTestData.Create(Guid.NewGuid(), RequestStatus.Sent.ToString());
+        Request request = RequestTestData.Create(Guid.NewGuid(), RequestStatus.Sent);
 
         bool? result = null;
 

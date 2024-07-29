@@ -6,6 +6,15 @@ namespace SFA.DAS.PR.Data.Repositories;
 
 public class RequestReadRepository(IProviderRelationshipsDataContext providerRelationshipsDataContext) : IRequestReadRepository
 {
+    public async Task<Request?> GetRequest(Guid requestId, CancellationToken cancellationToken)
+    {
+        return await providerRelationshipsDataContext.Requests
+            .Include(a => a.PermissionRequests)
+            .Include(a => a.Provider)
+        .AsNoTracking()
+        .FirstOrDefaultAsync(a => a.Id == requestId, cancellationToken);
+    }
+
     public async Task<Request?> GetRequest(long Ukprn, long AccountLegalEntityId, CancellationToken cancellationToken)
     {
         var requestQuery = providerRelationshipsDataContext.Requests
@@ -18,15 +27,12 @@ public class RequestReadRepository(IProviderRelationshipsDataContext providerRel
 
     public async Task<bool> RequestExists(long Ukprn, long AccountLegalEntityId, CancellationToken cancellationToken)
     {
-        string statusSent = RequestStatus.Sent.ToString();
-        string statusNew = RequestStatus.New.ToString();
-
         return await providerRelationshipsDataContext.Requests
             .AsNoTracking()
             .AnyAsync(a => 
                 a.AccountLegalEntityId == AccountLegalEntityId && 
                 a.Ukprn == Ukprn && 
-                (a.Status == statusNew || a.Status == statusSent),
+                (a.Status == RequestStatus.New || a.Status == RequestStatus.Sent),
                 cancellationToken
         );
     }

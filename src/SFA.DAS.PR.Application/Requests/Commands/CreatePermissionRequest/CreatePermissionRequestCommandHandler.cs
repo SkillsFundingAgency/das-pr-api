@@ -31,12 +31,12 @@ public class CreatePermissionRequestCommandHandler(
             RequestedBy = command.RequestedBy,
             RequestedDate = DateTime.UtcNow,
             AccountLegalEntityId = command.AccountLegalEntityId,
-            RequestType = RequestType.Permission.ToString(),
-            Status = RequestStatus.New.ToString(),
+            RequestType = RequestType.Permission,
+            Status = RequestStatus.New,
             EmployerOrganisationName = accountLegalEntity.Name,
             PermissionRequests = command.Operations.Select(a => new PermissionRequest()
             {
-                Operation = (int)a
+                Operation = (short)a
             }).ToList()
         };
     }
