@@ -29,10 +29,11 @@ public class GetProviderRelationshipsQueryHandler(IProviderRelationshipsReadRepo
         {
             Ukprn = request.Ukprn,
             SearchTerm = request.SearchTerm,
-            HasPendingRequest = request.HasPendingRequest,
             HasCreateCohortPermission = request.HasCreateCohortPermission,
-            HasRecruitmentWithReviewPermission = request.HasRecruitWithReviewPermission,
-            HasRecruitmentPermission = request.HasRecruitPermission,
+            HasRecruitmentWithReviewPermission = request.HasRecruitmentWithReviewPermission,
+            HasRecruitmentPermission = request.HasRecruitmentPermission,
+            HasNoRecruitmentPermission = request.HasNoRecruitmentPermissions,
+            HasPendingRequest = request.HasPendingRequest,
             PageSize = request.PageSize <= 0 ? defaultPageSize : request.PageSize,
             PageNumber = request.PageNumber <= 1 ? 0 : request.PageNumber - 1,
         };

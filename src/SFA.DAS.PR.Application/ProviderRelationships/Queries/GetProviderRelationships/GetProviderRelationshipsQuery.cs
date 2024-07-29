@@ -8,11 +8,11 @@ public class GetProviderRelationshipsQuery : IUkprnEntity, IRequest<ValidatedRes
 {
     public long? Ukprn { get; set; }
     public string? SearchTerm { get; set; }
+    public bool? HasCreateCohortPermission { get; set; }
+    public bool HasRecruitmentWithReviewPermission { get; set; }
+    public bool HasRecruitmentPermission { get; set; }
+    public bool HasNoRecruitmentPermissions { get; set; }
     public bool? HasPendingRequest { get; set; }
     public int PageSize { get; set; }
     public int PageNumber { get; set; }
-    public bool? HasCreateCohortPermission { get; set; }
-    public bool? HasRecruitWithReviewPermission { get; set; }
-    public bool? HasRecruitPermission { get; set; }
-    public bool? HasNoRecruitPermissions { get; set; }
 }
