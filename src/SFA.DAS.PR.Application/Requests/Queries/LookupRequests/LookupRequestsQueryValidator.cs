@@ -7,7 +7,7 @@ namespace SFA.DAS.PR.Application.Requests.Queries.LookupRequests;
 public class LookupRequestsQueryValidator : AbstractValidator<LookupRequestsQuery>
 {
     public static readonly string PayeValidationMessage = "Paye is required.";
-    public LookupRequestsQueryValidator(IProviderReadRepository providerReadRepository, IRequestReadRepository requestReadRepository)
+    public LookupRequestsQueryValidator(IProviderReadRepository providerReadRepository)
     {
         RuleFor(x => x.Ukprn)
             .NotEmpty()

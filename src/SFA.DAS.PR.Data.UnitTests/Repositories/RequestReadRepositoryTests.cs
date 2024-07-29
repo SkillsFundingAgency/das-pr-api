@@ -155,6 +155,28 @@ public class RequestReadRepositoryTests
     }
 
     [Test]
+    public async Task RequestExists_EmptyRequestStatus_Returns_True()
+    {
+        Request request = RequestTestData.Create(Guid.NewGuid());
+
+        bool? result = null;
+
+        using (var context = InMemoryProviderRelationshipsDataContext.CreateInMemoryContext(
+            $"{nameof(InMemoryProviderRelationshipsDataContext)}_{nameof(RequestExists_EmptyRequestStatus_Returns_True)}")
+        )
+        {
+            await context.AddAsync(request);
+            await context.SaveChangesAsync(cancellationToken);
+
+            RequestReadRepository sut = new(context);
+
+            result = await sut.RequestExists(request.Ukprn, request.AccountLegalEntityId!.Value, [], cancellationToken);
+        }
+
+        Assert.That(result, Is.True, $"result should be True");
+    }
+
+    [Test]
     public async Task RequestExists_RequestStatusSent_Returns_True()
     {
         Request request = RequestTestData.Create(Guid.NewGuid(), RequestStatus.Sent);
