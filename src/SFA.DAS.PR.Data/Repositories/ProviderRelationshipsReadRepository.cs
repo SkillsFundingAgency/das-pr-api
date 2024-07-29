@@ -28,9 +28,10 @@ public class ProviderRelationshipsReadRepository(IProviderRelationshipsDataConte
     {
         Expression<Func<ProviderRelationship, bool>> predicate = p => p.Ukprn == filters.Ukprn;
 
-        if (!string.IsNullOrWhiteSpace(filters.EmployerName)) predicate = predicate.And(p => p.EmployerName.Contains(filters.EmployerName));
+        if (!string.IsNullOrWhiteSpace(filters.SearchTerm)) predicate = predicate.And(p => p.EmployerName.Contains(filters.SearchTerm) || p.AgreementId == filters.SearchTerm);
 
-        if (filters.HasPendingRequest) predicate = predicate.And(p => p.RequestId != null);
+        if (filters.HasPendingRequest.HasValue && filters.HasPendingRequest == true) predicate = predicate.And(p => p.RequestId != null);
+        if (filters.HasPendingRequest.HasValue && filters.HasPendingRequest == false) predicate = predicate.And(p => p.RequestId == null);
 
         if (filters.HasCreateCohortPermission.HasValue) predicate = predicate.And(p => p.HasCreateCohortPermission == filters.HasCreateCohortPermission);
 

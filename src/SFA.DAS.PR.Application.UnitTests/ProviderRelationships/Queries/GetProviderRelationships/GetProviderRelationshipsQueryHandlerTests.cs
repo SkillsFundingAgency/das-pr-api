@@ -72,7 +72,7 @@ public class GetProviderRelationshipsQueryHandlerTests
                     && o.HasPendingRequest == query.HasPendingRequest
                     && o.HasCreateCohortPermission == query.HasCreateCohortPermission
                     && o.HasRecruitmentWithReviewPermission == query.HasRecruitWithReviewPermission
-                    && o.EmployerName == query.EmployerName
+                    && o.SearchTerm == query.SearchTerm
                     && o.HasRecruitmentPermission == query.HasRecruitPermission
                     && o.Ukprn == query.Ukprn),
                 cancellationToken),
