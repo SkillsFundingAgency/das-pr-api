@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Moq;
 using SFA.DAS.PR.Application.Mediatr.Responses;
 using SFA.DAS.PR.Application.Requests.Queries.GetRequest;
+using SFA.DAS.PR.Application.Requests.Queries.LookupRequests;
 using SFA.DAS.PR.Data.Repositories;
 using SFA.DAS.PR.Data.UnitTests.InMemoryDatabases;
 using SFA.DAS.PR.Domain.Entities;
@@ -12,37 +13,35 @@ using SFA.DAS.PR.Domain.Models;
 using SFA.DAS.ProviderRelationships.Types.Models;
 using SFA.DAS.Testing.AutoFixture;
 
-namespace SFA.DAS.PR.Application.UnitTests.Requests.Queries.GetRequest;
+namespace SFA.DAS.PR.Application.UnitTests.Requests.Queries.LookupRequests;
 
-public class GetRequestQueryHandlerTests
+public class LookupRequestsQueryHandlerTests
 {
     [Test]
     [RecursiveMoqAutoData]
-    public async Task GetRequestQueryHandler_Handle_ReturnsRequestModel(Request request)
+    public async Task LookupRequestsQueryHandler_Handle_ReturnsRequestModel(Request request)
     {
-        GetRequestQuery query = new GetRequestQuery(request.Id);
-
         ValidatedResponse<RequestModel?> requestModel;
 
         Request persistedRequest;
 
         using (var context = InMemoryProviderRelationshipsDataContext.CreateInMemoryContext(
-            $"{nameof(InMemoryProviderRelationshipsDataContext)}_{nameof(GetRequestQueryHandler_Handle_ReturnsRequestModel)}")
+            $"{nameof(InMemoryProviderRelationshipsDataContext)}_{nameof(LookupRequestsQueryHandler_Handle_ReturnsRequestModel)}")
         )
         {
             await context.AddAsync(request, CancellationToken.None);
             await context.SaveChangesAsync(CancellationToken.None);
 
             RequestReadRepository requestReadRepository = new(context);
-            GetRequestQueryHandler sut = new(requestReadRepository);
-            requestModel = await sut.Handle(query, CancellationToken.None);
+            LookupRequestsQueryHandler sut = new(requestReadRepository);
+            requestModel = await sut.Handle(new(request.Provider.Ukprn, request.EmployerPAYE!), CancellationToken.None);
             persistedRequest = await context.Requests.FirstAsync(CancellationToken.None);
         }
 
         requestModel.Result.Should().NotBeNull();
 
         requestModel.Result.Should().BeEquivalentTo(
-            persistedRequest, 
+            persistedRequest,
             options => options
                 .Excluding(model => model.Id)
                 .Excluding(model => model.RequestType)
@@ -65,20 +64,21 @@ public class GetRequestQueryHandlerTests
 
     [Test]
     [RecursiveMoqAutoData]
-    public async Task GetRequestQueryHandler_Handle_ReturnsNull(
-        [Frozen]Mock<IRequestReadRepository> requestReadRepository,
-        GetRequestQueryHandler sut
+    public async Task LookupRequestsQueryHandler_Handle_ReturnsNull(
+        [Frozen] Mock<IRequestReadRepository> requestReadRepository,
+        LookupRequestsQueryHandler sut,
+        LookupRequestsQuery query
     )
     {
-        requestReadRepository.Setup(a => 
+        requestReadRepository.Setup(a =>
             a.GetRequest(
-                It.IsAny<Guid>(), 
+                It.IsAny<long>(),
+                It.IsAny<string>(),
+                It.IsAny<RequestStatus[]>(),
                 It.IsAny<CancellationToken>()
             )
         )
         .ReturnsAsync((Request?)null);
-
-        GetRequestQuery query = new GetRequestQuery(Guid.NewGuid());
 
         ValidatedResponse<RequestModel?> requestModel = await sut.Handle(query, CancellationToken.None);
 

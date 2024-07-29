@@ -11,6 +11,7 @@ using SFA.DAS.PR.Application.Mediatr.Responses;
 using SFA.DAS.PR.Application.Requests.Commands.CreateAddAccountRequest;
 using SFA.DAS.PR.Application.Requests.Commands.CreatePermissionRequest;
 using SFA.DAS.PR.Application.Requests.Queries.GetRequest;
+using SFA.DAS.PR.Application.Requests.Queries.LookupRequests;
 using SFA.DAS.PR.Domain.Models;
 using SFA.DAS.Testing.AutoFixture;
 
@@ -159,5 +160,69 @@ public class RequestsControllerTests
         ).ReturnsAsync(new ValidatedResponse<RequestModel?>());
 
         result.Should().BeOfType<NotFoundResult>().And.NotBeNull();
+    }
+
+    [Test]
+    [MoqAutoData]
+    public async Task LookupRequests_InvokesQueryHandler(
+       [Frozen] Mock<IMediator> mediatorMock,
+       [Greedy] RequestsController sut,
+       LookupRequestsQuery query,
+       CancellationToken cancellationToken
+    )
+    {
+        await sut.LookupRequests(query.Ukprn!.Value, query.Paye, cancellationToken);
+
+        mediatorMock.Verify(m =>
+            m.Send(It.Is<LookupRequestsQuery>(a => a.Ukprn == query.Ukprn && a.Paye == query.Paye), It.IsAny<CancellationToken>())
+        );
+    }
+
+    [Test]
+    [MoqAutoData]
+    public async Task LookupRequests_Returns_NotFoundResult(
+       [Frozen] Mock<IMediator> mediatorMock,
+       [Greedy] RequestsController sut,
+       LookupRequestsQuery query,
+       CancellationToken cancellationToken
+    )
+    {
+        var result = await sut.LookupRequests(query.Ukprn!.Value, query.Paye, cancellationToken);
+
+        mediatorMock.Setup(m =>
+            m.Send(
+                It.Is<LookupRequestsQuery>(a => a.Ukprn == query.Ukprn && a.Paye == query.Paye),
+                It.IsAny<CancellationToken>()
+            )
+        ).ReturnsAsync(new ValidatedResponse<RequestModel?>());
+
+        result.Should().BeOfType<NotFoundResult>().And.NotBeNull();
+    }
+
+    [Test]
+    [MoqAutoData]
+    public async Task LookupRequests_InvalidRequest_ReturnsBadRequestResponse(
+        [Frozen] Mock<IMediator> mediatorMock,
+        [Greedy] RequestsController sut,
+        List<ValidationFailure> errors,
+        CancellationToken cancellationToken
+    )
+    {
+        var errorResponse = new ValidatedResponse<RequestModel?>(errors);
+
+        mediatorMock.Setup(m =>
+            m.Send(
+                It.IsAny<LookupRequestsQuery>(),
+                It.IsAny<CancellationToken>()
+            )
+        ).ReturnsAsync(errorResponse);
+
+        var result = await sut.LookupRequests(
+            10000001, "PAYE",
+            cancellationToken
+        );
+
+        result.As<BadRequestObjectResult>().Should().NotBeNull();
+        result.As<BadRequestObjectResult>().Value.As<List<ValidationError>>().Count.Should().Be(errors.Count);
     }
 }

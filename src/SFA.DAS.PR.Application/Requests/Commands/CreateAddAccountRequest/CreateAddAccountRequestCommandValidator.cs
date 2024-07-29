@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using SFA.DAS.PR.Application.Common.Validators;
+using SFA.DAS.PR.Domain.Entities;
 using SFA.DAS.PR.Domain.Interfaces;
 
 namespace SFA.DAS.PR.Application.Requests.Commands.CreateAddAccountRequest;
@@ -25,7 +26,7 @@ public class CreateAddAccountRequestCommandValidator : AbstractValidator<CreateA
         RuleFor(a => a.AccountLegalEntityId)
             .ValidateAccountLegalEntityExists(accountLegalEntityReadRepository);
 
-        RuleFor(a => new RequestValidationObject() { Ukprn = a.Ukprn, AccountLegalEntityId = a.AccountLegalEntityId })
+        RuleFor(a => new RequestValidationObject() { Ukprn = a.Ukprn, AccountLegalEntityId = a.AccountLegalEntityId, RequestStatuses = new[] { RequestStatus.New, RequestStatus.Sent } })
             .ValidateRequest(requestReadRepository);
 
         RuleFor(a => a.Operations).ValidateOperationCombinations();

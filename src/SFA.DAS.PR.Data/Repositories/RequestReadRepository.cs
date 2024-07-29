@@ -25,14 +25,28 @@ public class RequestReadRepository(IProviderRelationshipsDataContext providerRel
         return await requestQuery.OrderByDescending(a => a.RequestedDate).FirstOrDefaultAsync(cancellationToken);
     }
 
-    public async Task<bool> RequestExists(long Ukprn, long AccountLegalEntityId, CancellationToken cancellationToken)
+    public async Task<Request?> GetRequest(long Ukprn, string payee, RequestStatus[] requestStatuses, CancellationToken cancellationToken)
+    {
+        return await providerRelationshipsDataContext.Requests
+            .Include(a => a.PermissionRequests)
+            .Include(a => a.Provider)
+        .AsNoTracking()
+        .FirstOrDefaultAsync(a => 
+            a.Ukprn == Ukprn && 
+            a.EmployerPAYE == payee &&
+            (!requestStatuses.Any() || requestStatuses.Contains(a.Status)),
+            cancellationToken
+        );
+    }
+
+    public async Task<bool> RequestExists(long Ukprn, long AccountLegalEntityId, RequestStatus[] requestStatuses, CancellationToken cancellationToken)
     {
         return await providerRelationshipsDataContext.Requests
             .AsNoTracking()
             .AnyAsync(a => 
                 a.AccountLegalEntityId == AccountLegalEntityId && 
-                a.Ukprn == Ukprn && 
-                (a.Status == RequestStatus.New || a.Status == RequestStatus.Sent),
+                a.Ukprn == Ukprn &&
+                (!requestStatuses.Any() || requestStatuses.Contains(a.Status)),
                 cancellationToken
         );
     }

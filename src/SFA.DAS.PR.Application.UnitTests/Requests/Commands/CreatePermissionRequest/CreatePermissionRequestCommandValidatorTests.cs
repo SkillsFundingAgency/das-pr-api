@@ -2,6 +2,7 @@
 using Moq;
 using SFA.DAS.PR.Application.Common.Validators;
 using SFA.DAS.PR.Application.Requests.Commands.CreatePermissionRequest;
+using SFA.DAS.PR.Domain.Entities;
 using SFA.DAS.PR.Domain.Interfaces;
 using SFA.DAS.ProviderRelationships.Types.Models;
 
@@ -18,7 +19,7 @@ public class CreatePermissionRequestCommandValidatorTests
     [SetUp]
     public void SetUp()
     {
-        _requestReadRepositoryValidMock.Setup(a => a.RequestExists(It.IsAny<long>(), It.IsAny<long>(), It.IsAny<CancellationToken>())).ReturnsAsync(false);
+        _requestReadRepositoryValidMock.Setup(a => a.RequestExists(It.IsAny<long>(), It.IsAny<long>(), It.IsAny<RequestStatus[]>(), It.IsAny<CancellationToken>())).ReturnsAsync(false);
         _providersReadRepositoryValidMock.Setup(a => a.ProviderExists(It.IsAny<long>(), It.IsAny<CancellationToken>())).ReturnsAsync(true);
         _accountLegalEntityReadRepositoryValidMock.Setup(a => a.AccountLegalEntityExists(It.IsAny<long>(), It.IsAny<CancellationToken>())).ReturnsAsync(true);
         _accountProviderLegalEntitiesReadRepositoryValidMock.Setup(a => a.AccountProviderLegalEntityExists(It.IsAny<long>(), It.IsAny<long>(), It.IsAny<CancellationToken>())).ReturnsAsync(true);

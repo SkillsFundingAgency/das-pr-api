@@ -6,6 +6,7 @@ using SFA.DAS.PR.Api.Common;
 using SFA.DAS.PR.Application.Requests.Commands.CreateAddAccountRequest;
 using SFA.DAS.PR.Application.Requests.Commands.CreatePermissionRequest;
 using SFA.DAS.PR.Application.Requests.Queries.GetRequest;
+using SFA.DAS.PR.Application.Requests.Queries.LookupRequests;
 using SFA.DAS.PR.Domain.Models;
 
 namespace SFA.DAS.PR.Api.Controllers;
@@ -43,6 +44,18 @@ public class RequestsController(IMediator _mediator) : ActionResponseControllerB
     public async Task<IActionResult> GetRequest([FromRoute] Guid requestId, CancellationToken cancellationToken)
     {
         GetRequestQuery query = new(requestId);
+        var result = await _mediator.Send(query, cancellationToken);
+        return GetResponse(result);
+    }
+
+    [HttpGet]
+    [Authorize(Policy = Policies.Management)]
+    [ProducesResponseType(typeof(RequestModel), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(List<ValidationError>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> LookupRequests([FromQuery] long ukprn, [FromQuery] string paye, CancellationToken cancellationToken)
+    {
+        LookupRequestsQuery query = new(ukprn, paye);
         var result = await _mediator.Send(query, cancellationToken);
         return GetResponse(result);
     }

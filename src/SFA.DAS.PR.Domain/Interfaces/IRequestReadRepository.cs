@@ -6,5 +6,6 @@ public interface IRequestReadRepository
 {
     Task<Request?> GetRequest(Guid requestId, CancellationToken cancellationToken);
     Task<Request?> GetRequest(long Ukprn, long AccountLegalEntityId, CancellationToken cancellationToken);
-    Task<bool> RequestExists(long Ukprn, long AccountLegalEntityId, CancellationToken cancellationToken);
+    Task<Request?> GetRequest(long Ukprn, string payee, RequestStatus[] requestStatuses, CancellationToken cancellationToken);
+    Task<bool> RequestExists(long Ukprn, long AccountLegalEntityId, RequestStatus[] requestStatuses, CancellationToken cancellationToken);
 }

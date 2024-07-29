@@ -13,7 +13,8 @@ public static class RequestsValidator
             {
                 return !await requestReadRepository.RequestExists(
                     requestValidationObject.Ukprn!.Value, 
-                    requestValidationObject.AccountLegalEntityId, 
+                    requestValidationObject.AccountLegalEntityId,
+                    requestValidationObject.RequestStatuses,
                     cancellationToken
                 );
             })

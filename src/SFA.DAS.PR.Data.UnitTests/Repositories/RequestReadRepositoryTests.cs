@@ -72,6 +72,67 @@ public class RequestReadRepositoryTests
     }
 
     [Test]
+    public async Task GetRequestByUkprnPaye_Returns_Success()
+    {
+        Request request = RequestTestData.Create(Guid.NewGuid());
+
+        Request? result = null;
+
+        using (var context = InMemoryProviderRelationshipsDataContext.CreateInMemoryContext(
+            $"{nameof(InMemoryProviderRelationshipsDataContext)}_{nameof(GetRequestByUkprnPaye_Returns_Success)}")
+        )
+        {
+            await context.AddAsync(request);
+            await context.SaveChangesAsync(cancellationToken);
+
+            RequestReadRepository sut = new(context);
+
+            result = await sut.GetRequest(request.Provider.Ukprn, request.EmployerPAYE!, [RequestStatus.New], cancellationToken);
+        }
+
+        Assert.That(result, Is.Not.Null, $"result should not be null");
+    }
+
+    [Test]
+    public async Task GetRequestByUkprnPaye_EmptyStatuses_Returns_Success()
+    {
+        Request request = RequestTestData.Create(Guid.NewGuid());
+
+        Request? result = null;
+
+        using (var context = InMemoryProviderRelationshipsDataContext.CreateInMemoryContext(
+            $"{nameof(InMemoryProviderRelationshipsDataContext)}_{nameof(GetRequestByUkprnPaye_EmptyStatuses_Returns_Success)}")
+        )
+        {
+            await context.AddAsync(request);
+            await context.SaveChangesAsync(cancellationToken);
+
+            RequestReadRepository sut = new(context);
+
+            result = await sut.GetRequest(request.Provider.Ukprn, request.EmployerPAYE!, [], cancellationToken);
+        }
+
+        Assert.That(result, Is.Not.Null, $"result should not be null");
+    }
+
+    [Test]
+    public async Task GetRequestByUkprnPaye_EmptyStatuses_Returns_Null()
+    {
+        Request? result = null;
+
+        using (var context = InMemoryProviderRelationshipsDataContext.CreateInMemoryContext(
+            $"{nameof(InMemoryProviderRelationshipsDataContext)}_{nameof(GetRequestByUkprnPaye_Returns_Success)}")
+        )
+        {
+            RequestReadRepository sut = new(context);
+
+            result = await sut.GetRequest(10000001, "Paye", [], cancellationToken);
+        }
+
+        Assert.That(result, Is.Null, $"result should be null");
+    }
+
+    [Test]
     public async Task RequestExists_RequestStatusNew_Returns_True()
     {
         Request request = RequestTestData.Create(Guid.NewGuid());
@@ -87,7 +148,7 @@ public class RequestReadRepositoryTests
 
             RequestReadRepository sut = new(context);
 
-            result = await sut.RequestExists(request.Ukprn, request.AccountLegalEntityId!.Value, cancellationToken);
+            result = await sut.RequestExists(request.Ukprn, request.AccountLegalEntityId!.Value, [RequestStatus.New], cancellationToken);
         }
 
         Assert.That(result, Is.True, $"result should be True");
@@ -109,7 +170,7 @@ public class RequestReadRepositoryTests
 
             RequestReadRepository sut = new(context);
 
-            result = await sut.RequestExists(request.Ukprn, request.AccountLegalEntityId!.Value, cancellationToken);
+            result = await sut.RequestExists(request.Ukprn, request.AccountLegalEntityId!.Value, [RequestStatus.Sent], cancellationToken);
         }
 
         Assert.That(result, Is.True, $"result should be True");
@@ -126,7 +187,7 @@ public class RequestReadRepositoryTests
         {
             RequestReadRepository sut = new(context);
 
-            result = await sut.RequestExists(10000001, 1, cancellationToken);
+            result = await sut.RequestExists(10000001, 1, [RequestStatus.New], cancellationToken);
         }
 
         Assert.That(result, Is.False, $"result should be False");
