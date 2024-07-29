@@ -34,7 +34,7 @@ public class RequestReadRepository(IProviderRelationshipsDataContext providerRel
         .FirstOrDefaultAsync(a => 
             a.Ukprn == Ukprn && 
             a.EmployerPAYE == payee &&
-            (!requestStatuses.Any() || requestStatuses.Contains(a.Status)),
+            (requestStatuses.Count() == 0 || requestStatuses.Contains(a.Status)),
             cancellationToken
         );
     }
@@ -46,7 +46,7 @@ public class RequestReadRepository(IProviderRelationshipsDataContext providerRel
             .AnyAsync(a => 
                 a.AccountLegalEntityId == AccountLegalEntityId && 
                 a.Ukprn == Ukprn &&
-                (!requestStatuses.Any() || requestStatuses.Contains(a.Status)),
+                (requestStatuses.Count() == 0 || requestStatuses.Contains(a.Status)),
                 cancellationToken
         );
     }
