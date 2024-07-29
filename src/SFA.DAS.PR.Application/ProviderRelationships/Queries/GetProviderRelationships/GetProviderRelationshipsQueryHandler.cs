@@ -16,6 +16,8 @@ public class GetProviderRelationshipsQueryHandler(IProviderRelationshipsReadRepo
 
         var (relationships, totalCount) = await _providerRelationshipsReadRepository.GetProviderRelationships(options, cancellationToken);
 
+        result.HasAnyRelationships = await _providerRelationshipsReadRepository.HasAnyRelationship(request.Ukprn!.Value, cancellationToken);
+
         result.Employers = relationships.Select(r => (ProviderRelationshipModel)r);
         result.TotalCount = totalCount;
         result.PageNumber = options.PageNumber + 1;

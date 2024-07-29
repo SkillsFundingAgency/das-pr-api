@@ -79,6 +79,23 @@ public class GetProviderRelationshipsQueryHandlerTests
             Times.Once);
     }
 
+    [Test]
+    [RecursiveMoqInlineAutoData(true)]
+    [RecursiveMoqInlineAutoData(false)]
+    public async Task Handler_RespondsWithHasAnyRelationships(
+        bool hasAnyRelationships,
+        [Frozen] Mock<IProviderRelationshipsReadRepository> mockRepo,
+        GetProviderRelationshipsQueryHandler sut,
+        GetProviderRelationshipsQuery query,
+        CancellationToken cancellationToken)
+    {
+        mockRepo.Setup(r => r.HasAnyRelationship(query.Ukprn!.Value, cancellationToken)).ReturnsAsync(hasAnyRelationships);
+
+        var result = await sut.Handle(query, cancellationToken);
+
+        result.Result!.HasAnyRelationships.Should().Be(hasAnyRelationships);
+    }
+
     [Test, RecursiveMoqAutoData]
     public async Task Handler_ReturnsResults(
         [Frozen] Mock<IProviderRelationshipsReadRepository> mockRepo,

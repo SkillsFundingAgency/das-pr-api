@@ -11,9 +11,14 @@ namespace SFA.DAS.PR.Data.Repositories;
 [ExcludeFromCodeCoverage]
 public class ProviderRelationshipsReadRepository(IProviderRelationshipsDataContext _providerRelationshipsDataContext) : IProviderRelationshipsReadRepository
 {
+    public async Task<bool> HasAnyRelationship(long ukprn, CancellationToken cancellationToken)
+    {
+        return await _providerRelationshipsDataContext.ProviderRelationships.AsNoTracking().AnyAsync(p => p.Ukprn == ukprn, cancellationToken);
+    }
+
     public async Task<(List<ProviderRelationship>, int)> GetProviderRelationships(ProviderRelationshipsQueryFilters providerRelationshipsQueryOptions, CancellationToken cancellationToken)
     {
-        var query = _providerRelationshipsDataContext.ProviderRelationships.Where(BuildPredicate(providerRelationshipsQueryOptions));
+        var query = _providerRelationshipsDataContext.ProviderRelationships.AsNoTracking().Where(BuildPredicate(providerRelationshipsQueryOptions));
 
         var count = await query.CountAsync(cancellationToken);
 
