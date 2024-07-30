@@ -18,8 +18,8 @@ public class AccountProvidersController(IMediator _mediator) : ActionResponseCon
 
     [HttpGet]
     [Authorize(Policy = Policies.Integration)]
-    [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(GetAccountProvidersQueryResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(List<ValidationError>), StatusCodes.Status400BadRequest)]
     [SwaggerRequestExample(typeof(GetAccountProvidersQueryResult), typeof(GetAccountProvidersQueryResultExample))]
     public async Task<IActionResult> Get([FromRoute] long accountId, CancellationToken cancellationToken)
     {

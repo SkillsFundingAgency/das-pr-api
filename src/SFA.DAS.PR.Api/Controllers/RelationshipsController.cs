@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SFA.DAS.PR.Api.Attributes;
 using SFA.DAS.PR.Api.Authorization;
 using SFA.DAS.PR.Api.Common;
 using SFA.DAS.PR.Application.Mediatr.Responses;
@@ -16,7 +15,6 @@ public class RelationshipsController(IMediator _mediator) : ActionResponseContro
     public override string ControllerName => "Relationships";
 
     [HttpGet]
-    [UseEnumMemberConverter]
     [Authorize(Policy = Policies.Management)]
     [ProducesResponseType(typeof(GetRelationshipsQueryResult), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(List<ValidationError>), StatusCodes.Status400BadRequest)]
