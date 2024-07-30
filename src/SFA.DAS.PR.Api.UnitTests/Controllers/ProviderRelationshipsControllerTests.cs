@@ -29,8 +29,8 @@ public class ProviderRelationshipsControllerTests
             It.Is<GetProviderRelationshipsQuery>(q =>
                 q.Ukprn == ukprn
                 && q.SearchTerm == requestModel.SearchTerm
-                && q.HasRecruitPermission == requestModel.HasRecruitmentPermission
-                && q.HasRecruitWithReviewPermission == requestModel.HasRecruitmentWithReviewPermission
+                && q.HasRecruitmentPermission == requestModel.HasRecruitmentPermission
+                && q.HasRecruitmentWithReviewPermission == requestModel.HasRecruitmentWithReviewPermission
                 && q.HasCreateCohortPermission == requestModel.HasCreateCohortPermission
                 && q.HasPendingRequest == requestModel.HasPendingRequest
                 && q.PageNumber == requestModel.PageNumber
