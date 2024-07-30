@@ -11,9 +11,14 @@ namespace SFA.DAS.PR.Data.Repositories;
 [ExcludeFromCodeCoverage]
 public class ProviderRelationshipsReadRepository(IProviderRelationshipsDataContext _providerRelationshipsDataContext) : IProviderRelationshipsReadRepository
 {
+    public async Task<bool> HasAnyRelationship(long ukprn, CancellationToken cancellationToken)
+    {
+        return await _providerRelationshipsDataContext.ProviderRelationships.AsNoTracking().AnyAsync(p => p.Ukprn == ukprn, cancellationToken);
+    }
+
     public async Task<(List<ProviderRelationship>, int)> GetProviderRelationships(ProviderRelationshipsQueryFilters providerRelationshipsQueryOptions, CancellationToken cancellationToken)
     {
-        var query = _providerRelationshipsDataContext.ProviderRelationships.Where(BuildPredicate(providerRelationshipsQueryOptions));
+        var query = _providerRelationshipsDataContext.ProviderRelationships.AsNoTracking().Where(BuildPredicate(providerRelationshipsQueryOptions));
 
         var count = await query.CountAsync(cancellationToken);
 
@@ -35,22 +40,23 @@ public class ProviderRelationshipsReadRepository(IProviderRelationshipsDataConte
 
         if (filters.HasCreateCohortPermission.HasValue) predicate = predicate.And(p => p.HasCreateCohortPermission == filters.HasCreateCohortPermission);
 
-        if (filters.HasRecruitmentPermission == true && filters.HasRecruitmentWithReviewPermission == true)
+        predicate = filters switch
         {
-            predicate = predicate.And(p => p.HasRecruitmentPermission || p.HasRecruitmentWithReviewPermission);
-        }
-        else
-        {
-            if (filters.HasRecruitmentPermission.HasValue)
-            {
-                predicate = predicate.And(p => p.HasRecruitmentPermission == filters.HasRecruitmentPermission);
-            }
+            { HasRecruitmentPermission: true, HasRecruitmentWithReviewPermission: false, HasNoRecruitmentPermission: false }
+                => predicate.And(p => p.HasRecruitmentPermission == filters.HasRecruitmentPermission),
+            { HasRecruitmentPermission: false, HasRecruitmentWithReviewPermission: true, HasNoRecruitmentPermission: false }
+                => predicate.And(p => p.HasRecruitmentWithReviewPermission == filters.HasRecruitmentWithReviewPermission),
+            { HasRecruitmentPermission: false, HasRecruitmentWithReviewPermission: false, HasNoRecruitmentPermission: true }
+                => predicate.And(p => !p.HasRecruitmentPermission && !p.HasRecruitmentWithReviewPermission),
+            { HasRecruitmentPermission: true, HasRecruitmentWithReviewPermission: true, HasNoRecruitmentPermission: false }
+                => predicate.And(p => p.HasRecruitmentPermission || p.HasRecruitmentWithReviewPermission),
+            { HasRecruitmentPermission: true, HasRecruitmentWithReviewPermission: false, HasNoRecruitmentPermission: true }
+                => predicate.And(p => p.HasRecruitmentPermission || (!p.HasRecruitmentPermission && !p.HasRecruitmentWithReviewPermission)),
+            { HasRecruitmentPermission: false, HasRecruitmentWithReviewPermission: true, HasNoRecruitmentPermission: true }
+                => predicate.And(p => p.HasRecruitmentWithReviewPermission || (!p.HasRecruitmentPermission && !p.HasRecruitmentWithReviewPermission)),
+            _ => predicate
+        };
 
-            if (filters.HasRecruitmentWithReviewPermission.HasValue)
-            {
-                predicate = predicate.And(p => p.HasRecruitmentWithReviewPermission == filters.HasRecruitmentWithReviewPermission);
-            }
-        }
         return predicate;
     }
 }
