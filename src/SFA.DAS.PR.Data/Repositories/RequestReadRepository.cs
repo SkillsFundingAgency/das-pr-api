@@ -15,4 +15,19 @@ public class RequestReadRepository(IProviderRelationshipsDataContext providerRel
 
         return await requestQuery.OrderByDescending(a => a.RequestedDate).FirstOrDefaultAsync(cancellationToken);
     }
+
+    public async Task<bool> RequestExists(long Ukprn, long AccountLegalEntityId, CancellationToken cancellationToken)
+    {
+        string statusSent = RequestStatus.Sent.ToString();
+        string statusNew = RequestStatus.New.ToString();
+
+        return await providerRelationshipsDataContext.Requests
+            .AsNoTracking()
+            .AnyAsync(a => 
+                a.AccountLegalEntityId == AccountLegalEntityId && 
+                a.Ukprn == Ukprn && 
+                (a.Status == statusNew || a.Status == statusSent),
+                cancellationToken
+        );
+    }
 }

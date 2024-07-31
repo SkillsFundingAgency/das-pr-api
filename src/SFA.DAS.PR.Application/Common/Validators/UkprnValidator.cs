@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using SFA.DAS.PR.Data.Repositories;
 using SFA.DAS.PR.Domain.Interfaces;
 
 namespace SFA.DAS.PR.Application.Common.Validators;

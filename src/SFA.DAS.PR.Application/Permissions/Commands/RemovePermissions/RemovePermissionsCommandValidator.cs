@@ -18,7 +18,6 @@ public class RemovePermissionsCommandValidator : AbstractValidator<RemovePermiss
             .NotEmpty()
             .WithMessage(UkprnValidationMessage);
 
-
         RuleFor(x => x.Ukprn)
             .IsValidUkprn(providersReadRepository);
 

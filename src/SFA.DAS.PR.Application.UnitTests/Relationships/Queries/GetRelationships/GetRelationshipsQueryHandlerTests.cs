@@ -28,7 +28,7 @@ public class GetRelationshipsQueryHandlerTests
     {
         PermissionsAudit? audit = PermissionsAuditTestData.Create(Guid.NewGuid());
 
-        Request? request = RequestTestData.Create(Guid.NewGuid());
+        Request? request = RequestTestData.Create(Guid.NewGuid(), "New");
 
         accountProviderLegalEntitiesReadRepository.Setup(a =>
             a.GetAccountProviderLegalEntityByProvider(
