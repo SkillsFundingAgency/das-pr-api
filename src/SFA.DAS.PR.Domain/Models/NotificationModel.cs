@@ -5,11 +5,10 @@ namespace SFA.DAS.PR.Domain.Models;
 public class NotificationModel : IUkprnEntity
 {
     public required string TemplateName { get; set; }
-    public required string NotificationType {  get; set; }
+    public required string NotificationType { get; set; }
     public long? Ukprn { get; set; }
     public string? EmailAddress { get; set; }
     public string? Contact { get; set; }
-    public string? EmployerName { get; set; }
     public Guid? RequestId { get; set; }
     public long? AccountLegalEntityId { get; set; }
     public int? PermitApprovals { get; set; }
