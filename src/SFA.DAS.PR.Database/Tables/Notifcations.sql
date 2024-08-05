@@ -6,7 +6,6 @@
     [Ukprn] BIGINT,
     [EmailAddress] NVARCHAR(255) NULL,
     [Contact] NVARCHAR(400) NULL,
-    [EmployerName] NVARCHAR(250) NULL,
     [RequestId] UNIQUEIDENTIFIER NULL,
     [AccountLegalEntityId] BIGINT NULL,
     [PermitApprovals] SMALLINT NULL,

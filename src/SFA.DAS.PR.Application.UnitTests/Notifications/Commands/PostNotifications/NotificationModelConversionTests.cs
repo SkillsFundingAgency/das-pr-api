@@ -19,7 +19,6 @@ public class NotificationModelConversionTests
             Assert.That(sut.Ukprn, Is.EqualTo(source.Ukprn));
             Assert.That(sut.EmailAddress, Is.EqualTo(source.EmailAddress));
             Assert.That(sut.Contact, Is.EqualTo(source.Contact));
-            Assert.That(sut.EmployerName, Is.EqualTo(source.EmployerName));
             Assert.That(sut.RequestId, Is.EqualTo(source.RequestId));
             Assert.That(sut.AccountLegalEntityId, Is.EqualTo(source.AccountLegalEntityId));
             Assert.That(sut.PermitApprovals, Is.EqualTo(source.PermitApprovals));
