@@ -49,4 +49,18 @@ public class AccountProviderLegalEntitiesReadRepository(IProviderRelationshipsDa
             cancellationToken
         );
     }
+
+    public async Task<bool> AccountProviderLegalEntityExists(long ukprn, long accountLegalEntityId, CancellationToken cancellationToken)
+    {
+        return await _providerRelationshipsDataContext.AccountProviderLegalEntities.AsNoTracking()
+            .Include(a => a.AccountProvider)
+            .Include(a => a.Permissions)
+            .Include(a => a.AccountLegalEntity)
+        .AnyAsync(a =>
+            a.AccountLegalEntityId == accountLegalEntityId &&
+            a.AccountProvider.ProviderUkprn == ukprn &&
+            a.AccountLegalEntity.Deleted == null,
+            cancellationToken
+        );
+    }
 }

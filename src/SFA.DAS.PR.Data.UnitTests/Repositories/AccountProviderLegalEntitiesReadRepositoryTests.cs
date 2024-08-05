@@ -150,4 +150,55 @@ public class AccountProviderLegalEntitiesReadRepositoryTests
 
         Assert.That(result, Is.Null, $"result should be null");
     }
+
+    [Test]
+    public async Task AccountProviderLegalEntityExists_Returns_True()
+    {
+        Account account = AccountTestData.CreateAccount(1004);
+
+        AccountProviderLegalEntity accountProviderLegalEntity =
+            AccountProviderLegalEntityTestData.CreateAccountProviderLegalEntity(account);
+
+        bool? result = null;
+
+        using (var context = InMemoryProviderRelationshipsDataContext.CreateInMemoryContext(
+            $"{nameof(InMemoryProviderRelationshipsDataContext)}_{nameof(AccountProviderLegalEntityExists_Returns_True)}")
+        )
+        {
+            await context.AddAsync(account);
+            await context.AddAsync(accountProviderLegalEntity);
+            await context.SaveChangesAsync(cancellationToken);
+
+            AccountProviderLegalEntitiesReadRepository sut = new(context);
+
+            result = await sut.AccountProviderLegalEntityExists(
+                accountProviderLegalEntity.AccountProvider.ProviderUkprn,
+                accountProviderLegalEntity.AccountLegalEntityId,
+                cancellationToken
+           );
+        }
+
+        Assert.That(result, Is.True);
+    }
+
+    [Test]
+    public async Task AccountProviderLegalEntityExists_Returns_False()
+    {
+        bool? result = null;
+
+        using (var context = InMemoryProviderRelationshipsDataContext.CreateInMemoryContext(
+            $"{nameof(InMemoryProviderRelationshipsDataContext)}_{nameof(AccountProviderLegalEntityExists_Returns_False)}")
+        )
+        {
+            AccountProviderLegalEntitiesReadRepository sut = new(context);
+
+            result = await sut.AccountProviderLegalEntityExists(
+                10000003,
+                1,
+                cancellationToken
+           );
+        }
+
+        Assert.That(result, Is.False);
+    }
 }

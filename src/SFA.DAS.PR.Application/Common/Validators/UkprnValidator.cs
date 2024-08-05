@@ -1,11 +1,12 @@
 ﻿using FluentValidation;
-using SFA.DAS.PR.Data.Repositories;
 using SFA.DAS.PR.Domain.Interfaces;
 
 namespace SFA.DAS.PR.Application.Common.Validators;
 
 public static class UkprnValidator
 {
+    public static readonly string UkprnValidationMessage = "A Ukprn must be provided.";
+
     public const string UkprnFormatValidationMessage = "Currently a Ukprn must start with the value 1 and should be 8 digits long.";
 
     public const string ProviderEntityExistValidationMessage = "Provider must exist.";

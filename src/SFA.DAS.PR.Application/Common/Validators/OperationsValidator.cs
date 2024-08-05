@@ -8,7 +8,7 @@ public static class OperationsValidator
     public const string OperationFilterValidationMessage = "An operation filter must to be supplied.";
     public const string OperationsFilterValidationMessage = "Currently at least one operation must to be supplied.";
     public const string OperationFilterFormatValidationMessage = "Operation values are limited to 0, 1 or 2.";
-    public const string OperationsCombinationValidationMessage = "Operations filter can have a maximum of two items and must be one of the valid combinations: 0, 1, 2, 0,1, 0,2.";
+    public const string OperationsCombinationValidationMessage = "Operations filter can have a maximum of two items and must be one of the valid combinations: [0], [1], [2], [0,1], [0,2].";
     public static IRuleBuilderOptions<T, List<Operation>> ContainsValidOperations<T>(this IRuleBuilderInitial<T, List<Operation>> ruleBuilder) where T : IOperationsEntity
     {
         return ruleBuilder
