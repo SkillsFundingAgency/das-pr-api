@@ -12,7 +12,7 @@ public class EmployerRelationshipsReadRepository(IProviderRelationshipsDataConte
             .Include(acc => acc.AccountLegalEntities)
                 .ThenInclude(ale => ale.AccountProviderLegalEntities)
                     .ThenInclude(aple => aple.Permissions)
-            .Include(acc => acc.AccountLegalEntities)
+            .Include(acc => acc.AccountLegalEntities.Where(x => x.Deleted == null))
                 .ThenInclude(ale => ale.AccountProviderLegalEntities)
                     .ThenInclude(aple => aple.AccountProvider)
                         .ThenInclude(ap => ap.Provider)
