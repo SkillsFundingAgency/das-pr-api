@@ -1,16 +1,16 @@
 ﻿using SFA.DAS.ProviderRelationships.Types.Models;
 
-namespace SFA.DAS.PR.Api.RouteValues.Permissions;
+namespace SFA.DAS.PR.Api.Models;
 
-public class RevokePermissionsRouteValues
+public class RevokePermissionsRequestModel
 {
     public long? Ukprn { get; set; }
     public string AccountLegalEntityPublicHashedId { get; set; }
     public Operation[] OperationsToRevoke { get; set; }
 
-    public RevokePermissionsRouteValues() { }
+    public RevokePermissionsRequestModel() { }
 
-    public RevokePermissionsRouteValues(long? ukprn, string accountLegalEntityPublicHashedId, Operation[] operationsToRevoke) : this()
+    public RevokePermissionsRequestModel(long? ukprn, string accountLegalEntityPublicHashedId, Operation[] operationsToRevoke) : this()
     {
         Ukprn = ukprn;
         AccountLegalEntityPublicHashedId = accountLegalEntityPublicHashedId;

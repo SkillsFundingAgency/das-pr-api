@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.PR.Api.Authorization;
 using SFA.DAS.PR.Api.Common;
-using SFA.DAS.PR.Api.RouteValues.Permissions;
+using SFA.DAS.PR.Api.Models;
 using SFA.DAS.PR.Api.SwaggerExamples;
 using SFA.DAS.PR.Application.Mediatr.Responses;
 using SFA.DAS.PR.Application.Permissions.Commands.PostPermissions;
@@ -79,7 +79,7 @@ public class PermissionsController(IMediator _mediator) : ActionResponseControll
     [Route("revoke")]
     [HttpPost]
     [Authorize(Policy = Policies.Integration)]
-    public async Task<IActionResult> Revoke([FromBody] RevokePermissionsRouteValues routeValues)
+    public IActionResult Revoke([FromBody] RevokePermissionsRequestModel routeValues)
     {
         return Ok();
     }
