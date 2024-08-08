@@ -81,6 +81,8 @@ public class PermissionsController(IMediator _mediator) : ActionResponseControll
     [Authorize(Policy = Policies.Integration)]
     public IActionResult Revoke([FromBody] RevokePermissionsRequestModel routeValues)
     {
+        /// This endpoint is used by recruit, but we do not want to support the endpoint going forward
+        /// Hence just to avoid recruit process from failing we are returning a Ok response
         return Ok();
     }
 }
