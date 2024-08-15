@@ -50,4 +50,16 @@ public class RequestReadRepository(IProviderRelationshipsDataContext providerRel
                 cancellationToken
         );
     }
+
+    public async Task<bool> RequestExists(long Ukprn, string EmployerPAYE, RequestStatus[] requestStatuses, CancellationToken cancellationToken)
+    {
+        return await providerRelationshipsDataContext.Requests
+            .AsNoTracking()
+            .AnyAsync(a =>
+                a.EmployerPAYE == EmployerPAYE &&
+                a.Ukprn == Ukprn &&
+                (requestStatuses.Count() == 0 || requestStatuses.Contains(a.Status)),
+                cancellationToken
+        );
+    }
 }
