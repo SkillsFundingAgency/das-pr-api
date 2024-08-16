@@ -43,10 +43,7 @@ public class CreateNewAccountRequestCommandValidatorTests
             }
         );
         
-        result.ShouldNotHaveValidationErrorFor(query => query.Ukprn);
-        result.ShouldNotHaveValidationErrorFor(query => query.EmployerPAYE);
-        result.ShouldNotHaveValidationErrorFor(query => query.EmployerContactEmail);
-        result.ShouldNotHaveValidationErrorFor(query => query.Operations);
+        result.ShouldNotHaveAnyValidationErrors();
     }
 
     [Test]
