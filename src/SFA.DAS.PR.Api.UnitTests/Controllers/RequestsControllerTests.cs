@@ -9,6 +9,7 @@ using SFA.DAS.PR.Api.Common;
 using SFA.DAS.PR.Api.Controllers;
 using SFA.DAS.PR.Application.Mediatr.Responses;
 using SFA.DAS.PR.Application.Requests.Commands.CreateAddAccountRequest;
+using SFA.DAS.PR.Application.Requests.Commands.CreateNewAccountRequest;
 using SFA.DAS.PR.Application.Requests.Commands.CreatePermissionRequest;
 using SFA.DAS.PR.Application.Requests.Queries.GetRequest;
 using SFA.DAS.PR.Application.Requests.Queries.LookupRequests;
@@ -218,11 +219,31 @@ public class RequestsControllerTests
         ).ReturnsAsync(errorResponse);
 
         var result = await sut.LookupRequests(
-            10000001, "PAYE",
+            10000001, 
+            "PAYE",
             cancellationToken
         );
 
         result.As<BadRequestObjectResult>().Should().NotBeNull();
         result.As<BadRequestObjectResult>().Value.As<List<ValidationError>>().Count.Should().Be(errors.Count);
+    }
+
+    [Test]
+    [MoqAutoData]
+    public async Task CreateNewAccountRequest_InvokesQueryHandler(
+       [Frozen] Mock<IMediator> mediatorMock,
+       [Greedy] RequestsController sut,
+       CreateNewAccountRequestCommand command,
+       CancellationToken cancellationToken
+    )
+    {
+        await sut.CreateNewAccountRequest(command, cancellationToken);
+
+        mediatorMock.Verify(m =>
+            m.Send(It.Is<CreateNewAccountRequestCommand>(a => 
+                a.Ukprn == command.Ukprn &&
+                a.EmployerPAYE == command.EmployerPAYE
+            ), It.IsAny<CancellationToken>())
+        );
     }
 }
