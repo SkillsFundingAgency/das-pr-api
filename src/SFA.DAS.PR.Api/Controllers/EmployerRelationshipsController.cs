@@ -15,11 +15,11 @@ public class EmployerRelationshipsController(IMediator _mediator) : ActionRespon
     public override string ControllerName => "EmployerRelationships";
 
     [Authorize(Policy = Policies.Management)]
-    [HttpGet("employeraccount/{accountHashedId}")]
+    [HttpGet("employeraccount/{AccountId:long}")]
     [ProducesResponseType(typeof(GetEmployerRelationshipsQueryResult), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetEmployerRelationships(string accountHashedId, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetEmployerRelationships([FromRoute]long AccountId, CancellationToken cancellationToken)
     {
-        GetEmployerRelationshipsQuery query = new(accountHashedId);
+        GetEmployerRelationshipsQuery query = new(AccountId);
 
         ValidatedResponse<GetEmployerRelationshipsQueryResult> result = await _mediator.Send(query, cancellationToken);
 

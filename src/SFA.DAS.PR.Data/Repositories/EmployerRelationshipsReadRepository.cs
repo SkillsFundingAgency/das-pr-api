@@ -6,7 +6,7 @@ namespace SFA.DAS.PR.Data.Repositories;
 
 public class EmployerRelationshipsReadRepository(IProviderRelationshipsDataContext providerRelationshipsDataContext) : IEmployerRelationshipsReadRepository
 {
-    public async Task<Account?> GetRelationships(string accountHashedId, CancellationToken cancellationToken)
+    public async Task<Account?> GetRelationships(long accountId, CancellationToken cancellationToken)
     {
         return await providerRelationshipsDataContext.Accounts
             .Include(acc => acc.AccountLegalEntities)
@@ -16,6 +16,8 @@ public class EmployerRelationshipsReadRepository(IProviderRelationshipsDataConte
                 .ThenInclude(ale => ale.AccountProviderLegalEntities)
                     .ThenInclude(aple => aple.AccountProvider)
                         .ThenInclude(ap => ap.Provider)
-        .FirstOrDefaultAsync(a => a.HashedId == accountHashedId, cancellationToken);
+                            .ThenInclude(p => p.Requests.Where(a => a.Status == RequestStatus.New || a.Status == RequestStatus.Sent))
+                                .ThenInclude(r => r.PermissionRequests)
+        .FirstOrDefaultAsync(a => a.Id == accountId, cancellationToken);
     }
 }
