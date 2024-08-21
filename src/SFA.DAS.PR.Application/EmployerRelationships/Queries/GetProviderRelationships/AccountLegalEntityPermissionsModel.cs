@@ -11,12 +11,22 @@ public class AccountLegalEntityPermissionsModel
     public List<ProviderPermissionsModel> Permissions { get; set; } = [];
     public List<ProviderRequestModel> Requests { get; set; } = [];
 
+    private static readonly RequestStatus[] RequestStatusFilters = [RequestStatus.New, RequestStatus.Sent];
+
     public static implicit operator AccountLegalEntityPermissionsModel(AccountLegalEntity source) => new()
     {
         Id = source.Id,
         Name = source.Name,
         AccountId = source.AccountId,
         Permissions = source.AccountProviderLegalEntities.Select(a => (ProviderPermissionsModel)a).ToList(),
-        Requests = source.AccountProviderLegalEntities.SelectMany(a => a.AccountProvider.Provider.Requests).Select(a => (ProviderRequestModel)a).ToList()
+        Requests = GetRequests(source)
     };
+
+    private static List<ProviderRequestModel> GetRequests(AccountLegalEntity accountLegalEntity)
+    {
+        return accountLegalEntity
+            .Requests
+            .Where(t => RequestStatusFilters.Contains(t.Status))
+            .Select(a => (ProviderRequestModel)a).ToList();
+    }
 }
