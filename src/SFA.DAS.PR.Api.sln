@@ -23,6 +23,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.PR.Data.UnitTests",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.ProviderRelationships.Messages", "SFA.DAS.ProviderRelationships.Messages\SFA.DAS.ProviderRelationships.Messages.csproj", "{90B66C88-02B3-4EF7-8F78-58AD73CEEA43}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.PR.Domain.UnitTests", "SFA.DAS.PR.Domain.UnitTests\SFA.DAS.PR.Domain.UnitTests.csproj", "{44B7190A-0306-4D53-ABFC-8FBFB4FAA100}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -67,6 +69,10 @@ Global
 		{90B66C88-02B3-4EF7-8F78-58AD73CEEA43}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{90B66C88-02B3-4EF7-8F78-58AD73CEEA43}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{90B66C88-02B3-4EF7-8F78-58AD73CEEA43}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44B7190A-0306-4D53-ABFC-8FBFB4FAA100}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44B7190A-0306-4D53-ABFC-8FBFB4FAA100}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44B7190A-0306-4D53-ABFC-8FBFB4FAA100}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44B7190A-0306-4D53-ABFC-8FBFB4FAA100}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -75,6 +81,7 @@ Global
 		{8BF3E855-688E-478A-BEE4-BCF09A5F6C00} = {73D855CC-2B68-4F4B-B9D1-4A37F9DAC82D}
 		{B68562F0-0378-4432-AF8A-4B4DCE683A46} = {73D855CC-2B68-4F4B-B9D1-4A37F9DAC82D}
 		{22EAC520-2A03-46D8-88B2-EFE7305185F0} = {73D855CC-2B68-4F4B-B9D1-4A37F9DAC82D}
+		{44B7190A-0306-4D53-ABFC-8FBFB4FAA100} = {73D855CC-2B68-4F4B-B9D1-4A37F9DAC82D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C07EDC03-3B01-46D4-B491-07B96A62BB68}
