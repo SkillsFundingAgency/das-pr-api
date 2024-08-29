@@ -9,7 +9,7 @@ public class GetAccountProviderLegalEntitiesQueryHandler(IAccountProviderLegalEn
 {
     public async Task<ValidatedResponse<GetAccountProviderLegalEntitiesQueryResult>> Handle(GetAccountProviderLegalEntitiesQuery query, CancellationToken cancellationToken)
     {
-        if (query.Operations.Exists(o => o == Operation.Recruitment))
+        if (query.Operations.Exists(o => o == Operation.Recruitment) && !query.Operations.Exists(o => o == Operation.RecruitmentRequiresReview))
         {
             query.Operations.Add(Operation.RecruitmentRequiresReview);
         }
