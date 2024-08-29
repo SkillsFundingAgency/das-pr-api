@@ -9,9 +9,9 @@ public class GetAccountProviderLegalEntitiesQueryHandler(IAccountProviderLegalEn
 {
     public async Task<ValidatedResponse<GetAccountProviderLegalEntitiesQueryResult>> Handle(GetAccountProviderLegalEntitiesQuery query, CancellationToken cancellationToken)
     {
-        if (query.Operations.Exists(o => o == Operation.RecruitmentRequiresReview))
+        if (query.Operations.Exists(o => o == Operation.Recruitment))
         {
-            query.Operations.Add(Operation.Recruitment);
+            query.Operations.Add(Operation.RecruitmentRequiresReview);
         }
 
         List<AccountProviderLegalEntity> accountProviderLegalEntities = await _accountProviderLegalEntitiesReadRepository.GetAccountProviderLegalEntities(query.Ukprn, query.AccountHashedId, query.Operations, cancellationToken);
