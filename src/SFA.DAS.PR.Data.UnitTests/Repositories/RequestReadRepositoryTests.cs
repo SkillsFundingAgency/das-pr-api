@@ -257,7 +257,7 @@ public class RequestReadRepositoryTests
     [Test]
     public async Task RequestExists_RequestStatusNew_Returns_True()
     {
-        Request request = RequestTestData.Create(Guid.NewGuid(), RequestStatus.New.ToString());
+        Request request = RequestTestData.Create(Guid.NewGuid());
 
         bool? result = null;
 
@@ -279,7 +279,7 @@ public class RequestReadRepositoryTests
     [Test]
     public async Task RequestExists_RequestStatusSent_Returns_True()
     {
-        Request request = RequestTestData.Create(Guid.NewGuid(), RequestStatus.Sent.ToString());
+        Request request = RequestTestData.Create(Guid.NewGuid(), RequestStatus.Sent);
 
         bool? result = null;
 
