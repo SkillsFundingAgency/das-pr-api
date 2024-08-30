@@ -19,7 +19,7 @@ public class GetRelationshipsQueryResult
 
     public Operation[] Operations { get; set; } = [];
 
-    public PermissionAction? LastAction { get; set; }
+    public string? LastAction { get; set; }
 
     public DateTime? LastActionTime { get; set; }
 
@@ -27,7 +27,7 @@ public class GetRelationshipsQueryResult
 
     public DateTime? LastRequestTime { get; set; }
 
-    public RequestStatus? LastRequestStatus { get; set; }
+    public string? LastRequestStatus { get; set; }
 
     public Operation[]? LastRequestOperations { get; set; }
 

@@ -5,6 +5,8 @@ using SFA.DAS.PR.Api.Authorization;
 using SFA.DAS.PR.Api.Common;
 using SFA.DAS.PR.Application.Requests.Commands.CreateAddAccountRequest;
 using SFA.DAS.PR.Application.Requests.Commands.CreatePermissionRequest;
+using SFA.DAS.PR.Application.Requests.Queries.GetRequest;
+using SFA.DAS.PR.Domain.Models;
 
 namespace SFA.DAS.PR.Api.Controllers;
 
@@ -31,6 +33,17 @@ public class RequestsController(IMediator _mediator) : ActionResponseControllerB
     public async Task<IActionResult> CreatePermissionRequest([FromBody] CreatePermissionRequestCommand command, CancellationToken cancellationToken)
     {
         var result = await _mediator.Send(command, cancellationToken);
+        return GetResponse(result);
+    }
+
+    [HttpGet("{requestId}")]
+    [Authorize(Policy = Policies.Management)]
+    [ProducesResponseType(typeof(RequestModel), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetRequest([FromRoute] Guid requestId, CancellationToken cancellationToken)
+    {
+        GetRequestQuery query = new(requestId);
+        var result = await _mediator.Send(query, cancellationToken);
         return GetResponse(result);
     }
 }
