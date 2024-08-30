@@ -32,7 +32,7 @@ public class CreateAddAccountRequestCommandValidator : AbstractValidator<CreateA
         RuleFor(a => a.Operations).ValidateOperationCombinations();
 
         RuleFor(a => a.EmployerContactEmail)
-            .EmailAddress()
+            .Matches(ValidationRegex.EmailRegex)
             .WithMessage(EmployerContactEmailValidationMessage)
             .When(a => !string.IsNullOrWhiteSpace(a.EmployerContactEmail));
     }

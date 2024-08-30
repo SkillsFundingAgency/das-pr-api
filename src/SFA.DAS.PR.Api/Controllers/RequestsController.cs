@@ -7,6 +7,7 @@ using SFA.DAS.PR.Application.Requests.Commands.CreateAddAccountRequest;
 using SFA.DAS.PR.Application.Requests.Commands.CreateNewAccountRequest;
 using SFA.DAS.PR.Application.Requests.Commands.CreatePermissionRequest;
 using SFA.DAS.PR.Application.Requests.Queries.GetRequest;
+using SFA.DAS.PR.Application.Requests.Queries.LookupRequests;
 using SFA.DAS.PR.Domain.Models;
 
 namespace SFA.DAS.PR.Api.Controllers;
