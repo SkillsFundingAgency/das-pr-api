@@ -40,7 +40,6 @@ SELECT
   CAST(0 AS BIT) HasRecruitmentPermission, 
   CAST(0 AS BIT) HasRecruitmentWithReviewPermission
 FROM [dbo].[Requests] req
-  LEFT JOIN [dbo].[AccountProviders] apv on req.Ukprn = apv.ProviderUkprn
   LEFT JOIN [dbo].[AccountLegalEntities] ale on ale.[Id] = req.[AccountLegalEntityId]
 WHERE req.RequestType IN ('AddAccount','CreateAccount') 
   AND req.[Status] IN ('New','Sent')

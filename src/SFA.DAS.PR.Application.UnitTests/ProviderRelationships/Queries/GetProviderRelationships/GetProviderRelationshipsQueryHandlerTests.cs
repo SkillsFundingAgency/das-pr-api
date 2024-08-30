@@ -71,12 +71,29 @@ public class GetProviderRelationshipsQueryHandlerTests
                     && o.PageNumber == 0
                     && o.HasPendingRequest == query.HasPendingRequest
                     && o.HasCreateCohortPermission == query.HasCreateCohortPermission
-                    && o.HasRecruitmentWithReviewPermission == query.HasRecruitWithReviewPermission
-                    && o.EmployerName == query.EmployerName
-                    && o.HasRecruitmentPermission == query.HasRecruitPermission
+                    && o.HasRecruitmentWithReviewPermission == query.HasRecruitmentWithReviewPermission
+                    && o.SearchTerm == query.SearchTerm
+                    && o.HasRecruitmentPermission == query.HasRecruitmentPermission
                     && o.Ukprn == query.Ukprn),
                 cancellationToken),
             Times.Once);
+    }
+
+    [Test]
+    [RecursiveMoqInlineAutoData(true)]
+    [RecursiveMoqInlineAutoData(false)]
+    public async Task Handler_RespondsWithHasAnyRelationships(
+        bool hasAnyRelationships,
+        [Frozen] Mock<IProviderRelationshipsReadRepository> mockRepo,
+        GetProviderRelationshipsQueryHandler sut,
+        GetProviderRelationshipsQuery query,
+        CancellationToken cancellationToken)
+    {
+        mockRepo.Setup(r => r.HasAnyRelationship(query.Ukprn!.Value, cancellationToken)).ReturnsAsync(hasAnyRelationships);
+
+        var result = await sut.Handle(query, cancellationToken);
+
+        result.Result!.HasAnyRelationships.Should().Be(hasAnyRelationships);
     }
 
     [Test, RecursiveMoqAutoData]

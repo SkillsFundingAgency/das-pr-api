@@ -25,6 +25,7 @@ public class AccountProviderLegalEntitiesReadRepository(IProviderRelationshipsDa
     {
         return await _providerRelationshipsDataContext.AccountProviderLegalEntities.AsNoTracking()
             .Include(a => a.AccountProvider)
+            .ThenInclude(p => p.Provider)
             .Include(a => a.Permissions)
             .Include(a => a.AccountLegalEntity)
         .FirstOrDefaultAsync(a =>

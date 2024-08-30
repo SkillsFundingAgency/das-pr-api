@@ -16,6 +16,8 @@ public class GetProviderRelationshipsQueryHandler(IProviderRelationshipsReadRepo
 
         var (relationships, totalCount) = await _providerRelationshipsReadRepository.GetProviderRelationships(options, cancellationToken);
 
+        result.HasAnyRelationships = await _providerRelationshipsReadRepository.HasAnyRelationship(request.Ukprn!.Value, cancellationToken);
+
         result.Employers = relationships.Select(r => (ProviderRelationshipModel)r);
         result.TotalCount = totalCount;
         result.PageNumber = options.PageNumber + 1;
@@ -28,11 +30,12 @@ public class GetProviderRelationshipsQueryHandler(IProviderRelationshipsReadRepo
         => new()
         {
             Ukprn = request.Ukprn,
-            EmployerName = request.EmployerName,
-            HasPendingRequest = request.HasPendingRequest,
+            SearchTerm = request.SearchTerm,
             HasCreateCohortPermission = request.HasCreateCohortPermission,
-            HasRecruitmentWithReviewPermission = request.HasRecruitWithReviewPermission,
-            HasRecruitmentPermission = request.HasRecruitPermission,
+            HasRecruitmentWithReviewPermission = request.HasRecruitmentWithReviewPermission,
+            HasRecruitmentPermission = request.HasRecruitmentPermission,
+            HasNoRecruitmentPermission = request.HasNoRecruitmentPermissions,
+            HasPendingRequest = request.HasPendingRequest,
             PageSize = request.PageSize <= 0 ? defaultPageSize : request.PageSize,
             PageNumber = request.PageNumber <= 1 ? 0 : request.PageNumber - 1,
         };

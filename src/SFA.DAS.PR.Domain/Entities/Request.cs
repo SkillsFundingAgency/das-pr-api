@@ -4,7 +4,7 @@ public class Request
 {
     public Guid Id { get; set; }
 
-    public string RequestType { get; set; } = null!;
+    public RequestType RequestType { get; set; }
 
     public long Ukprn { get; set; }
 
@@ -26,7 +26,7 @@ public class Request
 
     public string? EmployerAORN { get; set; }
 
-    public string Status { get; set; } = null!;
+    public RequestStatus Status { get; set; }
 
     public string? ActionedBy { get; set; }
 
