@@ -33,6 +33,6 @@ public class CreateAddAccountRequestCommandValidator : AbstractValidator<CreateA
         RuleFor(a => a.EmployerContactEmail)
             .EmailAddress()
             .WithMessage(EmployerContactEmailValidationMessage)
-            .When(a => !string.IsNullOrWhiteSpace(a.EmployerContactEmail));
+            .When(a => a.EmployerContactEmail != null);
     }
 }

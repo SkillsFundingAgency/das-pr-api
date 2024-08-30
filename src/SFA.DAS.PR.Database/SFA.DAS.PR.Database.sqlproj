@@ -57,6 +57,9 @@
   <ItemGroup>
     <Folder Include="Properties" />
     <Folder Include="Tables" />
+    <Folder Include="Views" />
+    <Folder Include="Scripts" />
+    <Folder Include="Scripts\TestData" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="Tables\AccountLegalEntities.sql" />
@@ -70,5 +73,9 @@
     <Build Include="Tables\PermissionRequests.sql" />
     <Build Include="Tables\Requests.sql" />
     <Build Include="Tables\Notifcations.sql" />
+    <Build Include="Views\ProviderRelationships.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\TestData\ProviderRelationships.sql" />
   </ItemGroup>
 </Project>

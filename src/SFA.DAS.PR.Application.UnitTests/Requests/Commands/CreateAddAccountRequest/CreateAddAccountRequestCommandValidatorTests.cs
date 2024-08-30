@@ -78,4 +78,29 @@ public class CreateAddAccountRequestCommandValidatorTests
         result.ShouldHaveValidationErrorFor(q => q.EmployerContactEmail)
             .WithErrorMessage(CreateAddAccountRequestCommandValidator.EmployerContactEmailValidationMessage);
     }
+
+    [Test]
+    public async Task CreateAddAccountRequestCommand_EmptyEmployerContactEmail_Valid()
+    {
+        var sut = new CreateAddAccountRequestCommandValidator(
+            _requestReadRepositoryValidMock.Object,
+            _providersReadRepositoryValidMock.Object,
+            _accountLegalEntityReadRepositoryValidMock.Object
+        );
+        var result = await sut.TestValidateAsync(new CreateAddAccountRequestCommand { Ukprn = 10000002, AccountLegalEntityId = 1, RequestedBy = Guid.NewGuid().ToString(), EmployerContactEmail = null, Operations = [Operation.CreateCohort] });
+        result.ShouldNotHaveValidationErrorFor(q => q.EmployerContactEmail);
+    }
+
+    [Test]
+    public async Task CreateAddAccountRequestCommand_WhiteSpaceEmployerContactEmail_Invalid()
+    {
+        var sut = new CreateAddAccountRequestCommandValidator(
+            _requestReadRepositoryValidMock.Object,
+            _providersReadRepositoryValidMock.Object,
+            _accountLegalEntityReadRepositoryValidMock.Object
+        );
+        var result = await sut.TestValidateAsync(new CreateAddAccountRequestCommand { Ukprn = 10000002, AccountLegalEntityId = 1, RequestedBy = Guid.NewGuid().ToString(), EmployerContactEmail = "", Operations = [Operation.CreateCohort] });
+        result.ShouldHaveValidationErrorFor(q => q.EmployerContactEmail)
+            .WithErrorMessage(CreateAddAccountRequestCommandValidator.EmployerContactEmailValidationMessage);
+    }
 }

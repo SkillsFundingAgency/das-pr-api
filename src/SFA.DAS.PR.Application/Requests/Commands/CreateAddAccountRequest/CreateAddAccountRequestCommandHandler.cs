@@ -34,7 +34,7 @@ public class CreateAddAccountRequestCommandHandler(
             RequestType = RequestType.AddAccount.ToString(),
             Status = RequestStatus.New.ToString(),
             EmployerOrganisationName = accountLegalEntity.Name,
-            EmployerContactEmail = command.EmployerContactEmail,
+            EmployerContactEmail = command.EmployerContactEmail?.Trim(),
             PermissionRequests = command.Operations.Select(a => new PermissionRequest()
             {
                 Operation = (int)a
