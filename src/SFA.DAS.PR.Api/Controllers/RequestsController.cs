@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.PR.Api.Authorization;
 using SFA.DAS.PR.Api.Common;
+using SFA.DAS.PR.Application.Requests.Commands.AcceptCreateAccountRequest;
 using SFA.DAS.PR.Application.Requests.Commands.CreateAddAccountRequest;
 using SFA.DAS.PR.Application.Requests.Commands.CreateNewAccountRequest;
 using SFA.DAS.PR.Application.Requests.Commands.CreatePermissionRequest;
@@ -68,6 +69,18 @@ public class RequestsController(IMediator _mediator) : ActionResponseControllerB
     {
         LookupRequestsQuery query = new(ukprn, paye);
         var result = await _mediator.Send(query, cancellationToken);
+        return GetResponse(result);
+    }
+
+    [HttpPost("{requestId:guid}/createaccount/accepted")]
+    [Authorize(Policy = Policies.Management)]
+    [ProducesResponseType(typeof(AcceptCreateAccountRequestCommandResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(List<ValidationError>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> ActionRequest([FromRoute]Guid requestId, [FromBody] AcceptCreateAccountRequestCommand command, CancellationToken cancellationToken)
+    {
+        command.RequestId = requestId;
+        var result = await _mediator.Send(command, cancellationToken);
         return GetResponse(result);
     }
 }

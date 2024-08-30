@@ -36,4 +36,19 @@ public static class RequestsValidator
             })
             .WithMessage(RequestEmployerPAYEValidationMessage);
     }
+
+    public static IRuleBuilderOptions<T, RequestIdValidationObject> ValidateRequest<T>(this IRuleBuilder<T, RequestIdValidationObject> ruleBuilder, IRequestReadRepository requestReadRepository) where T : IRequestEntity
+    {
+        return ruleBuilder
+            .MustAsync(async (requestIdValidationObject, cancellationToken) =>
+            {
+                return !await requestReadRepository.RequestExists(
+                    requestIdValidationObject.RequestId,
+                    requestIdValidationObject.RequestStatuses,
+                    requestIdValidationObject.RequestType,
+                    cancellationToken
+                );
+            })
+            .WithMessage(RequestValidationMessage);
+    }
 }

@@ -62,4 +62,22 @@ public class RequestReadRepository(IProviderRelationshipsDataContext providerRel
                 cancellationToken
         );
     }
+
+    public async Task<bool> RequestExists(
+        Guid RequestId, 
+        RequestStatus[] requestStatuses, 
+        RequestType requestType, 
+        CancellationToken cancellationToken
+    )
+    {
+        return await providerRelationshipsDataContext.Requests
+            .AsNoTracking()
+            .AnyAsync(a =>
+                a.Id == RequestId &&
+                (requestStatuses.Count() == 0 || requestStatuses.Contains(a.Status) &&
+                a.RequestType == requestType
+            ),
+            cancellationToken
+        );
+    }
 }
