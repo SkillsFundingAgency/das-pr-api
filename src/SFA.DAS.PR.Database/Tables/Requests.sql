@@ -1,7 +1,7 @@
 ﻿CREATE TABLE [dbo].[Requests]
 (
     [Id] UNIQUEIDENTIFIER NOT NULL DEFAULT NEWID(),
-    [RequestType] VARCHAR(10) NOT NULL,
+    [RequestType] VARCHAR(20) NOT NULL,
     [Ukprn] BIGINT NOT NULL,
     [RequestedBy] VARCHAR(255) NOT NULL,
     [RequestedDate] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),

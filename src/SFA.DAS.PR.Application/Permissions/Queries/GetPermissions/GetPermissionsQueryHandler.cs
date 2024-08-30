@@ -11,13 +11,16 @@ public class GetPermissionsQueryHandler(IAccountProviderLegalEntitiesReadReposit
     {
         AccountProviderLegalEntity? accountProviderLegalEntity = await _accountProviderLegalEntitiesReadRepository.GetAccountProviderLegalEntity(query.Ukprn!.Value, query.accountLegalEntityId!.Value, cancellationToken);
 
-        if(accountProviderLegalEntity is null)
+        if (accountProviderLegalEntity is null)
         {
             return new ValidatedResponse<GetPermissionsQueryResult?>();
         }
 
+        var accountLegalEntityName = accountProviderLegalEntity.AccountLegalEntity.Name;
+        var providerName = accountProviderLegalEntity.AccountProvider.Provider.Name;
+
         List<Operation> operations = accountProviderLegalEntity.Permissions.Select(a => a.Operation).ToList();
 
-        return new ValidatedResponse<GetPermissionsQueryResult?>(new GetPermissionsQueryResult() { Operations = operations });
+        return new ValidatedResponse<GetPermissionsQueryResult?>(new GetPermissionsQueryResult() { Operations = operations, ProviderName = providerName, AccountLegalEntityName = accountLegalEntityName });
     }
 }

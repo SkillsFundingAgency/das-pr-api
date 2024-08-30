@@ -7,7 +7,7 @@ namespace SFA.DAS.PR.Data.UnitTests.Setup;
 
 public static class RequestTestData
 {
-    public static Request Create(Guid id, string requestStatus = "") {
+    public static Request Create(Guid id, RequestStatus requestStatus = RequestStatus.New) {
 
         Operation[] operations = [Operation.CreateCohort, Operation.RecruitmentRequiresReview, Operation.Recruitment];
 
@@ -18,7 +18,7 @@ public static class RequestTestData
            .With(a => a.Ukprn, 10000003)
            .With(a => a.AccountLegalEntityId, 3)
            .With(a => a.RequestedDate, DateTime.Today)
-           .With(a => a.Status, string.IsNullOrWhiteSpace(requestStatus) ? RequestStatus.New.ToString() : requestStatus)
+           .With(a => a.Status, requestStatus)
            .With(a => a.PermissionRequests, permissionRequests)
         .Create();
     }

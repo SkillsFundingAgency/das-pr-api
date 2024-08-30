@@ -1,7 +1,7 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using SFA.DAS.PR.Application.Permissions.Queries.GetPermissions;
+﻿using SFA.DAS.PR.Application.Permissions.Queries.GetPermissions;
 using SFA.DAS.ProviderRelationships.Types.Models;
 using Swashbuckle.AspNetCore.Filters;
+using System.Diagnostics.CodeAnalysis;
 
 namespace SFA.DAS.PR.Api.SwaggerExamples;
 
@@ -16,7 +16,9 @@ public class GetPermissionsQueryResultExample : IExamplesProvider<GetPermissions
             {
                 Operation.CreateCohort,
                 Operation.Recruitment
-            }
+            },
+            ProviderName = "provider name",
+            AccountLegalEntityName = "ALE Name"
         };
 
         return result;

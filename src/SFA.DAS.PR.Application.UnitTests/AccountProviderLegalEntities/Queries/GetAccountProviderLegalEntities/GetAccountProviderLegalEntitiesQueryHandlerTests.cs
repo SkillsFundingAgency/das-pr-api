@@ -14,17 +14,16 @@ public class GetAccountProviderLegalEntitiesQueryHandlerTests
     [Test]
     [RecursiveMoqAutoData]
     public async Task Handle_AccountProviderLegalEntitiesFound_ReturnsAccountProviderLegalEntitiesResult(
-            [Frozen] Mock<IAccountProviderLegalEntitiesReadRepository> accountProviderLegalEntitiesReadRepository,
-            GetAccountProviderLegalEntitiesQueryHandler sut,
-            List<AccountProviderLegalEntity> entities,
-            CancellationToken cancellationToken
-        )
+        [Frozen] Mock<IAccountProviderLegalEntitiesReadRepository> accountProviderLegalEntitiesReadRepository,
+        GetAccountProviderLegalEntitiesQueryHandler sut,
+        List<AccountProviderLegalEntity> entities,
+        CancellationToken cancellationToken)
     {
         GetAccountProviderLegalEntitiesQuery query = new()
         {
             Ukprn = null,
             AccountHashedId = "Hash",
-            Operations = [Operation.Recruitment]
+            Operations = [Operation.CreateCohort]
         };
 
         accountProviderLegalEntitiesReadRepository.Setup(a =>
@@ -43,14 +42,13 @@ public class GetAccountProviderLegalEntitiesQueryHandlerTests
     public async Task Handle_AccountProviderLegalEntitiesNotFound_ReturnsEmptyResult(
         [Frozen] Mock<IAccountProviderLegalEntitiesReadRepository> accountProviderLegalEntitiesReadRepository,
         GetAccountProviderLegalEntitiesQueryHandler sut,
-        CancellationToken cancellationToken
-    )
+        CancellationToken cancellationToken)
     {
         GetAccountProviderLegalEntitiesQuery query = new()
         {
             Ukprn = null,
             AccountHashedId = "Hash",
-            Operations = [Operation.Recruitment]
+            Operations = [Operation.CreateCohort]
         };
 
         accountProviderLegalEntitiesReadRepository.Setup(a =>
@@ -62,5 +60,71 @@ public class GetAccountProviderLegalEntitiesQueryHandlerTests
         var result = await sut.Handle(query, cancellationToken);
 
         result.Result.Should().BeEquivalentTo(expectedResult, c => c.ExcludingMissingMembers());
+    }
+
+    [Test]
+    [RecursiveMoqAutoData]
+    public async Task Handle_OperationRecruitment_IncludesRecruitmentRequiresReview(
+        [Frozen] Mock<IAccountProviderLegalEntitiesReadRepository> accountProviderLegalEntitiesReadRepository,
+        GetAccountProviderLegalEntitiesQueryHandler sut,
+        List<AccountProviderLegalEntity> entities,
+        CancellationToken cancellationToken)
+    {
+        GetAccountProviderLegalEntitiesQuery query = new()
+        {
+            Ukprn = null,
+            AccountHashedId = "Hash",
+            Operations = [Operation.Recruitment]
+        };
+
+        List<Operation> expectedOperations = [Operation.Recruitment, Operation.RecruitmentRequiresReview];
+
+        await sut.Handle(query, cancellationToken);
+
+        accountProviderLegalEntitiesReadRepository.Verify(a => a.GetAccountProviderLegalEntities(query.Ukprn, query.AccountHashedId, expectedOperations, cancellationToken));
+    }
+
+    [Test]
+    [RecursiveMoqAutoData]
+    public async Task Handle_OperationRecruitmentRequiresReview_IncludesRecruitmentRequiresReviewOnly(
+        [Frozen] Mock<IAccountProviderLegalEntitiesReadRepository> accountProviderLegalEntitiesReadRepository,
+        GetAccountProviderLegalEntitiesQueryHandler sut,
+        List<AccountProviderLegalEntity> entities,
+        CancellationToken cancellationToken)
+    {
+        GetAccountProviderLegalEntitiesQuery query = new()
+        {
+            Ukprn = null,
+            AccountHashedId = "Hash",
+            Operations = [Operation.RecruitmentRequiresReview]
+        };
+
+        List<Operation> expectedOperations = [Operation.RecruitmentRequiresReview];
+
+        await sut.Handle(query, cancellationToken);
+
+        accountProviderLegalEntitiesReadRepository.Verify(a => a.GetAccountProviderLegalEntities(query.Ukprn, query.AccountHashedId, expectedOperations, cancellationToken));
+    }
+
+    [Test]
+    [RecursiveMoqAutoData]
+    public async Task Handle_AllRecruitment(
+        [Frozen] Mock<IAccountProviderLegalEntitiesReadRepository> accountProviderLegalEntitiesReadRepository,
+        GetAccountProviderLegalEntitiesQueryHandler sut,
+        List<AccountProviderLegalEntity> entities,
+        CancellationToken cancellationToken)
+    {
+        GetAccountProviderLegalEntitiesQuery query = new()
+        {
+            Ukprn = null,
+            AccountHashedId = "Hash",
+            Operations = [Operation.Recruitment, Operation.RecruitmentRequiresReview]
+        };
+
+        List<Operation> expectedOperations = [Operation.Recruitment, Operation.RecruitmentRequiresReview];
+
+        await sut.Handle(query, cancellationToken);
+
+        accountProviderLegalEntitiesReadRepository.Verify(a => a.GetAccountProviderLegalEntities(query.Ukprn, query.AccountHashedId, expectedOperations, cancellationToken));
     }
 }

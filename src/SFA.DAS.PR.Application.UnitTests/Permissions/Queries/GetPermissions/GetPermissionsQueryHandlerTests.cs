@@ -3,7 +3,6 @@ using FluentAssertions;
 using Moq;
 using SFA.DAS.PR.Application.Mediatr.Responses;
 using SFA.DAS.PR.Application.Permissions.Queries.GetPermissions;
-using SFA.DAS.PR.Data.Repositories;
 using SFA.DAS.PR.Domain.Entities;
 using SFA.DAS.PR.Domain.Interfaces;
 using SFA.DAS.ProviderRelationships.Types.Models;
@@ -22,7 +21,12 @@ public class GetPermissionsQueryHandlerTests
         CancellationToken cancellationToken
     )
     {
-        GetPermissionsQueryResult getPermissionQueryResult = new GetPermissionsQueryResult { Operations = response };
+        GetPermissionsQueryResult getPermissionQueryResult = new GetPermissionsQueryResult
+        {
+            Operations = response,
+            AccountLegalEntityName = accountProviderLegalEntity.AccountLegalEntity.Name,
+            ProviderName = accountProviderLegalEntity.AccountProvider.Provider.Name
+        };
 
         readRepository.Setup(a =>
             a.GetAccountProviderLegalEntity(query.Ukprn.GetValueOrDefault(), query.accountLegalEntityId.GetValueOrDefault(), cancellationToken)
