@@ -5,7 +5,7 @@ using SFA.DAS.PR.Domain.Interfaces;
 
 namespace SFA.DAS.PR.Application.Requests.Commands.AcceptCreateAccountRequest;
 
-public class AcceptCreateAccountRequestCommandValidator : AbstractValidator<AcceptCreateAccountRequestCommand>
+public class AcceptCreateAccountRequestCommandValidator : AbstractValidator<AcceptCreateAccountRequestCommandWrapper>
 {
     public AcceptCreateAccountRequestCommandValidator(
         IRequestReadRepository requestReadRepository,
@@ -15,7 +15,7 @@ public class AcceptCreateAccountRequestCommandValidator : AbstractValidator<Acce
     {
         RuleFor(a => new RequestIdValidationObject() 
             { 
-                RequestId = a.RequestId!.Value, 
+                RequestId = a.RequestId, 
                 RequestStatuses = new[] { RequestStatus.New, RequestStatus.Sent },
                 RequestType = RequestType.CreateAccount
             }
