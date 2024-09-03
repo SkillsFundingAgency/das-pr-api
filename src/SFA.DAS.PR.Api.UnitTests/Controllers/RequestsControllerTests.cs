@@ -13,6 +13,7 @@ using SFA.DAS.PR.Application.Requests.Commands.AcceptCreateAccountRequest;
 using SFA.DAS.PR.Application.Requests.Commands.CreateAddAccountRequest;
 using SFA.DAS.PR.Application.Requests.Commands.CreateNewAccountRequest;
 using SFA.DAS.PR.Application.Requests.Commands.CreatePermissionRequest;
+using SFA.DAS.PR.Application.Requests.Commands.DeclinedRequest;
 using SFA.DAS.PR.Application.Requests.Queries.GetRequest;
 using SFA.DAS.PR.Application.Requests.Queries.LookupRequests;
 using SFA.DAS.PR.Domain.Models;
@@ -268,5 +269,54 @@ public class RequestsControllerTests
                 a.Account.Id == model.AccountDetails.Id
             ), It.IsAny<CancellationToken>())
         );
+    }
+
+    [Test]
+    [MoqAutoData]
+    public async Task DeclinedRequest_InvokesQueryHandler(
+       [Frozen] Mock<IMediator> mediatorMock,
+       [Greedy] RequestsController sut,
+       DeclinedRequestModel model,
+       Guid requestId,
+       CancellationToken cancellationToken
+    )
+    {
+        await sut.DeclineRequest(requestId, model, cancellationToken);
+
+        mediatorMock.Verify(m =>
+            m.Send(It.Is<DeclinedRequestCommand>(a =>
+                a.RequestId == requestId &&
+                a.ActionedBy == model.ActionedBy
+            ), It.IsAny<CancellationToken>())
+        );
+    }
+
+    [Test]
+    [MoqAutoData]
+    public async Task DeclinedRequest_ReturnsBadRequestResponse(
+       [Frozen] Mock<IMediator> mediatorMock,
+       [Greedy] RequestsController sut,
+       DeclinedRequestModel model,
+       Guid requestId,
+       CancellationToken cancellationToken,
+       List<ValidationFailure> errors
+    )
+    {
+        var errorResponse = new ValidatedResponse<Unit>(errors);
+
+        mediatorMock.Setup(m =>
+            m.Send(
+                It.Is<DeclinedRequestCommand>(a =>
+                    a.ActionedBy == model.ActionedBy &&
+                    a.RequestId == requestId
+                ),
+                It.IsAny<CancellationToken>()
+            )
+        ).ReturnsAsync(errorResponse);
+
+        var result = await sut.DeclineRequest(requestId, model, cancellationToken);
+
+        result.As<BadRequestObjectResult>().Should().NotBeNull();
+        result.As<BadRequestObjectResult>().Value.As<List<ValidationError>>().Count.Should().Be(errors.Count);
     }
 }
