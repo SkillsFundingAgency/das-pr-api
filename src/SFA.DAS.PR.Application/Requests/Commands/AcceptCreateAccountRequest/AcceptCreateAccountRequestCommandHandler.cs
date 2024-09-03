@@ -63,8 +63,8 @@ public sealed class AcceptCreateAccountRequestCommandHandler(
         await CreatePermissionsAudit(
             command,
             request,
-            permissions.Select(a => a.Operation), 
-            RequestAction.AccountCreated, 
+            permissions.Select(a => a.Operation),
+            RequestAction.AccountCreated,
             cancellationToken
         );
 
@@ -112,7 +112,7 @@ public sealed class AcceptCreateAccountRequestCommandHandler(
 
             await _providerRelationshipsDataContext.SaveChangesAsync(cancellationToken);
         }
-        catch(DbUpdateException _exception)
+        catch (DbUpdateException _exception)
         {
             _logger.LogError(_exception, "Account Id {AccountId} already exists", command.Account.Id);
 
@@ -141,7 +141,7 @@ public sealed class AcceptCreateAccountRequestCommandHandler(
                cancellationToken
            );
 
-           await _providerRelationshipsDataContext.SaveChangesAsync(cancellationToken);
+            await _providerRelationshipsDataContext.SaveChangesAsync(cancellationToken);
         }
         catch (DbUpdateException _exception)
         {
@@ -168,7 +168,7 @@ public sealed class AcceptCreateAccountRequestCommandHandler(
             );
         }
 
-        return new (hasAddedAccountProvider, accountProvider);
+        return new(hasAddedAccountProvider, accountProvider);
     }
 
     private async Task CreatePermissionsAudit(AcceptCreateAccountRequestCommand command, Request request, IEnumerable<Operation> operations, RequestAction action, CancellationToken cancellationToken)
@@ -187,7 +187,7 @@ public sealed class AcceptCreateAccountRequestCommandHandler(
     }
 
     private async Task PublishEvent(
-        AccountProviderLegalEntity accountProviderLegalEntity, 
+        AccountProviderLegalEntity accountProviderLegalEntity,
         AcceptCreateAccountRequestCommand command,
         IEnumerable<Permission> permissions,
         CancellationToken cancellationToken
