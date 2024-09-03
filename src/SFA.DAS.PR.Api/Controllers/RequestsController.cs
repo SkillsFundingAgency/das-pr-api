@@ -8,6 +8,7 @@ using SFA.DAS.PR.Application.Requests.Commands.AcceptCreateAccountRequest;
 using SFA.DAS.PR.Application.Requests.Commands.CreateAddAccountRequest;
 using SFA.DAS.PR.Application.Requests.Commands.CreateNewAccountRequest;
 using SFA.DAS.PR.Application.Requests.Commands.CreatePermissionRequest;
+using SFA.DAS.PR.Application.Requests.Commands.DeclinedRequest;
 using SFA.DAS.PR.Application.Requests.Queries.GetRequest;
 using SFA.DAS.PR.Application.Requests.Queries.LookupRequests;
 using SFA.DAS.PR.Domain.Models;
@@ -89,6 +90,23 @@ public class RequestsController(IMediator _mediator) : ActionResponseControllerB
         };
 
         var result = await _mediator.Send(requestWrapper, cancellationToken);
+        return GetResponse(result);
+    }
+
+    [HttpPost("{requestId:guid}/declined")]
+    [Authorize(Policy = Policies.Management)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(List<ValidationError>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> DeclineAccountRequest([FromRoute] Guid requestId, [FromBody] DeclinedRequestModel model, CancellationToken cancellationToken)
+    {
+        DeclinedRequestCommand command = new DeclinedRequestCommand()
+        {
+            RequestId = requestId,
+            ActionedBy = model.ActionedBy
+        };
+
+        var result = await _mediator.Send(command, cancellationToken);
         return GetResponse(result);
     }
 }

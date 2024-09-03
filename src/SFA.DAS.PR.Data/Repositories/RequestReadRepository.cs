@@ -66,7 +66,7 @@ public class RequestReadRepository(IProviderRelationshipsDataContext providerRel
     public async Task<bool> RequestExists(
         Guid RequestId, 
         RequestStatus[] requestStatuses, 
-        RequestType requestType, 
+        RequestType? requestType, 
         CancellationToken cancellationToken
     )
     {
@@ -75,7 +75,7 @@ public class RequestReadRepository(IProviderRelationshipsDataContext providerRel
             .AnyAsync(a =>
                 a.Id == RequestId &&
                 (requestStatuses.Count() == 0 || requestStatuses.Contains(a.Status) &&
-                a.RequestType == requestType
+                (requestType == null || a.RequestType == requestType)
             ),
             cancellationToken
         );

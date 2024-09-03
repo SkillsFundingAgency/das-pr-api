@@ -7,5 +7,5 @@ public class RequestIdValidationObject : IRequestEntity
 {
     public Guid RequestId { get; set; }
     public RequestStatus[] RequestStatuses { get; set; } = [];
-    public RequestType RequestType { get; set; }
+    public RequestType? RequestType { get; set; }
 }

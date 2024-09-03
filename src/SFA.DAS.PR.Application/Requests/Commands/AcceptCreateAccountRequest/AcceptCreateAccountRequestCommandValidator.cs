@@ -16,6 +16,6 @@ public sealed class AcceptCreateAccountRequestCommandValidator : AbstractValidat
                 RequestType = RequestType.CreateAccount
             }
         )
-        .ValidateRequest(requestReadRepository);
+        .ValidateRequest(requestReadRepository, RequestsValidator.CreateAccountRequestValidationMessage);
     }
 }
