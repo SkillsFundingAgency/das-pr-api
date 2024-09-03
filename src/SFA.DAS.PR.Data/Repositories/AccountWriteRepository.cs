@@ -7,7 +7,7 @@ public class AccountWriteRepository(IProviderRelationshipsDataContext _providerR
 {
     public async Task<Account> CreateAccount(Account account, CancellationToken cancellationToken)
     {
-        await _providerRelationshipsDataContext.Accounts.AddAsync(account);
+        await _providerRelationshipsDataContext.Accounts.AddAsync(account, cancellationToken);
         return account;
     }
 }

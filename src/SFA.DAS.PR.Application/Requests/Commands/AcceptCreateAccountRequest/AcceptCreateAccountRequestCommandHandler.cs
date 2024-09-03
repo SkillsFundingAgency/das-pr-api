@@ -47,7 +47,7 @@ public sealed class AcceptCreateAccountRequestCommandHandler(
             
         AccountProviderLegalEntity accountProviderLegalEntity = 
             await _accountProviderLegalEntitiesWriteRepository.CreateAccountProviderLegalEntity(
-                command.AccountLegalEntity.Id,
+                accountLegalEntity!.Id,
                 providerResponse.Item2,
                 cancellationToken
         );
@@ -79,7 +79,7 @@ public sealed class AcceptCreateAccountRequestCommandHandler(
             await _messageSession.Publish(
                 new AddedAccountProviderEvent(
                     providerResponse.Item2.Id,
-                    command.Account.Id,
+                    account.Id,
                     providerResponse.Item2.ProviderUkprn,
                     Guid.Parse(command.ActionedBy),
                     DateTime.UtcNow,
