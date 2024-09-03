@@ -74,10 +74,10 @@ public class RequestsController(IMediator _mediator) : ActionResponseControllerB
 
     [HttpPost("{requestId:guid}/createaccount/accepted")]
     [Authorize(Policy = Policies.Management)]
-    [ProducesResponseType(typeof(AcceptCreateAccountRequestCommandResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(Unit), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(List<ValidationError>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> ActionRequest([FromRoute]Guid requestId, [FromBody] AcceptCreateAccountRequestCommand command, CancellationToken cancellationToken)
+    public async Task<IActionResult> AcceptCreateAccountRequest([FromRoute]Guid requestId, [FromBody] AcceptCreateAccountRequestCommand command, CancellationToken cancellationToken)
     {
         AcceptCreateAccountRequestCommandWrapper requestWrapper = new()
         {

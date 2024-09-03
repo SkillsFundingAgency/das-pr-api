@@ -8,6 +8,7 @@ using Moq;
 using SFA.DAS.PR.Api.Common;
 using SFA.DAS.PR.Api.Controllers;
 using SFA.DAS.PR.Application.Mediatr.Responses;
+using SFA.DAS.PR.Application.Requests.Commands.AcceptCreateAccountRequest;
 using SFA.DAS.PR.Application.Requests.Commands.CreateAddAccountRequest;
 using SFA.DAS.PR.Application.Requests.Commands.CreateNewAccountRequest;
 using SFA.DAS.PR.Application.Requests.Commands.CreatePermissionRequest;
@@ -241,6 +242,26 @@ public class RequestsControllerTests
 
         mediatorMock.Verify(m =>
             m.Send(It.Is<CreateNewAccountRequestCommand>(a => 
+                a.Ukprn == command.Ukprn &&
+                a.EmployerPAYE == command.EmployerPAYE
+            ), It.IsAny<CancellationToken>())
+        );
+    }
+
+    [Test]
+    [MoqAutoData]
+    public async Task AcceptCreateAccountRequest_InvokesQueryHandler(
+       [Frozen] Mock<IMediator> mediatorMock,
+       [Greedy] RequestsController sut,
+       AcceptCreateAccountRequestCommand command,
+       long requestId,
+       CancellationToken cancellationToken
+    )
+    {
+        await sut.AcceptCreateAccountRequest(command, cancellationToken);
+
+        mediatorMock.Verify(m =>
+            m.Send(It.Is<CreateNewAccountRequestCommand>(a =>
                 a.Ukprn == command.Ukprn &&
                 a.EmployerPAYE == command.EmployerPAYE
             ), It.IsAny<CancellationToken>())
