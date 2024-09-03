@@ -12,7 +12,7 @@ using SFA.DAS.ProviderRelationships.Types.Models;
 
 namespace SFA.DAS.PR.Application.Requests.Commands.AcceptCreateAccountRequest;
 
-public class AcceptCreateAccountRequestCommandHandler(
+public sealed class AcceptCreateAccountRequestCommandHandler(
     ILogger<AcceptCreateAccountRequestCommandHandler> _logger,
     IEncodingService _encodingService,
     IProviderRelationshipsDataContext _providerRelationshipsDataContext,
@@ -24,29 +24,26 @@ public class AcceptCreateAccountRequestCommandHandler(
     IAccountProviderLegalEntitiesWriteRepository _accountProviderLegalEntitiesWriteRepository,
     IPermissionsWriteRepository _permissionsWriteRepository,
     IPermissionsAuditWriteRepository _permissionsAuditWriteRepository,
-    IMessageSession _messageSession
-) : IRequestHandler<AcceptCreateAccountRequestCommandWrapper, ValidatedResponse<Unit>>
+    IMessageSession _messageSession,
+    IRequestReadRepository requestReadRepository
+) : IRequestHandler<AcceptCreateAccountRequestCommand, ValidatedResponse<Unit>>
 {
-    public async Task<ValidatedResponse<Unit>> Handle(AcceptCreateAccountRequestCommandWrapper wrapper, CancellationToken cancellationToken)
+    public async Task<ValidatedResponse<Unit>> Handle(AcceptCreateAccountRequestCommand command, CancellationToken cancellationToken)
     {
-        await CreateAccountAndAddPermissions(wrapper, cancellationToken);
+        await CreateAccountAndAddPermissions(command, cancellationToken);
 
         return ValidatedResponse<Unit>.EmptySuccessResponse();
     }
 
-    private async Task CreateAccountAndAddPermissions(AcceptCreateAccountRequestCommandWrapper commandWrapper, CancellationToken cancellationToken)
+    private async Task CreateAccountAndAddPermissions(AcceptCreateAccountRequestCommand command, CancellationToken cancellationToken)
     {
-        AcceptCreateAccountRequestCommand command = commandWrapper.Commmand;
-
-        Request request = await _providerRelationshipsDataContext.Requests
-                                    .Include(a => a.PermissionRequests)
-                                    .FirstAsync(a => a.Id == commandWrapper.RequestId, cancellationToken);
+        Request? request = await requestReadRepository.GetRequest(command.RequestId, cancellationToken);
 
         Account account = await GetOrCreateAccount(command, cancellationToken);
 
         AccountLegalEntity? accountLegalEntity = await GetOrCreateAccountLegalEntity(command, cancellationToken);
 
-        Tuple<bool, AccountProvider> providerResponse = await GetOrCreateAccountProvider(command, request, cancellationToken);
+        Tuple<bool, AccountProvider> providerResponse = await GetOrCreateAccountProvider(command, request!, cancellationToken);
             
         AccountProviderLegalEntity accountProviderLegalEntity = 
             await _accountProviderLegalEntitiesWriteRepository.CreateAccountProviderLegalEntity(
@@ -55,7 +52,7 @@ public class AcceptCreateAccountRequestCommandHandler(
                 cancellationToken
         );
 
-        IEnumerable<Permission> permissions = request.PermissionRequests.Select(pr => new Permission()
+        IEnumerable<Permission> permissions = request!.PermissionRequests.Select(pr => new Permission()
         {
             AccountProviderLegalEntity = accountProviderLegalEntity,
             Operation = (Operation)pr.Operation

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.PR.Api.Authorization;
 using SFA.DAS.PR.Api.Common;
+using SFA.DAS.PR.Api.Models;
 using SFA.DAS.PR.Application.Requests.Commands.AcceptCreateAccountRequest;
 using SFA.DAS.PR.Application.Requests.Commands.CreateAddAccountRequest;
 using SFA.DAS.PR.Application.Requests.Commands.CreateNewAccountRequest;
@@ -74,15 +75,17 @@ public class RequestsController(IMediator _mediator) : ActionResponseControllerB
 
     [HttpPost("{requestId:guid}/createaccount/accepted")]
     [Authorize(Policy = Policies.Management)]
-    [ProducesResponseType(typeof(Unit), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(List<ValidationError>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> AcceptCreateAccountRequest([FromRoute]Guid requestId, [FromBody] AcceptCreateAccountRequestCommand command, CancellationToken cancellationToken)
+    public async Task<IActionResult> AcceptCreateAccountRequest([FromRoute]Guid requestId, [FromBody] AcceptCreateAccountRequestModel model, CancellationToken cancellationToken)
     {
-        AcceptCreateAccountRequestCommandWrapper requestWrapper = new()
+        AcceptCreateAccountRequestCommand requestWrapper = new()
         {
             RequestId = requestId,
-            Commmand = command
+            Account = model.AccountDetails,
+            AccountLegalEntity = model.AccountLegalEntityDetails,
+            ActionedBy = model.ActionedBy,
         };
 
         var result = await _mediator.Send(requestWrapper, cancellationToken);

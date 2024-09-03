@@ -7,6 +7,7 @@ public static class RequestsValidator
 {
     public const string RequestValidationMessage = "A 'new' or 'sent' request for this AccountLegalEntityId and Ukprn combination already exists.";
     public const string RequestEmployerPAYEValidationMessage = "A 'new' or 'sent' request for this EmployerPAYE and Ukprn combination already exists.";
+    public const string CreateAccountRequestValidationMessage = "A 'new' or 'sent' request with a request type of 'CreateAccount' must exist for this RequestId.";
     public static IRuleBuilderOptions<T, RequestValidationObject> ValidateRequest<T>(this IRuleBuilder<T, RequestValidationObject> ruleBuilder, IRequestReadRepository requestReadRepository) where T : IUkprnEntity, IAccountLegalEntityIdEntity
     {
         return ruleBuilder
@@ -42,13 +43,13 @@ public static class RequestsValidator
         return ruleBuilder
             .MustAsync(async (requestIdValidationObject, cancellationToken) =>
             {
-                return !await requestReadRepository.RequestExists(
+                return await requestReadRepository.RequestExists(
                     requestIdValidationObject.RequestId,
                     requestIdValidationObject.RequestStatuses,
                     requestIdValidationObject.RequestType,
                     cancellationToken
                 );
             })
-            .WithMessage(RequestValidationMessage);
+            .WithMessage(CreateAccountRequestValidationMessage);
     }
 }
