@@ -36,7 +36,7 @@ public class AcceptCreateAccountRequestCommandHandler(
 
     private async Task CreateAccountAndAddPermissions(AcceptCreateAccountRequestCommandWrapper commandWrapper, CancellationToken cancellationToken)
     {
-        AcceptCreateAccountRequestCommand command = commandWrapper.Commmand;
+        AcceptCreateAccountRequestCommand command = commandWrapper.Command;
 
         Request request = await _providerRelationshipsDataContext.Requests
                                     .Include(a => a.PermissionRequests)
@@ -47,8 +47,8 @@ public class AcceptCreateAccountRequestCommandHandler(
         AccountLegalEntity? accountLegalEntity = await GetOrCreateAccountLegalEntity(command, cancellationToken);
 
         Tuple<bool, AccountProvider> providerResponse = await GetOrCreateAccountProvider(command, request, cancellationToken);
-            
-        AccountProviderLegalEntity accountProviderLegalEntity = 
+
+        AccountProviderLegalEntity accountProviderLegalEntity =
             await _accountProviderLegalEntitiesWriteRepository.CreateAccountProviderLegalEntity(
                 command.AccountLegalEntity.Id,
                 providerResponse.Item2,
@@ -66,8 +66,8 @@ public class AcceptCreateAccountRequestCommandHandler(
         await CreatePermissionsAudit(
             command,
             request,
-            permissions.Select(a => a.Operation), 
-            RequestAction.AccountCreated, 
+            permissions.Select(a => a.Operation),
+            RequestAction.AccountCreated,
             cancellationToken
         );
 
@@ -115,7 +115,7 @@ public class AcceptCreateAccountRequestCommandHandler(
 
             await _providerRelationshipsDataContext.SaveChangesAsync(cancellationToken);
         }
-        catch(DbUpdateException _exception)
+        catch (DbUpdateException _exception)
         {
             _logger.LogError(_exception, "Account Id {AccountId} already exists", command.Account.Id);
 
@@ -144,7 +144,7 @@ public class AcceptCreateAccountRequestCommandHandler(
                cancellationToken
            );
 
-           await _providerRelationshipsDataContext.SaveChangesAsync(cancellationToken);
+            await _providerRelationshipsDataContext.SaveChangesAsync(cancellationToken);
         }
         catch (DbUpdateException _exception)
         {
@@ -171,7 +171,7 @@ public class AcceptCreateAccountRequestCommandHandler(
             );
         }
 
-        return new (hasAddedAccountProvider, accountProvider);
+        return new(hasAddedAccountProvider, accountProvider);
     }
 
     private async Task CreatePermissionsAudit(AcceptCreateAccountRequestCommand command, Request request, IEnumerable<Operation> operations, RequestAction action, CancellationToken cancellationToken)
@@ -190,7 +190,7 @@ public class AcceptCreateAccountRequestCommandHandler(
     }
 
     private async Task PublishEvent(
-        AccountProviderLegalEntity accountProviderLegalEntity, 
+        AccountProviderLegalEntity accountProviderLegalEntity,
         AcceptCreateAccountRequestCommand command,
         IEnumerable<Permission> permissions,
         CancellationToken cancellationToken

@@ -23,7 +23,7 @@ public class RequestsController(IMediator _mediator) : ActionResponseControllerB
     [Authorize(Policy = Policies.Management)]
     [ProducesResponseType(typeof(CreateAddAccountRequestCommandResult), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(List<ValidationError>), StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> CreateAddAccountRequest([FromBody]CreateAddAccountRequestCommand command, CancellationToken cancellationToken)
+    public async Task<IActionResult> CreateAddAccountRequest([FromBody] CreateAddAccountRequestCommand command, CancellationToken cancellationToken)
     {
         var result = await _mediator.Send(command, cancellationToken);
         return GetResponse(result);
@@ -77,12 +77,12 @@ public class RequestsController(IMediator _mediator) : ActionResponseControllerB
     [ProducesResponseType(typeof(Unit), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(List<ValidationError>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> AcceptCreateAccountRequest([FromRoute]Guid requestId, [FromBody] AcceptCreateAccountRequestCommand command, CancellationToken cancellationToken)
+    public async Task<IActionResult> AcceptCreateAccountRequest([FromRoute] Guid requestId, [FromBody] AcceptCreateAccountRequestCommand command, CancellationToken cancellationToken)
     {
         AcceptCreateAccountRequestCommandWrapper requestWrapper = new()
         {
             RequestId = requestId,
-            Commmand = command
+            Command = command
         };
 
         var result = await _mediator.Send(requestWrapper, cancellationToken);

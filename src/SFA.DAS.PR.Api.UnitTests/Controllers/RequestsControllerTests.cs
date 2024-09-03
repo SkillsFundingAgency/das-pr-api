@@ -67,12 +67,12 @@ public class RequestsControllerTests
 
         var result = await sut.CreateAddAccountRequest(
             new CreateAddAccountRequestCommand()
-            { 
-                AccountLegalEntityId = 1, 
-                Ukprn = 1, 
-                Operations = [], 
-                RequestedBy = Guid.NewGuid().ToString() 
-            }, 
+            {
+                AccountLegalEntityId = 1,
+                Ukprn = 1,
+                Operations = [],
+                RequestedBy = Guid.NewGuid().ToString()
+            },
             cancellationToken
         );
         result.As<BadRequestObjectResult>().Should().NotBeNull();
@@ -220,7 +220,7 @@ public class RequestsControllerTests
         ).ReturnsAsync(errorResponse);
 
         var result = await sut.LookupRequests(
-            10000001, 
+            10000001,
             "PAYE",
             cancellationToken
         );
@@ -241,7 +241,7 @@ public class RequestsControllerTests
         await sut.CreateNewAccountRequest(command, cancellationToken);
 
         mediatorMock.Verify(m =>
-            m.Send(It.Is<CreateNewAccountRequestCommand>(a => 
+            m.Send(It.Is<CreateNewAccountRequestCommand>(a =>
                 a.Ukprn == command.Ukprn &&
                 a.EmployerPAYE == command.EmployerPAYE
             ), It.IsAny<CancellationToken>())
@@ -254,16 +254,16 @@ public class RequestsControllerTests
        [Frozen] Mock<IMediator> mediatorMock,
        [Greedy] RequestsController sut,
        AcceptCreateAccountRequestCommand command,
-       long requestId,
+       Guid requestId,
        CancellationToken cancellationToken
     )
     {
-        await sut.AcceptCreateAccountRequest(command, cancellationToken);
+        await sut.AcceptCreateAccountRequest(requestId, command, cancellationToken);
 
         mediatorMock.Verify(m =>
-            m.Send(It.Is<CreateNewAccountRequestCommand>(a =>
-                a.Ukprn == command.Ukprn &&
-                a.EmployerPAYE == command.EmployerPAYE
+            m.Send(It.Is<AcceptCreateAccountRequestCommandWrapper>(a =>
+                a.RequestId == requestId &&
+                a.Command == command
             ), It.IsAny<CancellationToken>())
         );
     }
