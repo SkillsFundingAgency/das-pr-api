@@ -80,7 +80,7 @@ public class RequestsController(IMediator _mediator) : ActionResponseControllerB
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> AcceptCreateAccountRequest([FromRoute]Guid requestId, [FromBody] AcceptCreateAccountRequestModel model, CancellationToken cancellationToken)
     {
-        AcceptCreateAccountRequestCommand requestWrapper = new()
+        AcceptCreateAccountRequestCommand command = new()
         {
             RequestId = requestId,
             Account = model.AccountDetails,
@@ -88,7 +88,7 @@ public class RequestsController(IMediator _mediator) : ActionResponseControllerB
             ActionedBy = model.ActionedBy,
         };
 
-        var result = await _mediator.Send(requestWrapper, cancellationToken);
+        var result = await _mediator.Send(command, cancellationToken);
         return GetResponse(result);
     }
 }
