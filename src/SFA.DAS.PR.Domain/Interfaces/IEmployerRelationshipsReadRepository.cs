@@ -4,5 +4,5 @@ namespace SFA.DAS.PR.Domain.Interfaces;
 
 public interface IEmployerRelationshipsReadRepository
 {
-    Task<Account?> GetRelationships(string accountHashedId, CancellationToken cancellationToken);
+    Task<Account?> GetRelationships(long accountId, CancellationToken cancellationToken);
 }

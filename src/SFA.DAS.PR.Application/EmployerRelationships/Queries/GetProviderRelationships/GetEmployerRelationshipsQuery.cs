@@ -5,10 +5,10 @@ namespace SFA.DAS.PR.Application.Permissions.Queries.GetEmployerRelationships;
 
 public class GetEmployerRelationshipsQuery : IRequest<ValidatedResponse<GetEmployerRelationshipsQueryResult>>
 {
-    public string AccountHashedId { get; set; }
+    public long AccountId { get; set; }
 
-    public GetEmployerRelationshipsQuery(string accountHashedId)
+    public GetEmployerRelationshipsQuery(long accountId)
     {
-        AccountHashedId = accountHashedId;
+        AccountId = accountId;
     }
 }

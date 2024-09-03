@@ -18,10 +18,10 @@ public class GetEmployerRelationshipsQueryHandlerTests
             CancellationToken cancellationToken
         )
     {
-        GetEmployerRelationshipsQuery query = new(account.HashedId);
+        GetEmployerRelationshipsQuery query = new(account.Id);
 
         employerRelationshipsReadRepository.Setup(a =>
-            a.GetRelationships(query.AccountHashedId, cancellationToken)
+            a.GetRelationships(query.AccountId, cancellationToken)
         ).ReturnsAsync(account);
 
         ValidatedResponse<GetEmployerRelationshipsQueryResult> result = await sut.Handle(query, cancellationToken);
@@ -34,14 +34,14 @@ public class GetEmployerRelationshipsQueryHandlerTests
     public async Task Handle_GetEmployerRelationships_Returns_Empty_Result(
             [Frozen] Mock<IEmployerRelationshipsReadRepository> employerRelationshipsReadRepository,
             GetEmployerRelationshipsQueryHandler sut,
-            string accountHashedId,
+            long accountId,
             CancellationToken cancellationToken
         )
     {
-        GetEmployerRelationshipsQuery query = new(accountHashedId);
+        GetEmployerRelationshipsQuery query = new(accountId);
 
         employerRelationshipsReadRepository.Setup(a =>
-            a.GetRelationships(query.AccountHashedId, cancellationToken)
+            a.GetRelationships(query.AccountId, cancellationToken)
         ).ReturnsAsync((Account?)null);
 
         ValidatedResponse<GetEmployerRelationshipsQueryResult> result = await sut.Handle(query, cancellationToken);

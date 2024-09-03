@@ -8,16 +8,16 @@ public class GetEmployerRelationshipsQueryValidatorTests
     public async Task ValidateAccountHashedId_Valid()
     {
         var sut = new GetEmployerRelationshipsQueryValidator();
-        var result = await sut.TestValidateAsync(new GetEmployerRelationshipsQuery("hash"));
-        result.ShouldNotHaveValidationErrorFor(query => query.AccountHashedId);
+        var result = await sut.TestValidateAsync(new GetEmployerRelationshipsQuery(1));
+        result.ShouldNotHaveValidationErrorFor(query => query.AccountId);
     }
 
     [Test]
     public async Task ValidateAccountHashedId_Empty_Invalid()
     {
         var sut = new GetEmployerRelationshipsQueryValidator();
-        var result = await sut.TestValidateAsync(new GetEmployerRelationshipsQuery(string.Empty));
-        result.ShouldHaveValidationErrorFor(q => q.AccountHashedId)
+        var result = await sut.TestValidateAsync(new GetEmployerRelationshipsQuery(0));
+        result.ShouldHaveValidationErrorFor(q => q.AccountId)
                     .WithErrorMessage(GetEmployerRelationshipsQueryValidator.AccountHashedIdValidationMessage);
     }
 }

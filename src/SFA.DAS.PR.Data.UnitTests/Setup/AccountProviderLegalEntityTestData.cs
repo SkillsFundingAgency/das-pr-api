@@ -54,6 +54,8 @@ public static class AccountProviderLegalEntityTestData
 
     public static List<AccountProviderLegalEntity> CreateAccountProviderLegalEntitiesWithPermissions(Account account)
     {
+        var requestId = Guid.NewGuid();
+
         return new()
         {
             new()
@@ -81,7 +83,27 @@ public static class AccountProviderLegalEntityTestData
                     Name = "Name",
                     Created = DateTime.Now.AddDays(-1),
                     Updated = DateTime.Now,
-                    Deleted = null
+                    Deleted = null,
+                    Requests = new ()
+                    {
+                        new Request()
+                        {
+                            Id = requestId,
+                            RequestType = RequestType.CreateAccount,
+                            AccountLegalEntityId = 1003,
+                            Ukprn = 1005,
+                            RequestedBy = Guid.NewGuid().ToString(),
+                            PermissionRequests = new()
+                            {
+                                new PermissionRequest()
+                                {
+                                    Id = Guid.NewGuid(),
+                                    Operation = (short)Operation.Recruitment,
+                                    RequestId = requestId
+                                }
+                            }
+                        }
+                    }
                 },
                 AccountProvider = new()
                 {
