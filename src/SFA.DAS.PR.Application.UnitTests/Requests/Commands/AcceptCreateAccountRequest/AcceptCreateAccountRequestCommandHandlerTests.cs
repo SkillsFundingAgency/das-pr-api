@@ -26,7 +26,7 @@ namespace SFA.DAS.PR.Application.UnitTests.Requests.Commands.AcceptCreateAccount
         private Mock<IPermissionsWriteRepository> _permissionsWriteRepositoryMock;
         private Mock<IPermissionsAuditWriteRepository> _permissionsAuditWriteRepositoryMock;
         private Mock<IMessageSession> _messageSessionMock;
-        private Mock<IRequestReadRepository> _requestReadRepositoryMock;
+        private Mock<IRequestWriteRepository> _requestWriteRepositoryMock;
 
         private AcceptCreateAccountRequestCommandHandler _handler;
 
@@ -43,7 +43,7 @@ namespace SFA.DAS.PR.Application.UnitTests.Requests.Commands.AcceptCreateAccount
             _permissionsWriteRepositoryMock = new Mock<IPermissionsWriteRepository>();
             _permissionsAuditWriteRepositoryMock = new Mock<IPermissionsAuditWriteRepository>();
             _messageSessionMock = new Mock<IMessageSession>();
-            _requestReadRepositoryMock = new Mock<IRequestReadRepository>();
+            _requestWriteRepositoryMock = new Mock<IRequestWriteRepository>();
 
             _handler = new AcceptCreateAccountRequestCommandHandler(
                 _loggerMock.Object,
@@ -56,7 +56,7 @@ namespace SFA.DAS.PR.Application.UnitTests.Requests.Commands.AcceptCreateAccount
                 _permissionsWriteRepositoryMock.Object,
                 _permissionsAuditWriteRepositoryMock.Object,
                 _messageSessionMock.Object,
-                _requestReadRepositoryMock.Object
+                _requestWriteRepositoryMock.Object
             );
         }
 
@@ -70,7 +70,7 @@ namespace SFA.DAS.PR.Application.UnitTests.Requests.Commands.AcceptCreateAccount
 
             var request = RequestTestData.Create(Guid.NewGuid());
 
-            _requestReadRepositoryMock.Setup(x => x.GetRequest(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
+            _requestWriteRepositoryMock.Setup(x => x.GetRequest(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(request);
 
             _accountWriteRepositoryMock.Setup(x => x.CreateAccount(It.IsAny<Account>(), It.IsAny<CancellationToken>()))
@@ -108,7 +108,7 @@ namespace SFA.DAS.PR.Application.UnitTests.Requests.Commands.AcceptCreateAccount
             command.ActionedBy = Guid.NewGuid().ToString();
             var request = RequestTestData.Create(Guid.NewGuid());
 
-            _requestReadRepositoryMock.Setup(x => x.GetRequest(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
+            _requestWriteRepositoryMock.Setup(x => x.GetRequest(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(request);
 
             _accountWriteRepositoryMock.Setup(x => x.CreateAccount(It.IsAny<Account>(), It.IsAny<CancellationToken>()))
@@ -143,13 +143,13 @@ namespace SFA.DAS.PR.Application.UnitTests.Requests.Commands.AcceptCreateAccount
 
             var request = RequestTestData.Create(Guid.NewGuid());
 
-            _requestReadRepositoryMock.Setup(x => x.GetRequest(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
+            _requestWriteRepositoryMock.Setup(x => x.GetRequest(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(request);
 
             var actionedBy = Guid.NewGuid();
             command.ActionedBy = actionedBy.ToString();
 
-            _requestReadRepositoryMock.Setup(x => x.GetRequest(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
+            _requestWriteRepositoryMock.Setup(x => x.GetRequest(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(request);
 
             _accountProviderWriteRepositoryMock.Setup(x => x.GetAccountProvider(It.IsAny<long>(), It.IsAny<long>(), It.IsAny<CancellationToken>()))

@@ -23,7 +23,7 @@ public sealed class AcceptCreateAccountRequestCommandHandler(
     IPermissionsWriteRepository _permissionsWriteRepository,
     IPermissionsAuditWriteRepository _permissionsAuditWriteRepository,
     IMessageSession _messageSession,
-    IRequestReadRepository requestReadRepository
+    IRequestWriteRepository _requestWriteRepository
 ) : IRequestHandler<AcceptCreateAccountRequestCommand, ValidatedResponse<Unit>>
 {
     public async Task<ValidatedResponse<Unit>> Handle(AcceptCreateAccountRequestCommand command, CancellationToken cancellationToken)
@@ -35,7 +35,7 @@ public sealed class AcceptCreateAccountRequestCommandHandler(
 
     private async Task CreateAccountAndAddPermissions(AcceptCreateAccountRequestCommand command, CancellationToken cancellationToken)
     {
-        Request? request = await requestReadRepository.GetRequest(command.RequestId, cancellationToken);
+        Request? request = await _requestWriteRepository.GetRequest(command.RequestId, cancellationToken);
 
         await CreateAccount(command, cancellationToken);
 
