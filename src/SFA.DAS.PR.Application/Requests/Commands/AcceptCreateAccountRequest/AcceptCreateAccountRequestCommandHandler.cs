@@ -17,9 +17,7 @@ public sealed class AcceptCreateAccountRequestCommandHandler(
     IEncodingService _encodingService,
     IProviderRelationshipsDataContext _providerRelationshipsDataContext,
     IAccountWriteRepository _accountWriteRepository,
-    IAccountReadRepository _accountReadRepository,
     IAccountProviderWriteRepository _accountProviderWriteRepository,
-    IAccountLegalEntityReadRepository _accountLegalEntityReadRepository,
     IAccountLegalEntityWriteRepository _accountLegalEntityWriteRepository,
     IAccountProviderLegalEntitiesWriteRepository _accountProviderLegalEntitiesWriteRepository,
     IPermissionsWriteRepository _permissionsWriteRepository,
@@ -39,15 +37,15 @@ public sealed class AcceptCreateAccountRequestCommandHandler(
     {
         Request? request = await requestReadRepository.GetRequest(command.RequestId, cancellationToken);
 
-        Account account = await GetOrCreateAccount(command, cancellationToken);
+        await CreateAccount(command, cancellationToken);
 
-        AccountLegalEntity? accountLegalEntity = await GetOrCreateAccountLegalEntity(command, cancellationToken);
+        await CreateAccountLegalEntity(command, cancellationToken);
 
         Tuple<bool, AccountProvider> providerResponse = await GetOrCreateAccountProvider(command, request!, cancellationToken);
             
         AccountProviderLegalEntity accountProviderLegalEntity = 
             await _accountProviderLegalEntitiesWriteRepository.CreateAccountProviderLegalEntity(
-                accountLegalEntity!.Id,
+                command.AccountLegalEntity.Id,
                 providerResponse.Item2,
                 cancellationToken
         );
@@ -79,7 +77,7 @@ public sealed class AcceptCreateAccountRequestCommandHandler(
             await _messageSession.Publish(
                 new AddedAccountProviderEvent(
                     providerResponse.Item2.Id,
-                    account.Id,
+                    command.Account.Id,
                     providerResponse.Item2.ProviderUkprn,
                     Guid.Parse(command.ActionedBy),
                     DateTime.UtcNow,
@@ -91,13 +89,11 @@ public sealed class AcceptCreateAccountRequestCommandHandler(
         await PublishEvent(accountProviderLegalEntity, command, permissions, cancellationToken);
     }
 
-    private async Task<Account> GetOrCreateAccount(AcceptCreateAccountRequestCommand command, CancellationToken cancellationToken)
+    private async Task CreateAccount(AcceptCreateAccountRequestCommand command, CancellationToken cancellationToken)
     {
-        Account? account;
-
         try
         {
-            account = await _accountWriteRepository.CreateAccount(
+            await _accountWriteRepository.CreateAccount(
                 new Account()
                 {
                     Id = command.Account.Id,
@@ -115,20 +111,14 @@ public sealed class AcceptCreateAccountRequestCommandHandler(
         catch (DbUpdateException _exception)
         {
             _logger.LogError(_exception, "Account Id {AccountId} already exists", command.Account.Id);
-
-            account = await _accountReadRepository.GetAccount(command.Account.Id, cancellationToken);
         }
-
-        return account!;
     }
 
-    private async Task<AccountLegalEntity> GetOrCreateAccountLegalEntity(AcceptCreateAccountRequestCommand command, CancellationToken cancellationToken)
+    private async Task CreateAccountLegalEntity(AcceptCreateAccountRequestCommand command, CancellationToken cancellationToken)
     {
-        AccountLegalEntity? accountLegalEntity;
-
         try
         {
-            accountLegalEntity = await _accountLegalEntityWriteRepository.CreateAccountLegalEntity(
+            await _accountLegalEntityWriteRepository.CreateAccountLegalEntity(
                new AccountLegalEntity()
                {
                    Id = command.AccountLegalEntity.Id,
@@ -146,11 +136,7 @@ public sealed class AcceptCreateAccountRequestCommandHandler(
         catch (DbUpdateException _exception)
         {
             _logger.LogError(_exception, "Account legal entity Id {AccountLegalEntityId} already exists", command.AccountLegalEntity.Id);
-
-            accountLegalEntity = await _accountLegalEntityReadRepository.GetAccountLegalEntity(command.AccountLegalEntity.Id, cancellationToken);
         }
-
-        return accountLegalEntity!;
     }
     private async Task<Tuple<bool, AccountProvider>> GetOrCreateAccountProvider(AcceptCreateAccountRequestCommand command, Request request, CancellationToken cancellationToken)
     {

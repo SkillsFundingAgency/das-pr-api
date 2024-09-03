@@ -20,9 +20,7 @@ namespace SFA.DAS.PR.Application.UnitTests.Requests.Commands.AcceptCreateAccount
         private Mock<IEncodingService> _encodingServiceMock;
         private Mock<IProviderRelationshipsDataContext> _providerRelationshipsDataContextMock;
         private Mock<IAccountWriteRepository> _accountWriteRepositoryMock;
-        private Mock<IAccountReadRepository> _accountReadRepositoryMock;
         private Mock<IAccountProviderWriteRepository> _accountProviderWriteRepositoryMock;
-        private Mock<IAccountLegalEntityReadRepository> _accountLegalEntityReadRepositoryMock;
         private Mock<IAccountLegalEntityWriteRepository> _accountLegalEntityWriteRepositoryMock;
         private Mock<IAccountProviderLegalEntitiesWriteRepository> _accountProviderLegalEntitiesWriteRepositoryMock;
         private Mock<IPermissionsWriteRepository> _permissionsWriteRepositoryMock;
@@ -39,9 +37,7 @@ namespace SFA.DAS.PR.Application.UnitTests.Requests.Commands.AcceptCreateAccount
             _encodingServiceMock = new Mock<IEncodingService>();
             _providerRelationshipsDataContextMock = new Mock<IProviderRelationshipsDataContext>();
             _accountWriteRepositoryMock = new Mock<IAccountWriteRepository>();
-            _accountReadRepositoryMock = new Mock<IAccountReadRepository>();
             _accountProviderWriteRepositoryMock = new Mock<IAccountProviderWriteRepository>();
-            _accountLegalEntityReadRepositoryMock = new Mock<IAccountLegalEntityReadRepository>();
             _accountLegalEntityWriteRepositoryMock = new Mock<IAccountLegalEntityWriteRepository>();
             _accountProviderLegalEntitiesWriteRepositoryMock = new Mock<IAccountProviderLegalEntitiesWriteRepository>();
             _permissionsWriteRepositoryMock = new Mock<IPermissionsWriteRepository>();
@@ -54,9 +50,7 @@ namespace SFA.DAS.PR.Application.UnitTests.Requests.Commands.AcceptCreateAccount
                 _encodingServiceMock.Object,
                 _providerRelationshipsDataContextMock.Object,
                 _accountWriteRepositoryMock.Object,
-                _accountReadRepositoryMock.Object,
                 _accountProviderWriteRepositoryMock.Object,
-                _accountLegalEntityReadRepositoryMock.Object,
                 _accountLegalEntityWriteRepositoryMock.Object,
                 _accountProviderLegalEntitiesWriteRepositoryMock.Object,
                 _permissionsWriteRepositoryMock.Object,
@@ -126,9 +120,6 @@ namespace SFA.DAS.PR.Application.UnitTests.Requests.Commands.AcceptCreateAccount
             _accountLegalEntityWriteRepositoryMock.Setup(x => x.CreateAccountLegalEntity(It.IsAny<AccountLegalEntity>(), It.IsAny<CancellationToken>()))
                 .ThrowsAsync(new DbUpdateException());
 
-            _accountReadRepositoryMock.Setup(x => x.GetAccount(It.IsAny<long>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new Account());
-
             _accountProviderWriteRepositoryMock.Setup(x => x.GetAccountProvider(It.IsAny<long>(), It.IsAny<long>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new AccountProvider());
 
@@ -136,9 +127,7 @@ namespace SFA.DAS.PR.Application.UnitTests.Requests.Commands.AcceptCreateAccount
                 .ReturnsAsync(accountProviderLegalEntity);
 
             Assert.DoesNotThrowAsync(() => _handler.Handle(command, CancellationToken.None));
-            _accountReadRepositoryMock.Verify(x => x.GetAccount(It.IsAny<long>(), It.IsAny<CancellationToken>()), Times.Once);
             _accountProviderWriteRepositoryMock.Verify(x => x.GetAccountProvider(It.IsAny<long>(), It.IsAny<long>(), It.IsAny<CancellationToken>()), Times.Once);
-            _accountLegalEntityReadRepositoryMock.Verify(x => x.GetAccountLegalEntity(It.IsAny<long>(), It.IsAny<CancellationToken>()), Times.Once);
             _messageSessionMock.Verify(m => m.Publish(It.IsAny<AddedAccountProviderEvent>(), It.IsAny<PublishOptions>(), It.IsAny<CancellationToken>()), Times.Never);
             _messageSessionMock.Verify(m => m.Publish(It.IsAny<UpdatedPermissionsEvent>(), It.IsAny<PublishOptions>(), It.IsAny<CancellationToken>()), Times.Once);
         }
@@ -162,9 +151,6 @@ namespace SFA.DAS.PR.Application.UnitTests.Requests.Commands.AcceptCreateAccount
 
             _requestReadRepositoryMock.Setup(x => x.GetRequest(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(request);
-
-            _accountReadRepositoryMock.Setup(x => x.GetAccount(It.IsAny<long>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new Account());
 
             _accountProviderWriteRepositoryMock.Setup(x => x.GetAccountProvider(It.IsAny<long>(), It.IsAny<long>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new AccountProvider());
