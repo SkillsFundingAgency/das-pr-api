@@ -36,6 +36,8 @@ builder.Services
     .AddApplicationInsightsTelemetry()
     .AddTelemetryNotFoundAsSuccessfulResponse()
     .AddNServicBus(_configuration)
+    .AddConfiguration(_configuration)
+    .AddEncodingService()
     .AddServiceRegistrations()
     .AddAuthentication(_configuration)
     .AddApiVersioning(opt =>
