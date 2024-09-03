@@ -95,7 +95,7 @@ public class RequestsController(IMediator _mediator) : ActionResponseControllerB
 
     [HttpPost("{requestId:guid}/declined")]
     [Authorize(Policy = Policies.Management)]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(List<ValidationError>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DeclineAccountRequest([FromRoute] Guid requestId, [FromBody] DeclinedRequestModel model, CancellationToken cancellationToken)
