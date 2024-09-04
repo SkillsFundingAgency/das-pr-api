@@ -1,5 +1,4 @@
 ﻿using System.Text.Json;
-using System.Threading;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
