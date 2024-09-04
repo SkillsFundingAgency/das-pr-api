@@ -81,7 +81,7 @@ public sealed class AcceptCreateAccountRequestCommandHandler(
         await _providerRelationshipsDataContext.SaveChangesAsync(cancellationToken);
     }
 
-    private void AcceptRequest(Request request, AcceptCreateAccountRequestCommand command)
+    private static void AcceptRequest(Request request, AcceptCreateAccountRequestCommand command)
     {
         request.ActionedBy = command.ActionedBy;
         request.Status = RequestStatus.Accepted;
