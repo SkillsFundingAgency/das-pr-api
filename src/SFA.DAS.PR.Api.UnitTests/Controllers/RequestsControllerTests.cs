@@ -298,8 +298,8 @@ public class RequestsControllerTests
        [Greedy] RequestsController sut,
        DeclinedRequestModel model,
        Guid requestId,
-       CancellationToken cancellationToken,
-       List<ValidationFailure> errors
+       List<ValidationFailure> errors,
+       CancellationToken cancellationToken
     )
     {
         var errorResponse = new ValidatedResponse<Unit>(errors);

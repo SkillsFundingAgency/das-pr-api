@@ -43,10 +43,12 @@ public sealed class DeclinedRequestCommandHandlerTests
                requestWriteRepository
             );
 
-            await sut.Handle(command, CancellationToken.None);
+            result = await sut.Handle(command, CancellationToken.None);
 
             updatedRequest = await context.Requests.FirstOrDefaultAsync(a => a.Id == request.Id, CancellationToken.None);
         }
+
+        result.IsValidResponse.Should().BeTrue();
 
         Assert.Multiple(() =>
         {
