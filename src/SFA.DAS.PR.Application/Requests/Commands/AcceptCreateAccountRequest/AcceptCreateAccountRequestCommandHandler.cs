@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using System.Threading;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -9,8 +10,11 @@ using SFA.DAS.PR.Domain.Entities;
 using SFA.DAS.PR.Domain.Interfaces;
 using SFA.DAS.ProviderRelationships.Messages.Events;
 using SFA.DAS.ProviderRelationships.Types.Models;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace SFA.DAS.PR.Application.Requests.Commands.AcceptCreateAccountRequest;
+
+record struct ProviderResponse(bool ProviderAdded, AccountProvider? AcountProvider);
 
 public sealed class AcceptCreateAccountRequestCommandHandler(
     ILogger<AcceptCreateAccountRequestCommandHandler> _logger,
@@ -35,22 +39,22 @@ public sealed class AcceptCreateAccountRequestCommandHandler(
 
     private async Task CreateAccountAndAddPermissions(AcceptCreateAccountRequestCommand command, CancellationToken cancellationToken)
     {
-        Request? request = await _requestWriteRepository.GetRequest(command.RequestId, cancellationToken);
+        Request request = (await _requestWriteRepository.GetRequest(command.RequestId, cancellationToken))!;
 
         await CreateAccount(command, cancellationToken);
 
         await CreateAccountLegalEntity(command, cancellationToken);
 
-        Tuple<bool, AccountProvider> providerResponse = await GetOrCreateAccountProvider(command, request!, cancellationToken);
+        ProviderResponse providerResponse = await GetOrCreateAccountProvider(command, request, cancellationToken);
             
         AccountProviderLegalEntity accountProviderLegalEntity = 
             await _accountProviderLegalEntitiesWriteRepository.CreateAccountProviderLegalEntity(
                 command.AccountLegalEntity.Id,
-                providerResponse.Item2,
+                providerResponse.AcountProvider!,
                 cancellationToken
         );
 
-        IEnumerable<Permission> permissions = request!.PermissionRequests.Select(pr => new Permission()
+        IEnumerable<Permission> permissions = request.PermissionRequests.Select(pr => new Permission()
         {
             AccountProviderLegalEntity = accountProviderLegalEntity,
             Operation = (Operation)pr.Operation
@@ -66,27 +70,23 @@ public sealed class AcceptCreateAccountRequestCommandHandler(
             cancellationToken
         );
 
+        AcceptRequest(request, command);
+
+        if (providerResponse.ProviderAdded)
+        {
+            await PublishAddedAccountProviderEvent(command, providerResponse, cancellationToken);
+        }
+
+        await PublishUpdatedPermissionsEvent(accountProviderLegalEntity, command, permissions, cancellationToken);
+
+        await _providerRelationshipsDataContext.SaveChangesAsync(cancellationToken);
+    }
+
+    private void AcceptRequest(Request request, AcceptCreateAccountRequestCommand command)
+    {
         request.ActionedBy = command.ActionedBy;
         request.Status = RequestStatus.Accepted;
         request.UpdatedDate = DateTime.UtcNow;
-
-        await _providerRelationshipsDataContext.SaveChangesAsync(cancellationToken);
-
-        if (providerResponse.Item1)
-        {
-            await _messageSession.Publish(
-                new AddedAccountProviderEvent(
-                    providerResponse.Item2.Id,
-                    command.Account.Id,
-                    providerResponse.Item2.ProviderUkprn,
-                    Guid.Parse(command.ActionedBy),
-                    DateTime.UtcNow,
-                    null
-            ),
-            cancellationToken);
-        }
-
-        await PublishEvent(accountProviderLegalEntity, command, permissions, cancellationToken);
     }
 
     private async Task CreateAccount(AcceptCreateAccountRequestCommand command, CancellationToken cancellationToken)
@@ -138,23 +138,23 @@ public sealed class AcceptCreateAccountRequestCommandHandler(
             _logger.LogError(_exception, "Account legal entity Id {AccountLegalEntityId} already exists", command.AccountLegalEntity.Id);
         }
     }
-    private async Task<Tuple<bool, AccountProvider>> GetOrCreateAccountProvider(AcceptCreateAccountRequestCommand command, Request request, CancellationToken cancellationToken)
+    private async Task<ProviderResponse> GetOrCreateAccountProvider(AcceptCreateAccountRequestCommand command, Request request, CancellationToken cancellationToken)
     {
-        bool hasAddedAccountProvider = false;
+        var accountProvider = await _accountProviderWriteRepository.GetAccountProvider(request.Ukprn, command.Account.Id, cancellationToken);
 
-        AccountProvider? accountProvider = await _accountProviderWriteRepository.GetAccountProvider(request.Ukprn, command.Account.Id, cancellationToken);
+        ProviderResponse providerResponse = new ProviderResponse(false, accountProvider);
 
-        if (accountProvider is null)
+        if (providerResponse.AcountProvider is null)
         {
-            hasAddedAccountProvider = true;
-            accountProvider = await _accountProviderWriteRepository.CreateAccountProvider(
+            providerResponse.ProviderAdded = true;
+            providerResponse.AcountProvider = await _accountProviderWriteRepository.CreateAccountProvider(
                 request.Ukprn,
                 command.Account.Id,
                 cancellationToken
             );
         }
 
-        return new(hasAddedAccountProvider, accountProvider);
+        return providerResponse;
     }
 
     private async Task CreatePermissionsAudit(AcceptCreateAccountRequestCommand command, Request request, IEnumerable<Operation> operations, RequestAction action, CancellationToken cancellationToken)
@@ -172,7 +172,21 @@ public sealed class AcceptCreateAccountRequestCommandHandler(
         await _permissionsAuditWriteRepository.RecordPermissionsAudit(permissionsAudit, cancellationToken);
     }
 
-    private async Task PublishEvent(
+    private async Task PublishAddedAccountProviderEvent(AcceptCreateAccountRequestCommand command, ProviderResponse providerResponse, CancellationToken cancellationToken)
+    {
+        await _messageSession.Publish(
+            new AddedAccountProviderEvent(
+                providerResponse.AcountProvider!.Id,
+                command.Account.Id,
+                providerResponse.AcountProvider.ProviderUkprn,
+                Guid.Parse(command.ActionedBy),
+                DateTime.UtcNow,
+                null
+        ),
+        cancellationToken);
+    }
+
+    private async Task PublishUpdatedPermissionsEvent(
         AccountProviderLegalEntity accountProviderLegalEntity,
         AcceptCreateAccountRequestCommand command,
         IEnumerable<Permission> permissions,
