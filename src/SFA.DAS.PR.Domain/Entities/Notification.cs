@@ -7,7 +7,7 @@ public class Notification
     public Guid Id { get; set; }
     public required string TemplateName { get; set; }
     public required string NotificationType { get; set; }
-    public long Ukprn { get; set; }
+    public long? Ukprn { get; set; }
     public string? EmailAddress { get; set; }
     public string? Contact { get; set; }
     public string? EmployerName { get; set; }
@@ -23,7 +23,7 @@ public class Notification
     {
         TemplateName = source.TemplateName,
         NotificationType = source.NotificationType,
-        Ukprn = source.Ukprn!.Value,
+        Ukprn = source.Ukprn,
         EmailAddress = source.EmailAddress,
         Contact = source.Contact,
         EmployerName = source.EmployerName,
