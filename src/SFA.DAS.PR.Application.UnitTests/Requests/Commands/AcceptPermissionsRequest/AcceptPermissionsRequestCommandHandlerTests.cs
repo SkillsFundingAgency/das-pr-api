@@ -1,15 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using Moq;
-using SFA.DAS.Encoding;
-using SFA.DAS.PR.Application.Requests.Commands.AcceptCreateAccountRequest;
-using SFA.DAS.PR.Data.UnitTests.Setup;
+﻿using Moq;
+using SFA.DAS.PR.Application.Requests.Commands.AcceptPermissionsRequest;
 using SFA.DAS.PR.Data;
+using SFA.DAS.PR.Data.UnitTests.Setup;
 using SFA.DAS.PR.Domain.Entities;
 using SFA.DAS.PR.Domain.Interfaces;
-using SFA.DAS.Testing.AutoFixture;
-using SFA.DAS.PR.Application.Requests.Commands.AcceptPermissionsRequest;
 using SFA.DAS.ProviderRelationships.Messages.Events;
+using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.PR.Application.UnitTests.Requests.Commands.AcceptPermissionsRequest;
 
@@ -28,7 +24,7 @@ public sealed class AcceptPermissionsRequestCommandHandlerTests
     private AcceptPermissionsRequestCommandHandler _handler;
 
     [SetUp]
-    public void SetUp()
+    public void CreateHandler()
     {
         _providerRelationshipsDataContextMock = new Mock<IProviderRelationshipsDataContext>();
         _accountProviderWriteRepositoryMock = new Mock<IAccountProviderWriteRepository>();
@@ -37,6 +33,7 @@ public sealed class AcceptPermissionsRequestCommandHandlerTests
         _permissionsAuditWriteRepositoryMock = new Mock<IPermissionsAuditWriteRepository>();
         _messageSessionMock = new Mock<IMessageSession>();
         _requestWriteRepositoryMock = new Mock<IRequestWriteRepository>();
+        _accountLegalEntityReadRepositoryMock = new Mock<IAccountLegalEntityReadRepository>();
 
         _handler = new AcceptPermissionsRequestCommandHandler(
             _providerRelationshipsDataContextMock.Object,
@@ -52,95 +49,84 @@ public sealed class AcceptPermissionsRequestCommandHandlerTests
 
     [Test]
     [MoqAutoData]
-    public async Task AcceptCreateAccountRequestCommandHanler_ShouldCreateEntities_IfNotExists(AcceptPermissionsRequestCommand command)
+    public async Task AcceptPermissionsRequestCommandHandler_ShouldAcceptRequest(AcceptPermissionsRequestCommand command)
     {
+        Guid actionedByGuid = Guid.NewGuid();
+        command.ActionedBy = actionedByGuid.ToString();
+        Request request = RequestTestData.Create(Guid.NewGuid());
         Account account = AccountTestData.CreateAccount(10001);
 
-        command.ActionedBy = Guid.NewGuid().ToString();
+        AccountLegalEntity accountLegalEntity = AccountLegalEntityTestData.Create();
+        AccountProvider accountProvider = AccountProviderTestData.CreateAccountProvider(1, account.Id, request.Ukprn);
+        AccountProviderLegalEntity accountProviderLegalEntity = AccountProviderLegalEntityTestData.CreateAccountProviderLegalEntity(account);
 
-        var request = RequestTestData.Create(Guid.NewGuid());
+        _requestWriteRepositoryMock.Setup(x => 
+            x.GetRequest(
+                It.IsAny<Guid>(), 
+                It.IsAny<CancellationToken>()
+            )
+        )
+        .ReturnsAsync(request);
 
-        _requestWriteRepositoryMock.Setup(x => x.GetRequest(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(request);
+        _accountLegalEntityReadRepositoryMock.Setup(a => 
+            a.GetAccountLegalEntity(
+                request.AccountLegalEntityId!.Value,
+                CancellationToken.None
+            )
+        )
+        .ReturnsAsync(accountLegalEntity);
 
-        _accountProviderWriteRepositoryMock.Setup(x => x.CreateAccountProvider(It.IsAny<long>(), It.IsAny<long>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new AccountProvider());
+        _accountProviderWriteRepositoryMock.Setup(a =>
+            a.GetAccountProvider(
+                request.Ukprn,
+                accountLegalEntity.AccountId,
+                CancellationToken.None
+            )
+        )
+        .ReturnsAsync(accountProvider);
 
-        _accountProviderLegalEntitiesWriteRepositoryMock.Setup(a => a.CreateAccountProviderLegalEntity(It.IsAny<long>(), It.IsAny<AccountProvider>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(AccountProviderLegalEntityTestData.CreateAccountProviderLegalEntity(account));
+        _accountProviderLegalEntitiesWriteRepositoryMock.Setup(a => 
+            a.CreateAccountProviderLegalEntity(
+                request.AccountLegalEntityId!.Value, 
+                accountProvider, 
+                CancellationToken.None
+            )
+        )
+        .ReturnsAsync(accountProviderLegalEntity);
 
         var result = await _handler.Handle(command, CancellationToken.None);
 
-        _accountProviderWriteRepositoryMock.Verify(x => x.CreateAccountProvider(It.IsAny<long>(), It.IsAny<long>(), It.IsAny<CancellationToken>()), Times.Once);
-        _permissionsWriteRepositoryMock.Verify(x => x.CreatePermissions(It.IsAny<IEnumerable<Permission>>()), Times.Once);
-        _providerRelationshipsDataContextMock.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Exactly(3));
-        _messageSessionMock.Verify(m => m.Publish(It.IsAny<UpdatedPermissionsEvent>(), It.IsAny<PublishOptions>(), It.IsAny<CancellationToken>()), Times.Once);
-    }
-
-    [Test]
-    [MoqAutoData]
-    public void AcceptCreateAccountRequestCommandHanler_ShouldGetEntities_IfExists(AcceptPermissionsRequestCommand command)
-    {
-        Account account = AccountTestData.CreateAccount(1);
-
-        AccountProviderLegalEntity accountProviderLegalEntity =
-            AccountProviderLegalEntityTestData.CreateAccountProviderLegalEntity(account);
-
-        command.ActionedBy = Guid.NewGuid().ToString();
-        var request = RequestTestData.Create(Guid.NewGuid());
-
-        _requestWriteRepositoryMock.Setup(x => x.GetRequest(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(request);
-
-        _accountProviderWriteRepositoryMock.Setup(x => x.CreateAccountProvider(It.IsAny<long>(), It.IsAny<long>(), It.IsAny<CancellationToken>()))
-            .ThrowsAsync(new DbUpdateException());
-
-        _accountProviderWriteRepositoryMock.Setup(x => x.GetAccountProvider(It.IsAny<long>(), It.IsAny<long>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new AccountProvider());
-
-        _accountProviderLegalEntitiesWriteRepositoryMock.Setup(x => x.CreateAccountProviderLegalEntity(It.IsAny<long>(), It.IsAny<AccountProvider>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(accountProviderLegalEntity);
-
-        Assert.DoesNotThrowAsync(() => _handler.Handle(command, CancellationToken.None));
-        _accountProviderWriteRepositoryMock.Verify(x => x.GetAccountProvider(It.IsAny<long>(), It.IsAny<long>(), It.IsAny<CancellationToken>()), Times.Once);
-        _messageSessionMock.Verify(m => m.Publish(It.IsAny<AddedAccountProviderEvent>(), It.IsAny<PublishOptions>(), It.IsAny<CancellationToken>()), Times.Never);
-        _messageSessionMock.Verify(m => m.Publish(It.IsAny<UpdatedPermissionsEvent>(), It.IsAny<PublishOptions>(), It.IsAny<CancellationToken>()), Times.Once);
-    }
-
-    [Test]
-    [MoqAutoData]
-    public void AcceptCreateAccountRequestCommandHanler_CreatesPermissionAudit(AcceptPermissionsRequestCommand command)
-    {
-        Account account = AccountTestData.CreateAccount(1);
-
-        AccountProviderLegalEntity accountProviderLegalEntity =
-            AccountProviderLegalEntityTestData.CreateAccountProviderLegalEntity(account);
-
-        var request = RequestTestData.Create(Guid.NewGuid());
-
-        _requestWriteRepositoryMock.Setup(x => x.GetRequest(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(request);
-
-        var actionedBy = Guid.NewGuid();
-        command.ActionedBy = actionedBy.ToString();
-
-        _requestWriteRepositoryMock.Setup(x => x.GetRequest(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(request);
-
-        _accountProviderWriteRepositoryMock.Setup(x => x.GetAccountProvider(It.IsAny<long>(), It.IsAny<long>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new AccountProvider());
-
-        _accountProviderLegalEntitiesWriteRepositoryMock.Setup(x => x.CreateAccountProviderLegalEntity(It.IsAny<long>(), It.IsAny<AccountProvider>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(accountProviderLegalEntity);
-
-        Assert.DoesNotThrowAsync(() => _handler.Handle(command, CancellationToken.None));
+        _permissionsWriteRepositoryMock.Verify(x => 
+            x.CreatePermissions(
+                It.IsAny<IEnumerable<Permission>>()
+            ), 
+            Times.Once
+        );
 
         _permissionsAuditWriteRepositoryMock.Verify(a => a.RecordPermissionsAudit(
             It.Is<PermissionsAudit>(p =>
-                p.Action == nameof(RequestAction.AccountCreated) &&
+                p.Action == nameof(PermissionAction.PermissionUpdated) &&
                 p.Ukprn == request.Ukprn &&
-                p.AccountLegalEntityId == accountProviderLegalEntity.AccountLegalEntityId &&
-                p.EmployerUserRef == actionedBy),
-            It.IsAny<CancellationToken>()), Times.Once);
+                p.AccountLegalEntityId == request.AccountLegalEntityId!.Value &&
+                p.EmployerUserRef == actionedByGuid),
+                CancellationToken.None), 
+            Times.Once
+        );
+
+        _providerRelationshipsDataContextMock.Verify(x => 
+            x.SaveChangesAsync(
+                CancellationToken.None
+            ), 
+            Times.Exactly(1)
+        );
+
+        _messageSessionMock.Verify(m => 
+            m.Publish(
+                It.IsAny<UpdatedPermissionsEvent>(), 
+                It.IsAny<PublishOptions>(), 
+                It.IsAny<CancellationToken>()
+            ), 
+            Times.Once
+        );
     }
 }
