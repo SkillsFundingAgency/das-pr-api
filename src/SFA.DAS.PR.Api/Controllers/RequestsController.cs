@@ -5,6 +5,7 @@ using SFA.DAS.PR.Api.Authorization;
 using SFA.DAS.PR.Api.Common;
 using SFA.DAS.PR.Api.Models;
 using SFA.DAS.PR.Application.Requests.Commands.AcceptCreateAccountRequest;
+using SFA.DAS.PR.Application.Requests.Commands.AcceptPermissionsRequest;
 using SFA.DAS.PR.Application.Requests.Commands.CreateAddAccountRequest;
 using SFA.DAS.PR.Application.Requests.Commands.CreateNewAccountRequest;
 using SFA.DAS.PR.Application.Requests.Commands.CreatePermissionRequest;
@@ -87,6 +88,23 @@ public class RequestsController(IMediator _mediator) : ActionResponseControllerB
             Account = model.AccountDetails,
             AccountLegalEntity = model.AccountLegalEntityDetails,
             ActionedBy = model.ActionedBy,
+        };
+
+        var result = await _mediator.Send(command, cancellationToken);
+        return GetResponse(result);
+    }
+
+    [HttpPost("{requestId:guid}/permission/accepted")]
+    [Authorize(Policy = Policies.Management)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(List<ValidationError>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> AcceptPermissionsRequest([FromRoute] Guid requestId, [FromBody] AcceptPermissionsRequestModel model, CancellationToken cancellationToken)
+    {
+        AcceptPermissionsRequestCommand command = new()
+        {
+            RequestId = requestId,
+            ActionedBy = model.ActionedBy
         };
 
         var result = await _mediator.Send(command, cancellationToken);

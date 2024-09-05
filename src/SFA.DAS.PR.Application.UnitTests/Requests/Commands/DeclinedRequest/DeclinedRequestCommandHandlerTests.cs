@@ -1,15 +1,11 @@
-﻿using AutoFixture.NUnit3;
-using FluentAssertions;
+﻿using FluentAssertions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Moq;
 using SFA.DAS.PR.Application.Mediatr.Responses;
-using SFA.DAS.PR.Application.Requests.Commands.CreatePermissionRequest;
 using SFA.DAS.PR.Application.Requests.Commands.DeclinedRequest;
 using SFA.DAS.PR.Data.Repositories;
 using SFA.DAS.PR.Data.UnitTests.InMemoryDatabases;
 using SFA.DAS.PR.Domain.Entities;
-using SFA.DAS.PR.Domain.Interfaces;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.PR.Application.UnitTests.Requests.Commands.DeclinedRequest;

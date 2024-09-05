@@ -10,6 +10,7 @@ using SFA.DAS.PR.Api.Controllers;
 using SFA.DAS.PR.Api.Models;
 using SFA.DAS.PR.Application.Mediatr.Responses;
 using SFA.DAS.PR.Application.Requests.Commands.AcceptCreateAccountRequest;
+using SFA.DAS.PR.Application.Requests.Commands.AcceptPermissionsRequest;
 using SFA.DAS.PR.Application.Requests.Commands.CreateAddAccountRequest;
 using SFA.DAS.PR.Application.Requests.Commands.CreateNewAccountRequest;
 using SFA.DAS.PR.Application.Requests.Commands.CreatePermissionRequest;
@@ -315,6 +316,58 @@ public class RequestsControllerTests
         ).ReturnsAsync(errorResponse);
 
         var result = await sut.DeclineRequest(requestId, model, cancellationToken);
+
+        result.As<BadRequestObjectResult>().Should().NotBeNull();
+        result.As<BadRequestObjectResult>().Value.As<List<ValidationError>>().Count.Should().Be(errors.Count);
+    }
+
+    /////
+    ///
+
+    [Test]
+    [MoqAutoData]
+    public async Task AcceptPermissionsRequest_InvokesQueryHandler(
+       [Frozen] Mock<IMediator> mediatorMock,
+       [Greedy] RequestsController sut,
+       AcceptPermissionsRequestModel model,
+       Guid requestId,
+       CancellationToken cancellationToken
+    )
+    {
+        await sut.AcceptPermissionsRequest(requestId, model, cancellationToken);
+
+        mediatorMock.Verify(m =>
+            m.Send(It.Is<AcceptPermissionsRequestCommand>(a =>
+                a.RequestId == requestId &&
+                a.ActionedBy == model.ActionedBy
+            ), It.IsAny<CancellationToken>())
+        );
+    }
+
+    [Test]
+    [MoqAutoData]
+    public async Task AcceptPermissionsRequest_ReturnsBadRequestResponse(
+       [Frozen] Mock<IMediator> mediatorMock,
+       [Greedy] RequestsController sut,
+       AcceptPermissionsRequestModel model,
+       Guid requestId,
+       List<ValidationFailure> errors,
+       CancellationToken cancellationToken
+    )
+    {
+        var errorResponse = new ValidatedResponse<Unit>(errors);
+
+        mediatorMock.Setup(m =>
+            m.Send(
+                It.Is<AcceptPermissionsRequestCommand>(a =>
+                    a.ActionedBy == model.ActionedBy &&
+                    a.RequestId == requestId
+                ),
+                It.IsAny<CancellationToken>()
+            )
+        ).ReturnsAsync(errorResponse);
+
+        var result = await sut.AcceptPermissionsRequest(requestId, model, cancellationToken);
 
         result.As<BadRequestObjectResult>().Should().NotBeNull();
         result.As<BadRequestObjectResult>().Value.As<List<ValidationError>>().Count.Should().Be(errors.Count);
