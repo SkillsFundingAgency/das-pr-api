@@ -321,9 +321,6 @@ public class RequestsControllerTests
         result.As<BadRequestObjectResult>().Value.As<List<ValidationError>>().Count.Should().Be(errors.Count);
     }
 
-    /////
-    ///
-
     [Test]
     [MoqAutoData]
     public async Task AcceptPermissionsRequest_InvokesQueryHandler(
