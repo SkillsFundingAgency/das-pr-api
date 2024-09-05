@@ -16,6 +16,6 @@ public sealed class AcceptPermissionsRequestCommandValidator : AbstractValidator
                 RequestType = RequestType.Permission
             }
         )
-        .ValidateRequest(requestReadRepository, RequestsValidator.CreateAccountRequestValidationMessage);
+        .ValidateRequest(requestReadRepository, RequestsValidator.AcceptPermissionsRequestValidationMessage);
     }
 }
