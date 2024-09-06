@@ -10,6 +10,7 @@ public static class RequestsValidator
     public const string CreateAccountRequestValidationMessage = "A 'new' or 'sent' request with a request type of 'CreateAccount' must exist for this RequestId.";
     public const string DeclinedRequestValidationMessage = "A 'new' or 'sent' request must exist for this RequestId.";
     public const string AcceptPermissionsRequestValidationMessage = "A 'new' or 'sent' request with a request type of 'Permission' must exist for this RequestId.";
+    public const string AcceptAddAccountRequestValidationMessage = "A 'new' or 'sent' request with a request type of 'AddAccount' must exist for this RequestId.";
     public static IRuleBuilderOptions<T, RequestValidationObject> ValidateRequest<T>(this IRuleBuilder<T, RequestValidationObject> ruleBuilder, IRequestReadRepository requestReadRepository) where T : IUkprnEntity, IAccountLegalEntityIdEntity
     {
         return ruleBuilder

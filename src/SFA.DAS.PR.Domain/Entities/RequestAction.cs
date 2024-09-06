@@ -2,5 +2,6 @@
 
 public enum RequestAction
 {
-    AccountCreated
+    AccountCreated,
+    AccountAdded
 }

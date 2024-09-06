@@ -14,9 +14,9 @@ public sealed class AcceptAddAccountRequestCommandValidator : AbstractValidator<
         {
             RequestId = a.RequestId,
             RequestStatuses = new[] { RequestStatus.New, RequestStatus.Sent },
-            RequestType = RequestType.Permission
+            RequestType = RequestType.AddAccount
         }
         )
-        .ValidateRequest(requestReadRepository, RequestsValidator);
+        .ValidateRequest(requestReadRepository, RequestsValidator.AcceptAddAccountRequestValidationMessage);
     }
 }
