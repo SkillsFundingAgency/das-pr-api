@@ -93,7 +93,7 @@ public class RequestsController(IMediator _mediator) : ActionResponseControllerB
         return GetResponse(result);
     }
 
-    [HttpPost("{requestId:guid}/declined")]
+    [HttpPut("{requestId:guid}/declined")]
     [Authorize(Policy = Policies.Management)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(List<ValidationError>), StatusCodes.Status400BadRequest)]
