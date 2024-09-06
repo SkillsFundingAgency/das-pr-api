@@ -14,7 +14,7 @@ public sealed class AcceptPermissionsRequestCommandHandlerTests
 {
     private Mock<IProviderRelationshipsDataContext> _providerRelationshipsDataContextMock;
     private Mock<IRequestWriteRepository> _requestWriteRepositoryMock;
-    private Mock<IAccountProviderLegalEntitiesWriteRepository> _accountProviderLegalEntitiesWriteRepositoryMock;
+    private Mock<IAccountProviderLegalEntitiesReadRepository> _accountProviderLegalEntitiesReadRepositoryMock;
     private Mock<IAccountProviderWriteRepository> _accountProviderWriteRepositoryMock;
     private Mock<IPermissionsWriteRepository> _permissionsWriteRepositoryMock;
     private Mock<IMessageSession> _messageSessionMock;
@@ -28,7 +28,7 @@ public sealed class AcceptPermissionsRequestCommandHandlerTests
     {
         _providerRelationshipsDataContextMock = new Mock<IProviderRelationshipsDataContext>();
         _accountProviderWriteRepositoryMock = new Mock<IAccountProviderWriteRepository>();
-        _accountProviderLegalEntitiesWriteRepositoryMock = new Mock<IAccountProviderLegalEntitiesWriteRepository>();
+        _accountProviderLegalEntitiesReadRepositoryMock = new Mock<IAccountProviderLegalEntitiesReadRepository>();
         _permissionsWriteRepositoryMock = new Mock<IPermissionsWriteRepository>();
         _permissionsAuditWriteRepositoryMock = new Mock<IPermissionsAuditWriteRepository>();
         _messageSessionMock = new Mock<IMessageSession>();
@@ -38,8 +38,7 @@ public sealed class AcceptPermissionsRequestCommandHandlerTests
         _handler = new AcceptPermissionsRequestCommandHandler(
             _providerRelationshipsDataContextMock.Object,
             _requestWriteRepositoryMock.Object,
-            _accountProviderLegalEntitiesWriteRepositoryMock.Object,
-            _accountProviderWriteRepositoryMock.Object,
+            _accountProviderLegalEntitiesReadRepositoryMock.Object,
             _accountLegalEntityReadRepositoryMock.Object,
             _permissionsWriteRepositoryMock.Object,
             _messageSessionMock.Object,
@@ -85,10 +84,10 @@ public sealed class AcceptPermissionsRequestCommandHandlerTests
         )
         .ReturnsAsync(accountProvider);
 
-        _accountProviderLegalEntitiesWriteRepositoryMock.Setup(a => 
-            a.CreateAccountProviderLegalEntity(
-                request.AccountLegalEntityId!.Value, 
-                accountProvider, 
+        _accountProviderLegalEntitiesReadRepositoryMock.Setup(a => 
+            a.GetAccountProviderLegalEntity(
+                request.Ukprn,
+                accountLegalEntity.Id, 
                 CancellationToken.None
             )
         )
