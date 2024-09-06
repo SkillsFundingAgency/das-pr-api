@@ -12,8 +12,7 @@ namespace SFA.DAS.PR.Application.Requests.Commands.AcceptPermissionsRequest;
 public sealed class AcceptPermissionsRequestCommandHandler(
     IProviderRelationshipsDataContext _providerRelationshipsDataContext,
     IRequestWriteRepository _requestWriteRepository,
-    IAccountProviderLegalEntitiesWriteRepository _accountProviderLegalEntitiesWriteRepository,
-    IAccountProviderWriteRepository _accountProviderWriteRepository,
+    IAccountProviderLegalEntitiesReadRepository _accountProviderLegalEntitiesReadRepository,
     IAccountLegalEntityReadRepository _accountLegalEntityReadRepository,
     IPermissionsWriteRepository _permissionsWriteRepository,
     IMessageSession _messageSession,
@@ -31,34 +30,67 @@ public sealed class AcceptPermissionsRequestCommandHandler(
             cancellationToken
         ))!;
 
-        AccountProvider accountProvider = (await _accountProviderWriteRepository.GetAccountProvider(
-            request.Ukprn, 
-            accountLegalEntity.AccountId, 
+        AccountProviderLegalEntity? accountProviderLegalEntity = await _accountProviderLegalEntitiesReadRepository.GetAccountProviderLegalEntity(
+            request.Ukprn,
+            accountLegalEntity.Id,
             cancellationToken
-        ))!;
-
-        AccountProviderLegalEntity accountProviderLegalEntity =
-            await _accountProviderLegalEntitiesWriteRepository.CreateAccountProviderLegalEntity(
-                request.AccountLegalEntityId!.Value,
-                accountProvider,
-                cancellationToken
         );
 
-        IEnumerable<Permission> permissions = request.PermissionRequests.Select(pr => new Permission()
+        if (accountProviderLegalEntity is not null)
         {
-            AccountProviderLegalEntity = accountProviderLegalEntity,
-            Operation = (Operation)pr.Operation
-        });
+            Operation[] operations = request.PermissionRequests.Select(pr =>(Operation)pr.Operation).ToArray();
 
-        _permissionsWriteRepository.CreatePermissions(permissions);
+            bool permissionsUpdated = UpdatePermissions(operations, accountProviderLegalEntity, command, cancellationToken);
 
-        await CreatePermissionUpdatedAudit(command, request, permissions.Select(a => a.Operation), cancellationToken);
+            if(permissionsUpdated)
+            {
+                await CreatePermissionUpdatedAudit(command, request, operations, cancellationToken);
 
-        await PublishUpdatedPermissionsEvent(accountProviderLegalEntity, command, permissions, cancellationToken);
+                await PublishUpdatedPermissionsEvent(accountProviderLegalEntity, command, operations, cancellationToken);
+            }
+        }
 
         await _providerRelationshipsDataContext.SaveChangesAsync(cancellationToken);
 
         return ValidatedResponse<Unit>.EmptySuccessResponse();
+    }
+
+    private bool UpdatePermissions(Operation[] requestOperations, AccountProviderLegalEntity accountProviderLegalEntity, AcceptPermissionsRequestCommand command, CancellationToken cancellationToken)
+    {
+        Operation[] existingOperations = accountProviderLegalEntity.Permissions.Select(p => p.Operation).OrderBy(o => o).ToArray();
+
+        if (existingOperations.SequenceEqual(requestOperations))
+        {
+            return false;
+        }
+
+        RemovePermissions(accountProviderLegalEntity.Permissions);
+
+        AddPermissions(accountProviderLegalEntity.Id, requestOperations);
+
+        return true;
+    }
+
+    private void AddPermissions(long accountProviderLegalEntityId, Operation[] operationsToAdd)
+    {
+        if (operationsToAdd.Any())
+        {
+            IEnumerable<Permission> permissionsToAdd = operationsToAdd.Select(operation => new Permission
+            {
+                AccountProviderLegalEntityId = accountProviderLegalEntityId,
+                Operation = operation
+            });
+
+            _permissionsWriteRepository.CreatePermissions(permissionsToAdd);
+        }
+    }
+
+    private void RemovePermissions(IEnumerable<Permission> existingPermissions)
+    {
+        if (existingPermissions.Any())
+        {
+            _permissionsWriteRepository.DeletePermissions(existingPermissions);
+        }
     }
 
     private static void AcceptRequest(Request request, string actionedBy)
@@ -86,7 +118,7 @@ public sealed class AcceptPermissionsRequestCommandHandler(
     private async Task PublishUpdatedPermissionsEvent(
         AccountProviderLegalEntity accountProviderLegalEntity,
         AcceptPermissionsRequestCommand command,
-        IEnumerable<Permission> permissions,
+        Operation[] operations,
         CancellationToken cancellationToken
     )
     {
@@ -101,7 +133,7 @@ public sealed class AcceptPermissionsRequestCommandHandler(
                 string.Empty,
                 string.Empty,
                 string.Empty,
-                permissions.Select(a => a.Operation).ToHashSet(),
+                operations.ToHashSet(),
                 [],
                 DateTime.UtcNow
             )

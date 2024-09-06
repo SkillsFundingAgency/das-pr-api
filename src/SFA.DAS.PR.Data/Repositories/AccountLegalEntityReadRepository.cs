@@ -20,7 +20,7 @@ public class AccountLegalEntityReadRepository(IProviderRelationshipsDataContext 
 
     public async Task<AccountLegalEntity?> GetAccountLegalEntity(long accountLegalEntityId, CancellationToken cancellationToken)
     {
-        return await _providerRelationshipsDataContext.AccountLegalEntities.FirstOrDefaultAsync(a => a.Id == accountLegalEntityId, cancellationToken);
+        return await _providerRelationshipsDataContext.AccountLegalEntities.AsNoTracking().FirstOrDefaultAsync(a => a.Id == accountLegalEntityId, cancellationToken);
     }
 
     public async Task<bool> AccountLegalEntityExists(long accountLegalEntityId, CancellationToken cancellationToken)
