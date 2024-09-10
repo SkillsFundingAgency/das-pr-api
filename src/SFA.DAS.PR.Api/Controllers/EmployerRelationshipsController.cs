@@ -9,17 +9,17 @@ using SFA.DAS.PR.Application.Permissions.Queries.GetEmployerRelationships;
 namespace SFA.DAS.PR.Api.Controllers;
 
 [ApiController]
-[Route("relationships")]
+[Route("")]
 public class EmployerRelationshipsController(IMediator _mediator) : ActionResponseControllerBase
 {
     public override string ControllerName => "EmployerRelationships";
 
     [Authorize(Policy = Policies.Management)]
-    [HttpGet("employeraccount/{AccountId:long}")]
+    [HttpGet("employers/{accountId:long}/relationships")]
     [ProducesResponseType(typeof(GetEmployerRelationshipsQueryResult), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetEmployerRelationships([FromRoute]long AccountId, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetEmployerRelationships([FromRoute] long accountId, CancellationToken cancellationToken)
     {
-        GetEmployerRelationshipsQuery query = new(AccountId);
+        GetEmployerRelationshipsQuery query = new(accountId);
 
         ValidatedResponse<GetEmployerRelationshipsQueryResult> result = await _mediator.Send(query, cancellationToken);
 
