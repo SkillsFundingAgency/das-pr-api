@@ -28,7 +28,7 @@ public class GetRelationshipsQueryHandlerTests
     {
         PermissionsAudit? audit = PermissionsAuditTestData.Create(Guid.NewGuid());
 
-        Request? request = RequestTestData.Create(Guid.NewGuid());
+        Request? request = RequestTestData.Create(Guid.NewGuid(), RequestStatus.New);
 
         accountProviderLegalEntitiesReadRepository.Setup(a =>
             a.GetAccountProviderLegalEntityByProvider(
@@ -69,12 +69,12 @@ public class GetRelationshipsQueryHandlerTests
             Assert.That(result.Result!.ProviderName, Is.EqualTo(accountProviderLegalEntity.AccountProvider.Provider.Name), $"{result.Result!.ProviderName} should be equal to {accountProviderLegalEntity.AccountProvider.Provider.Name}.");
             Assert.That(result.Result!.Operations, Is.EquivalentTo(accountProviderLegalEntity.Permissions.Select(a => a.Operation).ToArray()));
 
-            Assert.That(result.Result!.LastAction, Is.EqualTo(Enum.Parse<PermissionAction>(audit.Action)));
+            Assert.That(result.Result!.LastAction, Is.EqualTo(audit.Action));
             Assert.That(result.Result!.LastActionTime, Is.EqualTo(audit.Eventtime));
 
-            Assert.That(result.Result!.LastRequestType, Is.EqualTo(request!.RequestType));
+            Assert.That(result.Result!.LastRequestType, Is.EqualTo(request!.RequestType.ToString()));
             Assert.That(result.Result!.LastRequestTime, Is.EqualTo(request!.UpdatedDate));
-            Assert.That(result.Result!.LastRequestStatus, Is.EqualTo(Enum.Parse<RequestStatus>(request.Status!)));
+            Assert.That(result.Result!.LastRequestStatus, Is.EqualTo(request.Status!.ToString()));
             Assert.That(result.Result!.LastRequestOperations, Is.EquivalentTo(request.PermissionRequests.Select(a => (Operation)a.Operation).ToArray()));
         });
     }

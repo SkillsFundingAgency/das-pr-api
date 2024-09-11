@@ -23,7 +23,7 @@ public class GetRelationshipsQueryHandler(IAccountProviderLegalEntitiesReadRepos
 
         if (permissionAudit != null)
         {
-            result.LastAction = Enum.Parse<PermissionAction>(permissionAudit.Action);
+            result.LastAction = permissionAudit.Action.ToString();
             result.LastActionTime = permissionAudit.Eventtime;
         }
         else
@@ -35,9 +35,9 @@ public class GetRelationshipsQueryHandler(IAccountProviderLegalEntitiesReadRepos
 
         if (request != null)
         {
-            result.LastRequestType = request.RequestType;
+            result.LastRequestType = request.RequestType.ToString();
             result.LastRequestTime = request.UpdatedDate ?? request.RequestedDate;
-            result.LastRequestStatus = Enum.Parse<RequestStatus>(request.Status);
+            result.LastRequestStatus = request.Status.ToString();
             result.LastRequestOperations = request.PermissionRequests.Select(a => (Operation)a.Operation).ToArray();
         }
 

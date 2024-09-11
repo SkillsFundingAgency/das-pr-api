@@ -33,7 +33,7 @@ public class EmployerRelationshipsControllerTests
        CancellationToken cancellationToken
     )
     {
-        await sut.GetEmployerRelationships(query.AccountHashedId, cancellationToken);
+        await sut.GetEmployerRelationships(query.AccountId, cancellationToken);
 
         mediatorMock.Verify(m =>
             m.Send(It.IsAny<GetEmployerRelationshipsQuery>(), cancellationToken)
@@ -63,7 +63,7 @@ public class EmployerRelationshipsControllerTests
             m.Send(It.IsAny<GetEmployerRelationshipsQuery>(), cancellationToken)
         ).ReturnsAsync(response);
 
-        var result = await sut.GetEmployerRelationships(query.AccountHashedId, cancellationToken);
+        var result = await sut.GetEmployerRelationships(query.AccountId, cancellationToken);
 
         result.As<OkObjectResult>().Should().NotBeNull();
         result.As<OkObjectResult>().Value.Should().Be(response.Result);

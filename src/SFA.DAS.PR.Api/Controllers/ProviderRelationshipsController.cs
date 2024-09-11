@@ -8,13 +8,13 @@ using SFA.DAS.PR.Application.ProviderRelationships.Queries.GetProviderRelationsh
 
 namespace SFA.DAS.PR.Api.Controllers;
 
-[Route("relationships/providers")]
+[Route("")]
 [ApiController]
 public class ProviderRelationshipsController(IMediator _mediator) : ActionResponseControllerBase
 {
     public override string ControllerName => "ProviderRelationships";
 
-    [HttpGet("{ukprn}")]
+    [HttpGet("providers/{ukprn}/relationships")]
     [Authorize(Policy = Policies.Management)]
     [ProducesResponseType(typeof(GetProviderRelationshipsQueryResult), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(List<ValidationError>), StatusCodes.Status400BadRequest)]

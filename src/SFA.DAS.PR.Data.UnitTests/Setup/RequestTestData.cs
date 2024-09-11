@@ -1,13 +1,13 @@
 ﻿using AutoFixture;
-using SFA.DAS.Testing.AutoFixture;
 using SFA.DAS.PR.Domain.Entities;
 using SFA.DAS.ProviderRelationships.Types.Models;
+using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.PR.Data.UnitTests.Setup;
 
 public static class RequestTestData
 {
-    public static Request Create(Guid id) {
+    public static Request Create(Guid id, RequestStatus requestStatus = RequestStatus.New) {
 
         Operation[] operations = [Operation.CreateCohort, Operation.RecruitmentRequiresReview, Operation.Recruitment];
 
@@ -18,7 +18,7 @@ public static class RequestTestData
            .With(a => a.Ukprn, 10000003)
            .With(a => a.AccountLegalEntityId, 3)
            .With(a => a.RequestedDate, DateTime.Today)
-           .With(a => a.Status, "New")
+           .With(a => a.Status, requestStatus)
            .With(a => a.PermissionRequests, permissionRequests)
         .Create();
     }
