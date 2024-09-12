@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
 using System.Threading;
 using MediatR;
+using SFA.DAS.PR.Application.Common.Helpers;
 using SFA.DAS.PR.Application.Mediatr.Responses;
 using SFA.DAS.PR.Data;
 using SFA.DAS.PR.Domain.Entities;
@@ -58,18 +59,11 @@ public sealed class AcceptAddAccountRequestCommandHandler(
 
     private async Task<AccountProviderLegalEntity> CreateAccountProviderLegalEntity(Request request, AccountProvider accountProvider, long accountLegalEntityId, CancellationToken cancellationToken)
     {
-        AccountProviderLegalEntity accountProviderLegalEntity = new()
-        {
-            AccountProvider = accountProvider,
-            AccountLegalEntityId = accountLegalEntityId,
-            Created = DateTime.UtcNow,
-            Updated = DateTime.UtcNow,
-            Permissions = request.PermissionRequests.Select(pr => new Permission()
-            {
-                Operation = (Operation)pr.Operation
-            })
-            .ToList()
-        };
+        AccountProviderLegalEntity accountProviderLegalEntity = AccountProviderLegalEntityHelper.Create(
+            accountProvider, 
+            accountLegalEntityId, 
+            request.PermissionRequests.Select(a => (Operation)a.Operation).ToList()
+        );
 
         await _accountProviderLegalEntitiesWriteRepository.CreateAccountProviderLegalEntity(accountProviderLegalEntity, cancellationToken);
 
