@@ -62,14 +62,14 @@ public sealed class AcceptCreateAccountRequestCommandHandler(
 
         AcceptRequest(request, command);
 
+        await _providerRelationshipsDataContext.SaveChangesAsync(cancellationToken);
+
         if (providerResponse.ProviderAdded)
         {
             await PublishAddedAccountProviderEvent(command, providerResponse, cancellationToken);
         }
 
         await PublishUpdatedPermissionsEvent(accountProviderLegalEntity, command, accountProviderLegalEntity.Permissions, cancellationToken);
-
-        await _providerRelationshipsDataContext.SaveChangesAsync(cancellationToken);
     }
 
     private static void AcceptRequest(Request request, AcceptCreateAccountRequestCommand command)

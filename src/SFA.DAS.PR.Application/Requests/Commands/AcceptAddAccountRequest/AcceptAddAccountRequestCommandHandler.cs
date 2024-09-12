@@ -42,9 +42,9 @@ public sealed class AcceptAddAccountRequestCommandHandler(
 
         await CreatePermissionUpdatedAudit(command, request, accountProviderLegalEntity.Permissions.Select(a => a.Operation), cancellationToken);
 
-        await PublishUpdatedPermissionsEvent(accountProviderLegalEntity, command, accountProviderLegalEntity.Permissions, cancellationToken);
-
         await _providerRelationshipsDataContext.SaveChangesAsync(cancellationToken);
+
+        await PublishUpdatedPermissionsEvent(accountProviderLegalEntity, command, accountProviderLegalEntity.Permissions, cancellationToken);
 
         return ValidatedResponse<Unit>.EmptySuccessResponse();
     }
