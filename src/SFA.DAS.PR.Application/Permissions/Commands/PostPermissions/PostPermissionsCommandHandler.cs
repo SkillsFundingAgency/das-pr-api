@@ -53,19 +53,13 @@ public class PostPermissionsCommandHandler(
             );
         }
 
-        AccountProviderLegalEntity accountProviderLegalEntity = await _accountProviderLegalEntitiesWriteRepository.CreateAccountProviderLegalEntity(
-            command.AccountLegalEntityId,
+        AccountProviderLegalEntity accountProviderLegalEntity = await CreateAccountProviderLegalEntity(
             accountProvider,
+            command.AccountLegalEntityId,
+            command.Operations,
             cancellationToken
         );
 
-        IEnumerable<Permission> permissions = command.Operations.Select(operation => new Permission()
-        {
-            AccountProviderLegalEntity = accountProviderLegalEntity,
-            Operation = operation
-        });
-
-        _permissionsWriteRepository.CreatePermissions(permissions);
         await CreatePermissionsAudit(command, command.Operations, PermissionAction.PermissionCreated, cancellationToken);
 
         await _providerRelationshipsDataContext.SaveChangesAsync(cancellationToken);
@@ -80,6 +74,25 @@ public class PostPermissionsCommandHandler(
         return new ValidatedResponse<PostPermissionsCommandResult>(new PostPermissionsCommandResult());
     }
 
+    private async Task<AccountProviderLegalEntity> CreateAccountProviderLegalEntity(AccountProvider accountProvider, long accountLegalEntityId, List<Operation> operations, CancellationToken cancellationToken)
+    {
+        AccountProviderLegalEntity accountProviderLegalEntity = new()
+        {
+            AccountProvider = accountProvider,
+            AccountLegalEntityId = accountLegalEntityId,
+            Created = DateTime.UtcNow,
+            Updated = DateTime.UtcNow,
+            Permissions = operations.Select(o => new Permission()
+            {
+                Operation = o
+            })
+            .ToList()
+        };
+
+        await _accountProviderLegalEntitiesWriteRepository.CreateAccountProviderLegalEntity(accountProviderLegalEntity, cancellationToken);
+
+        return accountProviderLegalEntity;
+    }
     private async Task<ValidatedResponse<PostPermissionsCommandResult>> UpdatePermissions(AccountProviderLegalEntity accountProviderLegalEntity, PostPermissionsCommand command, CancellationToken cancellationToken)
     {
         Operation[] existingOperations = accountProviderLegalEntity.Permissions.Select(po => po.Operation).OrderBy(po => po).ToArray();

@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using System.Threading;
 using MediatR;
 using SFA.DAS.PR.Application.Mediatr.Responses;
 using SFA.DAS.PR.Data;
@@ -15,7 +16,6 @@ public sealed class AcceptAddAccountRequestCommandHandler(
     IAccountProviderLegalEntitiesWriteRepository _accountProviderLegalEntitiesWriteRepository,
     IAccountProviderWriteRepository _accountProviderWriteRepository,
     IAccountLegalEntityReadRepository _accountLegalEntityReadRepository,
-    IPermissionsWriteRepository _permissionsWriteRepository,
     IMessageSession _messageSession,
     IPermissionsAuditWriteRepository _permissionsAuditWriteRepository
 ) : IRequestHandler<AcceptAddAccountRequestCommand, ValidatedResponse<Unit>>
@@ -37,24 +37,12 @@ public sealed class AcceptAddAccountRequestCommandHandler(
             cancellationToken
         ))!;
 
-        AccountProviderLegalEntity accountProviderLegalEntity =
-            await _accountProviderLegalEntitiesWriteRepository.CreateAccountProviderLegalEntity(
-                request.AccountLegalEntityId!.Value,
-                accountProvider,
-                cancellationToken
-        );
+        AccountProviderLegalEntity accountProviderLegalEntity = 
+            await CreateAccountProviderLegalEntity(request, accountProvider, accountLegalEntity.Id, cancellationToken);
 
-        IEnumerable<Permission> permissions = request.PermissionRequests.Select(pr => new Permission()
-        {
-            AccountProviderLegalEntity = accountProviderLegalEntity,
-            Operation = (Operation)pr.Operation
-        });
+        await CreatePermissionUpdatedAudit(command, request, accountProviderLegalEntity.Permissions.Select(a => a.Operation), cancellationToken);
 
-        _permissionsWriteRepository.CreatePermissions(permissions);
-
-        await CreatePermissionUpdatedAudit(command, request, permissions.Select(a => a.Operation), cancellationToken);
-
-        await PublishUpdatedPermissionsEvent(accountProviderLegalEntity, command, permissions, cancellationToken);
+        await PublishUpdatedPermissionsEvent(accountProviderLegalEntity, command, accountProviderLegalEntity.Permissions, cancellationToken);
 
         await _providerRelationshipsDataContext.SaveChangesAsync(cancellationToken);
 
@@ -66,6 +54,26 @@ public sealed class AcceptAddAccountRequestCommandHandler(
         request.Status = RequestStatus.Accepted;
         request.ActionedBy = actionedBy;
         request.UpdatedDate = DateTime.UtcNow;
+    }
+
+    private async Task<AccountProviderLegalEntity> CreateAccountProviderLegalEntity(Request request, AccountProvider accountProvider, long accountLegalEntityId, CancellationToken cancellationToken)
+    {
+        AccountProviderLegalEntity accountProviderLegalEntity = new()
+        {
+            AccountProvider = accountProvider,
+            AccountLegalEntityId = accountLegalEntityId,
+            Created = DateTime.UtcNow,
+            Updated = DateTime.UtcNow,
+            Permissions = request.PermissionRequests.Select(pr => new Permission()
+            {
+                Operation = (Operation)pr.Operation
+            })
+            .ToList()
+        };
+
+        await _accountProviderLegalEntitiesWriteRepository.CreateAccountProviderLegalEntity(accountProviderLegalEntity, cancellationToken);
+
+        return accountProviderLegalEntity;
     }
 
     private async Task CreatePermissionUpdatedAudit(AcceptAddAccountRequestCommand command, Request request, IEnumerable<Operation> operations, CancellationToken cancellationToken)

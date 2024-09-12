@@ -16,7 +16,6 @@ public sealed class AcceptAddAccountRequestCommandHandlerTests
     private Mock<IRequestWriteRepository> _requestWriteRepositoryMock;
     private Mock<IAccountProviderLegalEntitiesWriteRepository> _accountProviderLegalEntitiesWriteRepositoryMock;
     private Mock<IAccountProviderWriteRepository> _accountProviderWriteRepositoryMock;
-    private Mock<IPermissionsWriteRepository> _permissionsWriteRepositoryMock;
     private Mock<IMessageSession> _messageSessionMock;
     private Mock<IPermissionsAuditWriteRepository> _permissionsAuditWriteRepositoryMock;
     private Mock<IAccountLegalEntityReadRepository> _accountLegalEntityReadRepositoryMock;
@@ -29,7 +28,6 @@ public sealed class AcceptAddAccountRequestCommandHandlerTests
         _providerRelationshipsDataContextMock = new Mock<IProviderRelationshipsDataContext>();
         _accountProviderWriteRepositoryMock = new Mock<IAccountProviderWriteRepository>();
         _accountProviderLegalEntitiesWriteRepositoryMock = new Mock<IAccountProviderLegalEntitiesWriteRepository>();
-        _permissionsWriteRepositoryMock = new Mock<IPermissionsWriteRepository>();
         _permissionsAuditWriteRepositoryMock = new Mock<IPermissionsAuditWriteRepository>();
         _messageSessionMock = new Mock<IMessageSession>();
         _requestWriteRepositoryMock = new Mock<IRequestWriteRepository>();
@@ -41,7 +39,6 @@ public sealed class AcceptAddAccountRequestCommandHandlerTests
             _accountProviderLegalEntitiesWriteRepositoryMock.Object,
             _accountProviderWriteRepositoryMock.Object,
             _accountLegalEntityReadRepositoryMock.Object,
-            _permissionsWriteRepositoryMock.Object,
             _messageSessionMock.Object,
             _permissionsAuditWriteRepositoryMock.Object
         );
@@ -85,23 +82,16 @@ public sealed class AcceptAddAccountRequestCommandHandlerTests
         )
         .ReturnsAsync(accountProvider);
 
-        _accountProviderLegalEntitiesWriteRepositoryMock.Setup(a =>
-            a.CreateAccountProviderLegalEntity(
-                request.AccountLegalEntityId!.Value,
-                accountProvider,
-                CancellationToken.None
-            )
-        )
-        .ReturnsAsync(accountProviderLegalEntity);
-
         var result = await _handler.Handle(command, CancellationToken.None);
 
-        _permissionsWriteRepositoryMock.Verify(x =>
-            x.CreatePermissions(
-                It.IsAny<IEnumerable<Permission>>()
-            ),
-            Times.Once
-        );
+        _accountProviderLegalEntitiesWriteRepositoryMock.Verify(a => a.CreateAccountProviderLegalEntity(
+               It.Is<AccountProviderLegalEntity>(p =>
+                   p.AccountLegalEntityId == accountLegalEntity.Id &&
+                   p.Permissions.Count == request.PermissionRequests.Count &&
+                   p.AccountProvider == accountProvider),
+                   CancellationToken.None),
+               Times.Once
+            );
 
         _permissionsAuditWriteRepositoryMock.Verify(a => a.RecordPermissionsAudit(
             It.Is<PermissionsAudit>(p =>
