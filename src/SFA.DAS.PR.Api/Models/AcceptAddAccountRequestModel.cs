@@ -2,5 +2,5 @@
 
 public class AcceptAddAccountRequestModel
 {
-    public required string ActionedBy { get; set; }
+    public string? ActionedBy { get; set; }
 }

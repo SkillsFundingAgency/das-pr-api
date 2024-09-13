@@ -7,8 +7,11 @@ namespace SFA.DAS.PR.Application.Requests.Commands.DeclinedRequest;
 
 public sealed class DeclinedRequestCommandValidator : AbstractValidator<DeclinedRequestCommand>
 {
+    public const string ActionedByValidationMessage = "The ActionedBy property is required";
     public DeclinedRequestCommandValidator(IRequestReadRepository _requestReadRepository)
     {
+        RuleFor(a => a.ActionedBy).NotEmpty().WithMessage(ActionedByValidationMessage);
+
         RuleFor(a => new RequestIdValidationObject()
         {
             RequestId = a.RequestId,

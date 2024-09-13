@@ -7,5 +7,5 @@ namespace SFA.DAS.PR.Application.Requests.Commands.DeclinedRequest;
 public class DeclinedRequestCommand : IRequest<ValidatedResponse<Unit>>, IRequestEntity
 {
     public required Guid RequestId { get; set; }
-    public required string ActionedBy { get; set; }
+    public string? ActionedBy { get; set; }
 }

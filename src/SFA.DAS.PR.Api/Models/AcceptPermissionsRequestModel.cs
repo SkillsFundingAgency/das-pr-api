@@ -2,5 +2,5 @@
 
 public class AcceptPermissionsRequestModel
 {
-    public required string ActionedBy { get; set; }
+    public string? ActionedBy { get; set; }
 }

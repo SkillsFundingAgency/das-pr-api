@@ -7,8 +7,11 @@ namespace SFA.DAS.PR.Application.Requests.Commands.AcceptPermissionsRequest;
 
 public sealed class AcceptPermissionsRequestCommandValidator : AbstractValidator<AcceptPermissionsRequestCommand>
 {
+    public const string ActionedByValidationMessage = "The ActionedBy property is required";
     public AcceptPermissionsRequestCommandValidator(IRequestReadRepository requestReadRepository)
     {
+        RuleFor(a => a.ActionedBy).NotEmpty().WithMessage(ActionedByValidationMessage);
+
         RuleFor(a => new RequestIdValidationObject()
             {
                 RequestId = a.RequestId,

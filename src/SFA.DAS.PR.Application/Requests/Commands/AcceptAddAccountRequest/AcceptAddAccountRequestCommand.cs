@@ -7,5 +7,5 @@ namespace SFA.DAS.PR.Application.Requests.Commands.AcceptAddAccountRequest;
 public sealed class AcceptAddAccountRequestCommand : IRequest<ValidatedResponse<Unit>>, IRequestEntity
 {
     public required Guid RequestId { get; set; }
-    public required string ActionedBy { get; set; }
+    public string? ActionedBy { get; set; }
 }

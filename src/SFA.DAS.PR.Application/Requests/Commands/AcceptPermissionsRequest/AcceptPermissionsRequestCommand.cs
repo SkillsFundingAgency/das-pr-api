@@ -7,5 +7,5 @@ namespace SFA.DAS.PR.Application.Requests.Commands.AcceptPermissionsRequest;
 public sealed class AcceptPermissionsRequestCommand : IRequest<ValidatedResponse<Unit>>, IRequestEntity
 {
     public Guid RequestId { get; set; }
-    public required string ActionedBy { get; set; }
+    public string? ActionedBy { get; set; }
 }

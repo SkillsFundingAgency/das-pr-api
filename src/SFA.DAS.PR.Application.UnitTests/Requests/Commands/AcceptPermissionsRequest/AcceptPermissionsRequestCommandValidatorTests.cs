@@ -53,4 +53,17 @@ public sealed class AcceptPermissionsRequestCommandValidatorTests
         var result = await sut.TestValidateAsync(command);
         result.ShouldHaveAnyValidationError();
     }
+
+    [Test]
+    [MoqAutoData]
+    public async Task AcceptPermissionsRequestCommandValidator_AcceptPermissionsRequestCommand_ActionedBy_Invalid(
+        AcceptPermissionsRequestCommand command
+    )
+    {
+        command.ActionedBy = string.Empty;
+        var sut = new AcceptPermissionsRequestCommandValidator(_requestReadRepositoryInvalidMock.Object);
+        var result = await sut.TestValidateAsync(command);
+        result.ShouldHaveValidationErrorFor(a => a.ActionedBy)
+            .WithErrorMessage(AcceptPermissionsRequestCommandValidator.ActionedByValidationMessage);
+    }
 }

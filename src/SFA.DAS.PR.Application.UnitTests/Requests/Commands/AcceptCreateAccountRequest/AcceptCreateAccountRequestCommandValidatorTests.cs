@@ -1,5 +1,6 @@
 ﻿using FluentValidation.TestHelper;
 using Moq;
+using SFA.DAS.PR.Application.Requests.Commands.AcceptAddAccountRequest;
 using SFA.DAS.PR.Application.Requests.Commands.AcceptCreateAccountRequest;
 using SFA.DAS.PR.Domain.Entities;
 using SFA.DAS.PR.Domain.Interfaces;
@@ -52,5 +53,18 @@ public sealed class AcceptCreateAccountRequestCommandValidatorTests
         var sut = new AcceptCreateAccountRequestCommandValidator(_requestReadRepositoryInvalidMock.Object);
         var result = await sut.TestValidateAsync(command);
         result.ShouldHaveAnyValidationError();
+    }
+
+    [Test]
+    [MoqAutoData]
+    public async Task AcceptCreateAccountRequestCommandValidator_AcceptCreateAccountRequestCommand_ActionedBy_Invalid(
+        AcceptCreateAccountRequestCommand command
+    )
+    {
+        command.ActionedBy = string.Empty;
+        var sut = new AcceptCreateAccountRequestCommandValidator(_requestReadRepositoryInvalidMock.Object);
+        var result = await sut.TestValidateAsync(command);
+        result.ShouldHaveValidationErrorFor(a => a.ActionedBy)
+            .WithErrorMessage(AcceptCreateAccountRequestCommandValidator.ActionedByValidationMessage);
     }
 }

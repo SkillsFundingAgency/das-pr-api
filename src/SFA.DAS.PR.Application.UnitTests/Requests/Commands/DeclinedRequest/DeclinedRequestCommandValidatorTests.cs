@@ -1,5 +1,6 @@
 ﻿using FluentValidation.TestHelper;
 using Moq;
+using SFA.DAS.PR.Application.Requests.Commands.AcceptPermissionsRequest;
 using SFA.DAS.PR.Application.Requests.Commands.DeclinedRequest;
 using SFA.DAS.PR.Domain.Entities;
 using SFA.DAS.PR.Domain.Interfaces;
@@ -52,5 +53,18 @@ public sealed class DeclinedRequestCommandValidatorTests
         var sut = new DeclinedRequestCommandValidator(_requestReadRepositoryInvalidMock.Object);
         var result = await sut.TestValidateAsync(command);
         result.ShouldHaveAnyValidationError();
+    }
+
+    [Test]
+    [MoqAutoData]
+    public async Task DeclinedRequestCommandValidator_DeclinedRequestCommand_ActionedBy_Invalid(
+        DeclinedRequestCommand command
+    )
+    {
+        command.ActionedBy = string.Empty;
+        var sut = new DeclinedRequestCommandValidator(_requestReadRepositoryInvalidMock.Object);
+        var result = await sut.TestValidateAsync(command);
+        result.ShouldHaveValidationErrorFor(a => a.ActionedBy)
+            .WithErrorMessage(DeclinedRequestCommandValidator.ActionedByValidationMessage);
     }
 }
