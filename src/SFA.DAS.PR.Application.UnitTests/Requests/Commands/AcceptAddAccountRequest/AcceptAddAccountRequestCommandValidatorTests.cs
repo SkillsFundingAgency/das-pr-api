@@ -1,6 +1,5 @@
 ﻿using FluentValidation.TestHelper;
 using Moq;
-using SFA.DAS.PR.Application.Permissions.Queries.GetPermissions;
 using SFA.DAS.PR.Application.Requests.Commands.AcceptAddAccountRequest;
 using SFA.DAS.PR.Domain.Entities;
 using SFA.DAS.PR.Domain.Interfaces;
