@@ -168,7 +168,7 @@ public sealed class AcceptCreateAccountRequestCommandHandler(
             Action = action.ToString(),
             Ukprn = request.Ukprn,
             AccountLegalEntityId = command.AccountLegalEntity.Id,
-            EmployerUserRef = Guid.Parse(command.ActionedBy),
+            EmployerUserRef = Guid.Parse(command.ActionedBy!),
             Operations = JsonSerializer.Serialize(operations)
         };
 
@@ -182,7 +182,7 @@ public sealed class AcceptCreateAccountRequestCommandHandler(
                 providerResponse.AcountProvider!.Id,
                 command.Account.Id,
                 providerResponse.AcountProvider.ProviderUkprn,
-                Guid.Parse(command.ActionedBy),
+                Guid.Parse(command.ActionedBy!),
                 DateTime.UtcNow,
                 null
         ),
@@ -203,7 +203,7 @@ public sealed class AcceptCreateAccountRequestCommandHandler(
                 accountProviderLegalEntity.AccountProvider.Id,
                 accountProviderLegalEntity.Id,
                 accountProviderLegalEntity.AccountProvider.ProviderUkprn,
-                Guid.Parse(command.ActionedBy),
+                Guid.Parse(command.ActionedBy!),
                 string.Empty,
                 string.Empty,
                 string.Empty,

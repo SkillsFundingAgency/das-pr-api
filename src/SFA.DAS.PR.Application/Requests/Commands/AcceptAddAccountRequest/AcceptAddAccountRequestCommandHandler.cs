@@ -23,7 +23,7 @@ public sealed class AcceptAddAccountRequestCommandHandler(
     {
         Request request = (await _requestWriteRepository.GetRequest(command.RequestId, cancellationToken))!;
 
-        AcceptRequest(request, command.ActionedBy);
+        AcceptRequest(request, command.ActionedBy!);
 
         AccountLegalEntity accountLegalEntity = (await _accountLegalEntityReadRepository.GetAccountLegalEntity(
             request.AccountLegalEntityId!.Value,
@@ -76,7 +76,7 @@ public sealed class AcceptAddAccountRequestCommandHandler(
             Action = nameof(RequestAction.AccountAdded),
             Ukprn = request.Ukprn,
             AccountLegalEntityId = request.AccountLegalEntityId!.Value,
-            EmployerUserRef = Guid.Parse(command.ActionedBy),
+            EmployerUserRef = Guid.Parse(command.ActionedBy!),
             Operations = JsonSerializer.Serialize(operations)
         };
 
@@ -100,7 +100,7 @@ public sealed class AcceptAddAccountRequestCommandHandler(
                 accountProviderLegalEntity.AccountProvider.Id,
                 accountProviderLegalEntity.Id,
                 accountProviderLegalEntity.AccountProvider.ProviderUkprn,
-                Guid.Parse(command.ActionedBy),
+                Guid.Parse(command.ActionedBy!),
                 string.Empty,
                 string.Empty,
                 string.Empty,
