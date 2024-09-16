@@ -30,7 +30,7 @@ public class EmployerRelationshipsReadRepositoryTests
 
             EmployerRelationshipsReadRepository sut = new(context);
 
-            result = await sut.GetRelationships(account.HashedId, cancellationToken);
+            result = await sut.GetRelationships(account.Id, cancellationToken);
         }
 
         Assert.Multiple(() =>
@@ -43,6 +43,11 @@ public class EmployerRelationshipsReadRepositoryTests
                            .SelectMany(a => a.Permissions)
                            .ToList(),
                         Has.Count.EqualTo(1), "Permissions count should be 1");
+            Assert.That(result?.AccountProviders
+                           .Select(a => a.Provider)
+                           .Select(a => a.Requests)
+                           .ToList(),
+                        Has.Count.EqualTo(1), "Requests count should be 1");
         });
     }
 }

@@ -4,10 +4,10 @@ namespace SFA.DAS.PR.Application.Permissions.Queries.GetEmployerRelationships;
 
 public class GetEmployerRelationshipsQueryValidator : AbstractValidator<GetEmployerRelationshipsQuery>
 {
-    public const string AccountHashedIdValidationMessage = "An AccountHashedId must be supplied.";
+    public const string AccountHashedIdValidationMessage = "An AccountId must be supplied.";
     public GetEmployerRelationshipsQueryValidator()
     {
-        RuleFor(a => a.AccountHashedId)
+        RuleFor(a => a.AccountId)
             .NotEmpty()
             .WithMessage(AccountHashedIdValidationMessage);
     }

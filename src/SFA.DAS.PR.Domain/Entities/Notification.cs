@@ -10,7 +10,6 @@ public class Notification
     public long? Ukprn { get; set; }
     public string? EmailAddress { get; set; }
     public string? Contact { get; set; }
-    public string? EmployerName { get; set; }
     public Guid? RequestId { get; set; }
     public long? AccountLegalEntityId { get; set; }
     public int? PermitApprovals { get; set; }
@@ -26,7 +25,6 @@ public class Notification
         Ukprn = source.Ukprn,
         EmailAddress = source.EmailAddress,
         Contact = source.Contact,
-        EmployerName = source.EmployerName,
         RequestId = source.RequestId,
         AccountLegalEntityId = source.AccountLegalEntityId,
         PermitApprovals = source.PermitApprovals,

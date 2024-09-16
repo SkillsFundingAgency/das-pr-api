@@ -12,4 +12,5 @@ public class AccountLegalEntity
 
     public virtual Account Account { get; set; } = null!;
     public virtual List<AccountProviderLegalEntity> AccountProviderLegalEntities { get; set; } = [];
+    public virtual List<Request> Requests { get; set; } = [];
 }
