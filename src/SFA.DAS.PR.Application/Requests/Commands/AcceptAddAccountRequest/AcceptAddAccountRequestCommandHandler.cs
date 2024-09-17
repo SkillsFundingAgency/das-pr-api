@@ -30,11 +30,7 @@ public sealed class AcceptAddAccountRequestCommandHandler(
             cancellationToken
         ))!;
 
-        AccountProvider accountProvider = (await _accountProviderWriteRepository.GetAccountProvider(
-            request.Ukprn,
-            accountLegalEntity.AccountId,
-            cancellationToken
-        ))!;
+        AccountProvider accountProvider = await GetOrCreateAccountProvider(request, accountLegalEntity, cancellationToken);
 
         AccountProviderLegalEntity accountProviderLegalEntity = 
             await CreateAccountProviderLegalEntity(request, accountProvider, accountLegalEntity.Id, cancellationToken);
@@ -46,6 +42,22 @@ public sealed class AcceptAddAccountRequestCommandHandler(
         await PublishUpdatedPermissionsEvent(accountProviderLegalEntity, command, accountProviderLegalEntity.Permissions, cancellationToken);
 
         return ValidatedResponse<Unit>.EmptySuccessResponse();
+    }
+
+    private async Task<AccountProvider> GetOrCreateAccountProvider(Request request, AccountLegalEntity accountLegalEntity, CancellationToken cancellationToken)
+    {
+        AccountProvider? accountProvider = await _accountProviderWriteRepository.GetAccountProvider(
+            request.Ukprn,
+            accountLegalEntity.AccountId,
+            cancellationToken
+        );
+
+        if(accountProvider is null)
+        {
+            accountProvider = await _accountProviderWriteRepository.CreateAccountProvider(request.Ukprn, accountLegalEntity.AccountId, cancellationToken);
+        }
+
+        return accountProvider;
     }
 
     private static void AcceptRequest(Request request, string actionedBy)
