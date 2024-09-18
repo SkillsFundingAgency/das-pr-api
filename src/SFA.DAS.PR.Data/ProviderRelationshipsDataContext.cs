@@ -23,6 +23,7 @@ public class ProviderRelationshipsDataContext : DbContext, IProviderRelationship
     public ProviderRelationshipsDataContext(DbContextOptions<ProviderRelationshipsDataContext> options)
         : base(options)
     {
+
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -25,7 +25,9 @@ namespace SFA.DAS.PR.Application.UnitTests.Requests.Commands.AcceptCreateAccount
         private Mock<IPermissionsAuditWriteRepository> _permissionsAuditWriteRepositoryMock;
         private Mock<IMessageSession> _messageSessionMock;
         private Mock<IRequestWriteRepository> _requestWriteRepositoryMock;
-
+        private Mock<IAccountReadRepository> _accountReadRepository;
+        private Mock<IAccountLegalEntityReadRepository> _accountLegalEntityReadRepository;
+             
         private AcceptCreateAccountRequestCommandHandler _handler;
 
         [SetUp]
@@ -41,6 +43,8 @@ namespace SFA.DAS.PR.Application.UnitTests.Requests.Commands.AcceptCreateAccount
             _permissionsAuditWriteRepositoryMock = new Mock<IPermissionsAuditWriteRepository>();
             _messageSessionMock = new Mock<IMessageSession>();
             _requestWriteRepositoryMock = new Mock<IRequestWriteRepository>();
+            _accountReadRepository = new Mock<IAccountReadRepository>();
+            _accountLegalEntityReadRepository = new Mock<IAccountLegalEntityReadRepository>();
 
             _handler = new AcceptCreateAccountRequestCommandHandler(
                 _loggerMock.Object,
@@ -52,7 +56,9 @@ namespace SFA.DAS.PR.Application.UnitTests.Requests.Commands.AcceptCreateAccount
                 _accountProviderLegalEntitiesWriteRepositoryMock.Object,
                 _permissionsAuditWriteRepositoryMock.Object,
                 _messageSessionMock.Object,
-                _requestWriteRepositoryMock.Object
+                _requestWriteRepositoryMock.Object,
+                _accountReadRepository.Object,
+                _accountLegalEntityReadRepository.Object
             );
         }
 
