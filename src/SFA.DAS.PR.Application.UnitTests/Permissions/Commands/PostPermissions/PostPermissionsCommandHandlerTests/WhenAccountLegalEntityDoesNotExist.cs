@@ -73,13 +73,7 @@ public class WhenAccountLegalEntityDoesNotExist
     [Test]
     public void ThenInvokesAccountProviderLegalEntitiesWriteRepository_ToCreateAccountProviderLegalEntityRelationship()
     {
-        _accountProviderLegalEntitiesWriteRepositoryMock.Verify(a => a.CreateAccountProviderLegalEntity(_command.AccountLegalEntityId, It.IsAny<AccountProvider>(), _cancellationToken), Times.Once);
-    }
-
-    [Test]
-    public void ThenInvokesPermissionsWriteRepository_ToAddPermissions()
-    {
-        _permissionsWriteRepositoryMock.Verify(p => p.CreatePermissions(It.IsAny<IEnumerable<Permission>>()), Times.Once);
+        _accountProviderLegalEntitiesWriteRepositoryMock.Verify(a => a.CreateAccountProviderLegalEntity(It.IsAny<AccountProviderLegalEntity>(), _cancellationToken), Times.Once);
     }
 
     [Test]

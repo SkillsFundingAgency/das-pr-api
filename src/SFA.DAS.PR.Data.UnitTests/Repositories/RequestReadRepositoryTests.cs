@@ -253,4 +253,45 @@ public class RequestReadRepositoryTests
 
         Assert.That(result, Is.False, "result should be False");
     }
+
+    [Test]
+    public async Task RequestExists_SearchByRequestId_Returns_False()
+    {
+        bool? result = null;
+
+        using (var context = InMemoryProviderRelationshipsDataContext.CreateInMemoryContext(
+            $"{nameof(InMemoryProviderRelationshipsDataContext)}_{nameof(RequestExists_SearchByRequestId_Returns_False)}")
+        )
+        {
+            RequestReadRepository sut = new(context);
+
+            result = await sut.RequestExists(Guid.NewGuid(), [RequestStatus.New], RequestType.CreateAccount, cancellationToken);
+        }
+
+        Assert.That(result, Is.False, "result should be False");
+    }
+
+    [Test]
+    public async Task RequestExists_SearchByRequestId_Returns_True()
+    {
+        Guid requestId = Guid.NewGuid();
+
+        Request request = RequestTestData.Create(requestId, RequestStatus.Sent);
+
+        bool? result = null;
+
+        using (var context = InMemoryProviderRelationshipsDataContext.CreateInMemoryContext(
+            $"{nameof(InMemoryProviderRelationshipsDataContext)}_{nameof(RequestExists_SearchByRequestId_Returns_True)}")
+        )
+        {
+            await context.AddAsync(request);
+            await context.SaveChangesAsync(cancellationToken);
+
+            RequestReadRepository sut = new(context);
+
+            result = await sut.RequestExists(requestId, [RequestStatus.Sent], RequestType.CreateAccount, cancellationToken);
+        }
+
+        Assert.That(result, Is.True, "result should be True");
+    }
 }

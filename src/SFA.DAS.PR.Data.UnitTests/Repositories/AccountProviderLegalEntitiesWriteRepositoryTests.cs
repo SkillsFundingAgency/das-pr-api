@@ -23,7 +23,7 @@ public class AccountProviderLegalEntitiesWriteRepositoryTests
         {
             AccountProviderLegalEntitiesWriteRepository sut = new(context);
 
-            await sut.CreateAccountProviderLegalEntity(1, accountProvider, cancellationToken);
+            await sut.CreateAccountProviderLegalEntity(new AccountProviderLegalEntity() { Id = 1, AccountProvider = accountProvider }, cancellationToken);
 
             await context.SaveChangesAsync(cancellationToken);
 

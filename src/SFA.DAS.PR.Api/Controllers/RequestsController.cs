@@ -3,9 +3,14 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.PR.Api.Authorization;
 using SFA.DAS.PR.Api.Common;
+using SFA.DAS.PR.Api.Models;
+using SFA.DAS.PR.Application.Requests.Commands.AcceptAddAccountRequest;
+using SFA.DAS.PR.Application.Requests.Commands.AcceptCreateAccountRequest;
+using SFA.DAS.PR.Application.Requests.Commands.AcceptPermissionsRequest;
 using SFA.DAS.PR.Application.Requests.Commands.CreateAddAccountRequest;
 using SFA.DAS.PR.Application.Requests.Commands.CreateNewAccountRequest;
 using SFA.DAS.PR.Application.Requests.Commands.CreatePermissionRequest;
+using SFA.DAS.PR.Application.Requests.Commands.DeclinedRequest;
 using SFA.DAS.PR.Application.Requests.Queries.GetRequest;
 using SFA.DAS.PR.Application.Requests.Queries.LookupRequests;
 using SFA.DAS.PR.Domain.Models;
@@ -22,7 +27,7 @@ public class RequestsController(IMediator _mediator) : ActionResponseControllerB
     [Authorize(Policy = Policies.Management)]
     [ProducesResponseType(typeof(CreateAddAccountRequestCommandResult), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(List<ValidationError>), StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> CreateAddAccountRequest([FromBody]CreateAddAccountRequestCommand command, CancellationToken cancellationToken)
+    public async Task<IActionResult> CreateAddAccountRequest([FromBody] CreateAddAccountRequestCommand command, CancellationToken cancellationToken)
     {
         var result = await _mediator.Send(command, cancellationToken);
         return GetResponse(result);
@@ -68,6 +73,72 @@ public class RequestsController(IMediator _mediator) : ActionResponseControllerB
     {
         LookupRequestsQuery query = new(ukprn, paye);
         var result = await _mediator.Send(query, cancellationToken);
+        return GetResponse(result);
+    }
+
+    [HttpPost("{requestId:guid}/createaccount/accepted")]
+    [Authorize(Policy = Policies.Management)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(List<ValidationError>), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> AcceptCreateAccountRequest([FromRoute]Guid requestId, [FromBody] AcceptCreateAccountRequestModel model, CancellationToken cancellationToken)
+    {
+        AcceptCreateAccountRequestCommand command = new()
+        {
+            RequestId = requestId,
+            Account = model.AccountDetails,
+            AccountLegalEntity = model.AccountLegalEntityDetails,
+            ActionedBy = model.ActionedBy,
+        };
+
+        var result = await _mediator.Send(command, cancellationToken);
+        return GetResponse(result);
+    }
+
+    [HttpPost("{requestId:guid}/permission/accepted")]
+    [Authorize(Policy = Policies.Management)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(List<ValidationError>), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> AcceptPermissionsRequest([FromRoute] Guid requestId, [FromBody] AcceptPermissionsRequestModel model, CancellationToken cancellationToken)
+    {
+        AcceptPermissionsRequestCommand command = new()
+        {
+            RequestId = requestId,
+            ActionedBy = model.ActionedBy
+        };
+
+        var result = await _mediator.Send(command, cancellationToken);
+        return GetResponse(result);
+    }
+
+    [HttpPut("{requestId:guid}/declined")]
+    [Authorize(Policy = Policies.Management)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(List<ValidationError>), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> DeclineRequest([FromRoute] Guid requestId, [FromBody] DeclinedRequestModel model, CancellationToken cancellationToken)
+    {
+        DeclinedRequestCommand command = new DeclinedRequestCommand()
+        {
+            RequestId = requestId,
+            ActionedBy = model.ActionedBy
+        };
+
+        var result = await _mediator.Send(command, cancellationToken);
+        return GetResponse(result);
+    }
+
+    [HttpPost("{requestId:guid}/addaccount/accepted")]
+    [Authorize(Policy = Policies.Management)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(List<ValidationError>), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> AcceptAddAccountRequest([FromRoute] Guid requestId, [FromBody] AcceptAddAccountRequestModel model, CancellationToken cancellationToken)
+    {
+        AcceptAddAccountRequestCommand command = new AcceptAddAccountRequestCommand()
+        {
+            RequestId = requestId,
+            ActionedBy = model.ActionedBy
+        };
+
+        var result = await _mediator.Send(command, cancellationToken);
         return GetResponse(result);
     }
 }

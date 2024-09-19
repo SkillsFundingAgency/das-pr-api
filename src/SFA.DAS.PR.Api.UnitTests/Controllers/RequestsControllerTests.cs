@@ -7,10 +7,15 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using SFA.DAS.PR.Api.Common;
 using SFA.DAS.PR.Api.Controllers;
+using SFA.DAS.PR.Api.Models;
 using SFA.DAS.PR.Application.Mediatr.Responses;
+using SFA.DAS.PR.Application.Requests.Commands.AcceptAddAccountRequest;
+using SFA.DAS.PR.Application.Requests.Commands.AcceptCreateAccountRequest;
+using SFA.DAS.PR.Application.Requests.Commands.AcceptPermissionsRequest;
 using SFA.DAS.PR.Application.Requests.Commands.CreateAddAccountRequest;
 using SFA.DAS.PR.Application.Requests.Commands.CreateNewAccountRequest;
 using SFA.DAS.PR.Application.Requests.Commands.CreatePermissionRequest;
+using SFA.DAS.PR.Application.Requests.Commands.DeclinedRequest;
 using SFA.DAS.PR.Application.Requests.Queries.GetRequest;
 using SFA.DAS.PR.Application.Requests.Queries.LookupRequests;
 using SFA.DAS.PR.Domain.Models;
@@ -66,12 +71,12 @@ public class RequestsControllerTests
 
         var result = await sut.CreateAddAccountRequest(
             new CreateAddAccountRequestCommand()
-            { 
-                AccountLegalEntityId = 1, 
-                Ukprn = 1, 
-                Operations = [], 
-                RequestedBy = Guid.NewGuid().ToString() 
-            }, 
+            {
+                AccountLegalEntityId = 1,
+                Ukprn = 1,
+                Operations = [],
+                RequestedBy = Guid.NewGuid().ToString()
+            },
             cancellationToken
         );
         result.As<BadRequestObjectResult>().Should().NotBeNull();
@@ -219,7 +224,7 @@ public class RequestsControllerTests
         ).ReturnsAsync(errorResponse);
 
         var result = await sut.LookupRequests(
-            10000001, 
+            10000001,
             "PAYE",
             cancellationToken
         );
@@ -240,10 +245,178 @@ public class RequestsControllerTests
         await sut.CreateNewAccountRequest(command, cancellationToken);
 
         mediatorMock.Verify(m =>
-            m.Send(It.Is<CreateNewAccountRequestCommand>(a => 
+            m.Send(It.Is<CreateNewAccountRequestCommand>(a =>
                 a.Ukprn == command.Ukprn &&
                 a.EmployerPAYE == command.EmployerPAYE
             ), It.IsAny<CancellationToken>())
         );
+    }
+
+    [Test]
+    [MoqAutoData]
+    public async Task AcceptCreateAccountRequest_InvokesQueryHandler(
+       [Frozen] Mock<IMediator> mediatorMock,
+       [Greedy] RequestsController sut,
+       AcceptCreateAccountRequestModel model,
+       Guid requestId,
+       CancellationToken cancellationToken
+    )
+    {
+        await sut.AcceptCreateAccountRequest(requestId, model, cancellationToken);
+
+        mediatorMock.Verify(m =>
+            m.Send(It.Is<AcceptCreateAccountRequestCommand>(a =>
+                a.RequestId == requestId &&
+                a.AccountLegalEntity.Id == model.AccountLegalEntityDetails.Id &&
+                a.Account.Id == model.AccountDetails.Id
+            ), It.IsAny<CancellationToken>())
+        );
+    }
+
+    [Test]
+    [MoqAutoData]
+    public async Task DeclinedRequest_InvokesQueryHandler(
+       [Frozen] Mock<IMediator> mediatorMock,
+       [Greedy] RequestsController sut,
+       DeclinedRequestModel model,
+       Guid requestId,
+       CancellationToken cancellationToken
+    )
+    {
+        await sut.DeclineRequest(requestId, model, cancellationToken);
+
+        mediatorMock.Verify(m =>
+            m.Send(It.Is<DeclinedRequestCommand>(a =>
+                a.RequestId == requestId &&
+                a.ActionedBy == model.ActionedBy
+            ), It.IsAny<CancellationToken>())
+        );
+    }
+
+    [Test]
+    [MoqAutoData]
+    public async Task DeclinedRequest_ReturnsBadRequestResponse(
+       [Frozen] Mock<IMediator> mediatorMock,
+       [Greedy] RequestsController sut,
+       DeclinedRequestModel model,
+       Guid requestId,
+       List<ValidationFailure> errors,
+       CancellationToken cancellationToken
+    )
+    {
+        var errorResponse = new ValidatedResponse<Unit>(errors);
+
+        mediatorMock.Setup(m =>
+            m.Send(
+                It.Is<DeclinedRequestCommand>(a =>
+                    a.ActionedBy == model.ActionedBy &&
+                    a.RequestId == requestId
+                ),
+                It.IsAny<CancellationToken>()
+            )
+        ).ReturnsAsync(errorResponse);
+
+        var result = await sut.DeclineRequest(requestId, model, cancellationToken);
+
+        result.As<BadRequestObjectResult>().Should().NotBeNull();
+        result.As<BadRequestObjectResult>().Value.As<List<ValidationError>>().Count.Should().Be(errors.Count);
+    }
+
+    [Test]
+    [MoqAutoData]
+    public async Task AcceptPermissionsRequest_InvokesQueryHandler(
+       [Frozen] Mock<IMediator> mediatorMock,
+       [Greedy] RequestsController sut,
+       AcceptPermissionsRequestModel model,
+       Guid requestId,
+       CancellationToken cancellationToken
+    )
+    {
+        await sut.AcceptPermissionsRequest(requestId, model, cancellationToken);
+
+        mediatorMock.Verify(m =>
+            m.Send(It.Is<AcceptPermissionsRequestCommand>(a =>
+                a.RequestId == requestId &&
+                a.ActionedBy == model.ActionedBy
+            ), It.IsAny<CancellationToken>())
+        );
+    }
+
+    [Test]
+    [MoqAutoData]
+    public async Task AcceptPermissionsRequest_ReturnsBadRequestResponse(
+       [Frozen] Mock<IMediator> mediatorMock,
+       [Greedy] RequestsController sut,
+       AcceptPermissionsRequestModel model,
+       Guid requestId,
+       List<ValidationFailure> errors,
+       CancellationToken cancellationToken
+    )
+    {
+        var errorResponse = new ValidatedResponse<Unit>(errors);
+
+        mediatorMock.Setup(m =>
+            m.Send(
+                It.Is<AcceptPermissionsRequestCommand>(a =>
+                    a.ActionedBy == model.ActionedBy &&
+                    a.RequestId == requestId
+                ),
+                It.IsAny<CancellationToken>()
+            )
+        ).ReturnsAsync(errorResponse);
+
+        var result = await sut.AcceptPermissionsRequest(requestId, model, cancellationToken);
+
+        result.As<BadRequestObjectResult>().Should().NotBeNull();
+        result.As<BadRequestObjectResult>().Value.As<List<ValidationError>>().Count.Should().Be(errors.Count);
+    }
+
+    [Test]
+    [MoqAutoData]
+    public async Task AcceptAddAccountRequest_InvokesQueryHandler(
+       [Frozen] Mock<IMediator> mediatorMock,
+       [Greedy] RequestsController sut,
+       AcceptAddAccountRequestModel model,
+       Guid requestId,
+       CancellationToken cancellationToken
+    )
+    {
+        await sut.AcceptAddAccountRequest(requestId, model, cancellationToken);
+
+        mediatorMock.Verify(m =>
+            m.Send(It.Is<AcceptAddAccountRequestCommand>(a =>
+                a.RequestId == requestId &&
+                a.ActionedBy == model.ActionedBy
+            ), It.IsAny<CancellationToken>())
+        );
+    }
+
+    [Test]
+    [MoqAutoData]
+    public async Task AcceptAddAccountRequest_ReturnsBadRequestResponse(
+       [Frozen] Mock<IMediator> mediatorMock,
+       [Greedy] RequestsController sut,
+       AcceptAddAccountRequestModel model,
+       Guid requestId,
+       List<ValidationFailure> errors,
+       CancellationToken cancellationToken
+    )
+    {
+        var errorResponse = new ValidatedResponse<Unit>(errors);
+
+        mediatorMock.Setup(m =>
+            m.Send(
+                It.Is<AcceptAddAccountRequestCommand>(a =>
+                    a.ActionedBy == model.ActionedBy &&
+                    a.RequestId == requestId
+                ),
+                It.IsAny<CancellationToken>()
+            )
+        ).ReturnsAsync(errorResponse);
+
+        var result = await sut.AcceptAddAccountRequest(requestId, model, cancellationToken);
+
+        result.As<BadRequestObjectResult>().Should().NotBeNull();
+        result.As<BadRequestObjectResult>().Value.As<List<ValidationError>>().Count.Should().Be(errors.Count);
     }
 }

@@ -82,7 +82,7 @@ AppSettings.Development.json file
       }
     },
     "ConfigurationStorageConnectionString": "UseDevelopmentStorage=true;",
-    "ConfigNames": "SFA.DAS.PR.Api",
+    "ConfigNames": "SFA.DAS.PR.Api,SFA.DAS.Encoding",
     "EnvironmentName": "LOCAL",
     "Version": "1.0",
     "APPINSIGHTS_INSTRUMENTATIONKEY": ""

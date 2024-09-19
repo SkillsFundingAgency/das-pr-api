@@ -4,5 +4,5 @@ namespace SFA.DAS.PR.Domain.Interfaces;
 
 public interface IAccountProviderLegalEntitiesWriteRepository
 {
-    Task<AccountProviderLegalEntity> CreateAccountProviderLegalEntity(long accountLegalEntityId, AccountProvider accountProvider, CancellationToken cancellationToken);
+    Task CreateAccountProviderLegalEntity(AccountProviderLegalEntity accountProviderLegalEntity, CancellationToken cancellationToken);
 }
