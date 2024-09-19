@@ -40,7 +40,7 @@ public sealed class AcceptPermissionsRequestCommandHandler(
         {
             Operation[] operations = request.PermissionRequests.Select(pr =>(Operation)pr.Operation).ToArray();
 
-            bool permissionsUpdated = UpdatePermissions(operations, accountProviderLegalEntity, command, cancellationToken);
+            bool permissionsUpdated = UpdatePermissions(operations, accountProviderLegalEntity);
 
             if(permissionsUpdated)
             {
@@ -55,7 +55,7 @@ public sealed class AcceptPermissionsRequestCommandHandler(
         return ValidatedResponse<Unit>.EmptySuccessResponse();
     }
 
-    private bool UpdatePermissions(Operation[] requestOperations, AccountProviderLegalEntity accountProviderLegalEntity, AcceptPermissionsRequestCommand command, CancellationToken cancellationToken)
+    private bool UpdatePermissions(Operation[] requestOperations, AccountProviderLegalEntity accountProviderLegalEntity)
     {
         Operation[] existingOperations = accountProviderLegalEntity.Permissions.Select(p => p.Operation).OrderBy(o => o).ToArray();
 
