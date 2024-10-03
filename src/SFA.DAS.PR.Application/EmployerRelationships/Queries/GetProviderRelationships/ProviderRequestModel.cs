@@ -8,11 +8,13 @@ public class ProviderRequestModel
     public required long Ukprn { get; set; }
     public required Guid RequestId { get; set; }
     public Operation[] Operations { get; set; } = [];
+    public RequestType RequestType { get; set; }
 
     public static implicit operator ProviderRequestModel(Request source) => new()
     {
         Ukprn = source.Ukprn,
         RequestId = source.Id,
-        Operations = source.PermissionRequests.Select(a => (Operation)a.Operation).ToArray()
+        Operations = source.PermissionRequests.Select(a => (Operation)a.Operation).ToArray(),
+        RequestType = source.RequestType
     };
 }
