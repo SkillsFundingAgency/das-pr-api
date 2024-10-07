@@ -69,9 +69,9 @@ public class RequestsController(IMediator _mediator) : ActionResponseControllerB
     [ProducesResponseType(typeof(RequestModel), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(List<ValidationError>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> LookupRequests([FromQuery] long ukprn, [FromQuery] string paye, CancellationToken cancellationToken)
+    public async Task<IActionResult> LookupRequests([FromQuery] long ukprn, [FromQuery] string? paye, [FromQuery] string? email, CancellationToken cancellationToken)
     {
-        LookupRequestsQuery query = new(ukprn, paye);
+        LookupRequestsQuery query = new(ukprn, paye, email);
         var result = await _mediator.Send(query, cancellationToken);
         return GetResponse(result);
     }
@@ -80,7 +80,7 @@ public class RequestsController(IMediator _mediator) : ActionResponseControllerB
     [Authorize(Policy = Policies.Management)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(List<ValidationError>), StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> AcceptCreateAccountRequest([FromRoute]Guid requestId, [FromBody] AcceptCreateAccountRequestModel model, CancellationToken cancellationToken)
+    public async Task<IActionResult> AcceptCreateAccountRequest([FromRoute] Guid requestId, [FromBody] AcceptCreateAccountRequestModel model, CancellationToken cancellationToken)
     {
         AcceptCreateAccountRequestCommand command = new()
         {
