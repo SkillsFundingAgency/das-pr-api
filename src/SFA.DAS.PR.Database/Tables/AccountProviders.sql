@@ -12,10 +12,6 @@
 )
 GO 
 
-CREATE NONCLUSTERED INDEX [IX_AccountProviders_ProviderUkprn] ON [dbo].[AccountProviders]([ProviderUkprn] ASC)
-  INCLUDE([AccountId]) WITH (STATISTICS_NORECOMPUTE = OFF, DROP_EXISTING = OFF, ONLINE = OFF) ON [PRIMARY]
-GO
-
 CREATE INDEX [IX_AccountProviders] ON [dbo].[AccountProviders] ([ProviderUkprn]) 
   INCLUDE ([Id], [AccountId], [Created]);
 GO
