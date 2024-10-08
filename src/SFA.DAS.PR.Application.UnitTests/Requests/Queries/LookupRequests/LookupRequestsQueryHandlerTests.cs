@@ -3,7 +3,6 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using SFA.DAS.PR.Application.Mediatr.Responses;
-using SFA.DAS.PR.Application.Requests.Queries.GetRequest;
 using SFA.DAS.PR.Application.Requests.Queries.LookupRequests;
 using SFA.DAS.PR.Data.Repositories;
 using SFA.DAS.PR.Data.UnitTests.InMemoryDatabases;
@@ -34,7 +33,7 @@ public class LookupRequestsQueryHandlerTests
 
             RequestReadRepository requestReadRepository = new(context);
             LookupRequestsQueryHandler sut = new(requestReadRepository);
-            requestModel = await sut.Handle(new(request.Provider.Ukprn, request.EmployerPAYE!), CancellationToken.None);
+            requestModel = await sut.Handle(new(request.Provider.Ukprn, request.EmployerPAYE!, request.EmployerContactEmail!), CancellationToken.None);
             persistedRequest = await context.Requests.FirstAsync(CancellationToken.None);
         }
 
@@ -73,7 +72,8 @@ public class LookupRequestsQueryHandlerTests
         requestReadRepository.Setup(a =>
             a.GetRequest(
                 It.IsAny<long>(),
-                It.IsAny<string>(),
+                It.IsAny<string?>(),
+                It.IsAny<string?>(),
                 It.IsAny<RequestStatus[]>(),
                 It.IsAny<CancellationToken>()
             )

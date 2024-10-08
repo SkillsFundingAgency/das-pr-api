@@ -22,3 +22,10 @@ GO
 CREATE INDEX [IX_Requests_Ukprn] ON [dbo].[Requests]([Ukprn], [Status], [AccountLegalEntityId])
 INCLUDE ([Id], [RequestedDate]);
 GO
+
+CREATE INDEX [IX_Requests_Ukprn_Email] ON [dbo].[Requests]([Ukprn], [Status], [EmployerContactEmail]);
+GO
+
+CREATE INDEX [IX_Requests_Ukprn_Paye] ON [dbo].[Requests]([Ukprn], [Status], [EmployerPAYE]);
+
+GO

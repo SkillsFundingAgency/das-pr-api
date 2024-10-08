@@ -177,7 +177,7 @@ public class RequestsControllerTests
        CancellationToken cancellationToken
     )
     {
-        await sut.LookupRequests(query.Ukprn!.Value, query.Paye, cancellationToken);
+        await sut.LookupRequests(query.Ukprn!.Value, query.Paye, query.Email, cancellationToken);
 
         mediatorMock.Verify(m =>
             m.Send(It.Is<LookupRequestsQuery>(a => a.Ukprn == query.Ukprn && a.Paye == query.Paye), It.IsAny<CancellationToken>())
@@ -193,7 +193,7 @@ public class RequestsControllerTests
        CancellationToken cancellationToken
     )
     {
-        var result = await sut.LookupRequests(query.Ukprn!.Value, query.Paye, cancellationToken);
+        var result = await sut.LookupRequests(query.Ukprn!.Value, query.Paye, query.Email, cancellationToken);
 
         mediatorMock.Setup(m =>
             m.Send(
@@ -226,6 +226,7 @@ public class RequestsControllerTests
         var result = await sut.LookupRequests(
             10000001,
             "PAYE",
+            null,
             cancellationToken
         );
 

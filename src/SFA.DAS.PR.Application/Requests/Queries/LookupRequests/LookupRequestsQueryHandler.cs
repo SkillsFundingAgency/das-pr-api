@@ -10,9 +10,9 @@ public class LookupRequestsQueryHandler(IRequestReadRepository _requestReadRepos
 {
     public async Task<ValidatedResponse<RequestModel?>> Handle(LookupRequestsQuery query, CancellationToken cancellationToken)
     {
-        Request? request = await _requestReadRepository.GetRequest(query.Ukprn!.Value, query.Paye, [RequestStatus.New, RequestStatus.Sent], cancellationToken);
+        Request? request = await _requestReadRepository.GetRequest(query.Ukprn!.Value, query!.Paye, query!.Email, [RequestStatus.New, RequestStatus.Sent], cancellationToken);
 
-        if(request is null)
+        if (request is null)
         {
             return new ValidatedResponse<RequestModel?>();
         }
