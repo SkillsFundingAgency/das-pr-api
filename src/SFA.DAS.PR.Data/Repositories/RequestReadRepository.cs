@@ -33,7 +33,11 @@ public class RequestReadRepository(IProviderRelationshipsDataContext providerRel
         .AsNoTracking()
         .FirstOrDefaultAsync(a =>
             a.Ukprn == Ukprn &&
-            (a.EmployerPAYE == paye || a.EmployerContactEmail == email) &&
+            ((a.EmployerPAYE == paye && a.EmployerContactEmail == email)
+            || (a.EmployerPAYE == paye && email == null)
+            || (paye == null && a.EmployerContactEmail == email)
+            )
+            &&
             (requestStatuses.Count() == 0 || requestStatuses.Contains(a.Status)),
             cancellationToken
         );
