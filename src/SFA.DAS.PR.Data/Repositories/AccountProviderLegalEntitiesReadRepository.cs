@@ -6,19 +6,20 @@ using SFA.DAS.ProviderRelationships.Types.Models;
 namespace SFA.DAS.PR.Data.Repositories;
 public class AccountProviderLegalEntitiesReadRepository(IProviderRelationshipsDataContext _providerRelationshipsDataContext) : IAccountProviderLegalEntitiesReadRepository
 {
-    public Task<List<AccountProviderLegalEntity>> GetAccountProviderLegalEntities(long? ukprn, string? accountHashId, List<Operation> operations, CancellationToken cancellationToken)
+    public async Task<List<AccountProviderLegalEntity>> GetAccountProviderLegalEntities(long? ukprn, string? accountHashId, List<Operation> operations, CancellationToken cancellationToken)
     {
-        return _providerRelationshipsDataContext.AccountProviderLegalEntities.AsNoTracking()
+        var query = _providerRelationshipsDataContext.AccountProviderLegalEntities.AsNoTracking()
             .Include(a => a.AccountProvider)
                 .ThenInclude(a => a.Account)
             .Include(a => a.Permissions)
             .Include(a => a.AccountLegalEntity)
             .Where(t =>
-                (!ukprn.HasValue || t.AccountProvider.ProviderUkprn == ukprn) &&
-                (string.IsNullOrWhiteSpace(accountHashId) || t.AccountProvider.Account!.HashedId == accountHashId) &&
-                (t.Permissions.Any(p => operations.Contains(p.Operation))) &&
-                t.AccountLegalEntity.Deleted == null
-        ).ToListAsync(cancellationToken);
+                (!ukprn.HasValue || t.AccountProvider.ProviderUkprn == ukprn)
+                && (string.IsNullOrWhiteSpace(accountHashId) || t.AccountProvider.Account!.HashedId == accountHashId)
+                && (t.Permissions.Any(p => EF.Constant(operations).Contains(p.Operation)))
+                && t.AccountLegalEntity.Deleted == null
+        );
+        return await query.ToListAsync(cancellationToken);
     }
 
     public async Task<AccountProviderLegalEntity?> GetAccountProviderLegalEntity(long? ukprn, long accountLegalEntityId, CancellationToken cancellationToken)
