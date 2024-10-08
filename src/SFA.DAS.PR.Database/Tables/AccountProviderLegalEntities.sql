@@ -12,3 +12,8 @@
     INDEX [IX_AccountProviderLegalEntities_AccountProviderId] NONCLUSTERED ([AccountProviderId] ASC),
     INDEX [IX_AccountProviderLegalEntities_AccountLegalEntityId] NONCLUSTERED ([AccountLegalEntityId] ASC)
 )
+GO
+
+CREATE INDEX [IX_AccountProviderLegalEntities] ON [dbo].[AccountProviderLegalEntities] ([AccountProviderId] , [AccountLegalEntityId]) 
+  INCLUDE ([Id],[Created],[Updated]);
+GO
