@@ -10,11 +10,8 @@
     CONSTRAINT [UK_AccountProviders_AccountId_ProviderUkprn] UNIQUE ([AccountId] ASC, [ProviderUkprn] ASC), 
     INDEX [IX_AccountProviders_AccountId] NONCLUSTERED ([AccountId] ASC)
 )
-
 GO 
 
-CREATE NONCLUSTERED INDEX [IX_AccountProviders_ProviderUkprn] ON [dbo].[AccountProviders]
-(
-    [ProviderUkprn] ASC
-) INCLUDE([AccountId]) WITH (STATISTICS_NORECOMPUTE = OFF, DROP_EXISTING = OFF, ONLINE = OFF) ON [PRIMARY]
+CREATE INDEX [IX_AccountProviders] ON [dbo].[AccountProviders] ([ProviderUkprn]) 
+  INCLUDE ([Id], [AccountId], [Created]);
 GO
