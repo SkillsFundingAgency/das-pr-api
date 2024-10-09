@@ -20,6 +20,7 @@ public sealed class ProviderRequestModelTests
             Assert.That(providerRequestModel.RequestId, Is.EqualTo(request.Id));
             Assert.That(providerRequestModel.Ukprn, Is.EqualTo(request.Ukprn));
             Assert.That(providerRequestModel.Operations.Count(), Is.EqualTo(request.PermissionRequests.Count));
+            Assert.That(providerRequestModel.RequestType, Is.EqualTo(request.RequestType));
         });
     }
 }
