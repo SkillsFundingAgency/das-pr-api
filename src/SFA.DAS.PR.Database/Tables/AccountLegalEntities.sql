@@ -11,16 +11,11 @@
     CONSTRAINT [FK_AccountLegalEntities_Accounts_AccountId] FOREIGN KEY ([AccountId]) REFERENCES [Accounts] ([Id]),
     INDEX [IX_AccountLegalEntities_AccountId] NONCLUSTERED ([AccountId] ASC)
 )
-
 GO
 
-CREATE NONCLUSTERED INDEX [idx_AccountLegalEntities_Deleted]
-ON [dbo].[AccountLegalEntities] ([Deleted]) 
-INCLUDE ([Name], [PublicHashedId]) WITH (ONLINE = ON)
-
+CREATE NONCLUSTERED INDEX [Idx_AccountLegalEntities_Hashedid] ON [dbo].[Accounts] ([HashedId])
 GO
 
-CREATE NONCLUSTERED INDEX [Idx_AccountLegalEntities_Hashedid]
-ON [dbo].[Accounts] ([HashedId])
-
+CREATE INDEX [IX_AccountLegalEntities] ON [dbo].[AccountLegalEntities] ([Id],[Deleted]) 
+  INCLUDE ([AccountId], [PublicHashedId], [Name], [Created], [Updated]);
 GO

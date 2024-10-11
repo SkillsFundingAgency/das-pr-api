@@ -8,11 +8,13 @@ namespace SFA.DAS.PR.Application.Requests.Queries.LookupRequests;
 public class LookupRequestsQuery : IRequest<ValidatedResponse<RequestModel?>>, IUkprnEntity
 {
     public long? Ukprn { get; set; }
-    public string Paye { get; set; }
+    public string? Paye { get; set; }
+    public string? Email { get; set; }
 
-    public LookupRequestsQuery(long? ukprn, string paye)
+    public LookupRequestsQuery(long? ukprn, string? paye, string? email)
     {
         Ukprn = ukprn;
         Paye = paye;
+        Email = email;
     }
 }
