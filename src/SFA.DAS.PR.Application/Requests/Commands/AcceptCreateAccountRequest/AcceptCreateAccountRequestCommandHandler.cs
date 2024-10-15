@@ -58,7 +58,7 @@ public sealed class AcceptCreateAccountRequestCommandHandler(
             command,
             request,
             accountProviderLegalEntity.Permissions.Select(a => a.Operation),
-            RequestAction.AccountCreated,
+            PermissionAction.AccountCreated,
             cancellationToken
         );
 
@@ -203,7 +203,7 @@ public sealed class AcceptCreateAccountRequestCommandHandler(
         return providerResponse;
     }
 
-    private async Task CreatePermissionsAudit(AcceptCreateAccountRequestCommand command, Request request, IEnumerable<Operation> operations, RequestAction action, CancellationToken cancellationToken)
+    private async Task CreatePermissionsAudit(AcceptCreateAccountRequestCommand command, Request request, IEnumerable<Operation> operations, PermissionAction action, CancellationToken cancellationToken)
     {
         PermissionsAudit permissionsAudit = new()
         {

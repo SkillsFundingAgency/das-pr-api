@@ -85,7 +85,7 @@ public sealed class AcceptAddAccountRequestCommandHandler(
         PermissionsAudit permissionsAudit = new()
         {
             Eventtime = DateTime.UtcNow,
-            Action = nameof(RequestAction.AccountAdded),
+            Action = nameof(PermissionAction.AccountAdded),
             Ukprn = request.Ukprn,
             AccountLegalEntityId = request.AccountLegalEntityId!.Value,
             EmployerUserRef = Guid.Parse(command.ActionedBy!),

@@ -95,7 +95,7 @@ public sealed class AcceptAddAccountRequestCommandHandlerTests
 
         _permissionsAuditWriteRepositoryMock.Verify(a => a.RecordPermissionsAudit(
             It.Is<PermissionsAudit>(p =>
-                p.Action == nameof(RequestAction.AccountAdded) &&
+                p.Action == nameof(PermissionAction.AccountAdded) &&
                 p.Ukprn == request.Ukprn &&
                 p.AccountLegalEntityId == request.AccountLegalEntityId!.Value &&
                 p.EmployerUserRef == actionedByGuid),
