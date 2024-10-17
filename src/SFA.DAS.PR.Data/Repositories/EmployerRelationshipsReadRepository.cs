@@ -19,6 +19,9 @@ public class EmployerRelationshipsReadRepository(IProviderRelationshipsDataConte
             .Include(acc => acc.AccountLegalEntities)
                 .ThenInclude(ale => ale.Requests)
                     .ThenInclude(r => r.PermissionRequests)
+            .Include(acc => acc.AccountLegalEntities)
+                .ThenInclude(ale => ale.Requests)
+                    .ThenInclude(r => r.Provider)
         .FirstOrDefaultAsync(a => a.Id == accountId, cancellationToken);
     }
 }

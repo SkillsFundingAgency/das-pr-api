@@ -246,7 +246,7 @@ namespace SFA.DAS.PR.Application.UnitTests.Requests.Commands.AcceptCreateAccount
 
             _permissionsAuditWriteRepositoryMock.Verify(a => a.RecordPermissionsAudit(
                     It.Is<PermissionsAudit>(p =>
-                        p.Action == nameof(RequestAction.AccountCreated) &&
+                        p.Action == nameof(PermissionAction.AccountCreated) &&
                         p.Ukprn == request.Ukprn &&
                         p.AccountLegalEntityId == command.AccountLegalEntity.Id &&
                         p.EmployerUserRef == actionedBy
