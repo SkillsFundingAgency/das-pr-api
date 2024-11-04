@@ -33,7 +33,7 @@ public class LookupRequestsQueryHandlerTests
 
             RequestReadRepository requestReadRepository = new(context);
             LookupRequestsQueryHandler sut = new(requestReadRepository);
-            requestModel = await sut.Handle(new(request.Provider.Ukprn, request.EmployerPAYE!, request.EmployerContactEmail!), CancellationToken.None);
+            requestModel = await sut.Handle(new(request.Provider.Ukprn, request.EmployerPAYE!, request.EmployerContactEmail!, request.AccountLegalEntityId!), CancellationToken.None);
             persistedRequest = await context.Requests.FirstAsync(CancellationToken.None);
         }
 
@@ -74,6 +74,7 @@ public class LookupRequestsQueryHandlerTests
                 It.IsAny<long>(),
                 It.IsAny<string?>(),
                 It.IsAny<string?>(),
+                It.IsAny<long?>(),
                 It.IsAny<RequestStatus[]>(),
                 It.IsAny<CancellationToken>()
             )

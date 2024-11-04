@@ -87,7 +87,7 @@ public class RequestReadRepositoryTests
 
             RequestReadRepository sut = new(context);
 
-            result = await sut.GetRequest(request.Provider.Ukprn, request.EmployerPAYE!, request.EmployerContactEmail!, [RequestStatus.New], cancellationToken);
+            result = await sut.GetRequest(request.Provider.Ukprn, request.EmployerPAYE!, request.EmployerContactEmail!, request.AccountLegalEntityId!, [RequestStatus.New], cancellationToken);
         }
 
         Assert.That(result, Is.Not.Null, "result should not be null");
@@ -109,7 +109,7 @@ public class RequestReadRepositoryTests
 
             RequestReadRepository sut = new(context);
 
-            result = await sut.GetRequest(request.Provider.Ukprn, request.EmployerPAYE!, null, [], cancellationToken);
+            result = await sut.GetRequest(request.Provider.Ukprn, request.EmployerPAYE!, null, null, [], cancellationToken);
         }
 
         Assert.That(result, Is.Not.Null, "result should not be null");
@@ -126,7 +126,7 @@ public class RequestReadRepositoryTests
         {
             RequestReadRepository sut = new(context);
 
-            result = await sut.GetRequest(10000001, "Paye", null, [], cancellationToken);
+            result = await sut.GetRequest(10000001, "Paye", null, null, [], cancellationToken);
         }
 
         Assert.That(result, Is.Null, "result should be null");
