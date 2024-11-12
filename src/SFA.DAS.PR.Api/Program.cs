@@ -56,8 +56,8 @@ builder.Services
 
 builder.Services.AddSwaggerGen(options =>
 {
-    options.SwaggerDoc(Policies.Management, new OpenApiInfo { Title = "Management", Version = "v1" });
-    options.SwaggerDoc(Policies.Integration, new OpenApiInfo { Title = "Integration", Version = "v1" });
+    options.SwaggerDoc(Policies.Management, new OpenApiInfo { Title = "Provider Relationships Management", Version = "v1" });
+    options.SwaggerDoc(Policies.Integration, new OpenApiInfo { Title = "Provider Relationships Integration", Version = "v1" });
 });
 
 builder.Services.AddPrDataContext(_configuration["ApplicationSettings:DbConnectionString"]!, _configuration["EnvironmentName"]!);
