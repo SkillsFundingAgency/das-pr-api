@@ -2,6 +2,7 @@
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Moq;
+using SFA.DAS.PR.Application.Common.Commands;
 using SFA.DAS.PR.Application.Mediatr.Responses;
 using SFA.DAS.PR.Application.Permissions.Commands.PostPermissions;
 using SFA.DAS.PR.Data;
@@ -43,10 +44,10 @@ public class PostPermissionsCommandHandlerIntegrationTests
             a.GetAccountLegalEntity(command.AccountLegalEntityId, cancellationToken)
         ).ReturnsAsync(accountLegalEntity);
 
-        ValidatedResponse<PostPermissionsCommandResult> result = await sut.Handle(command, cancellationToken);
+        ValidatedResponse<SuccessCommandResult> result = await sut.Handle(command, cancellationToken);
 
-        result.Result.Should().NotBeNull();
-        result.Result.Should().BeOfType<PostPermissionsCommandResult>();
+        result.Should().NotBeNull();
+        result.Should().BeOfType<ValidatedResponse<SuccessCommandResult>>();
     }
 
     [Test]
@@ -73,7 +74,7 @@ public class PostPermissionsCommandHandlerIntegrationTests
             a.GetAccountLegalEntity(command.AccountLegalEntityId, cancellationToken)
         ).ReturnsAsync(accountLegalEntity);
 
-        ValidatedResponse<PostPermissionsCommandResult> result = null!;
+        ValidatedResponse<SuccessCommandResult> result = null!;
 
         int permissionCount = 0;
 
@@ -98,8 +99,8 @@ public class PostPermissionsCommandHandlerIntegrationTests
             audit = await context.PermissionsAudit.FirstOrDefaultAsync(a => a.AccountLegalEntityId == command.AccountLegalEntityId && a.Ukprn == command.Ukprn!.Value);
         }
 
-        result.Result.Should().NotBeNull();
-        result.Result.Should().BeOfType<PostPermissionsCommandResult>();
+        result.Should().NotBeNull();
+        result.Should().BeOfType<ValidatedResponse<SuccessCommandResult>>();
 
         Assert.Multiple(() =>
         {
@@ -135,7 +136,7 @@ public class PostPermissionsCommandHandlerIntegrationTests
             a.GetAccountLegalEntity(command.AccountLegalEntityId, cancellationToken)
         ).ReturnsAsync(accountLegalEntity);
 
-        ValidatedResponse<PostPermissionsCommandResult> result = null!;
+        ValidatedResponse<SuccessCommandResult> result = null!;
 
         int permissionCount = 0;
 
@@ -160,8 +161,8 @@ public class PostPermissionsCommandHandlerIntegrationTests
             audit = await context.PermissionsAudit.FirstOrDefaultAsync(a => a.AccountLegalEntityId == command.AccountLegalEntityId && a.Ukprn == command.Ukprn!.Value);
         }
 
-        result.Result.Should().NotBeNull();
-        result.Result.Should().BeOfType<PostPermissionsCommandResult>();
+        result.Should().NotBeNull();
+        result.Should().BeOfType<ValidatedResponse<SuccessCommandResult>>();
 
         Assert.Multiple(() =>
         {
@@ -194,7 +195,7 @@ public class PostPermissionsCommandHandlerIntegrationTests
             a.GetAccountLegalEntity(command.AccountLegalEntityId, cancellationToken)
         ).ReturnsAsync(accountLegalEntity);
 
-        ValidatedResponse<PostPermissionsCommandResult> result = null!;
+        ValidatedResponse<SuccessCommandResult> result = null!;
 
         int permissionCount = 0;
 
@@ -221,8 +222,8 @@ public class PostPermissionsCommandHandlerIntegrationTests
             audit = await context.PermissionsAudit.FirstOrDefaultAsync(a => a.AccountLegalEntityId == command.AccountLegalEntityId && a.Ukprn == command.Ukprn!.Value);
         }
 
-        result.Result.Should().NotBeNull();
-        result.Result.Should().BeOfType<PostPermissionsCommandResult>();
+        result.Should().NotBeNull();
+        result.Should().BeOfType<ValidatedResponse<SuccessCommandResult>>();
 
         Assert.Multiple(() =>
         {
