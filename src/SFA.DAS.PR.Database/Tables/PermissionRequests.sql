@@ -3,7 +3,8 @@
     [Id] UNIQUEIDENTIFIER DEFAULT NEWID(),
     [RequestId] UNIQUEIDENTIFIER NOT NULL,
     [Operation] SMALLINT NOT NULL,
-    CONSTRAINT [PK_PermissionRequests] PRIMARY KEY ( [Id] )
+    CONSTRAINT [PK_PermissionRequests] PRIMARY KEY ( [Id] ),
+    CONSTRAINT [FK_PermissionRequests_RequestId] FOREIGN KEY (RequestId) REFERENCES [Requests] ([Id])
 );
 GO
 
