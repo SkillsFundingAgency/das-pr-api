@@ -6,7 +6,7 @@ namespace SFA.DAS.PR.Application.Requests.Queries.LookupRequests;
 
 public class LookupRequestsQueryValidator : AbstractValidator<LookupRequestsQuery>
 {
-    public static readonly string PayeOrEmailValidationMessage = "Paye or Email is required.";
+    public static readonly string PayeOrEmailOrAccountLegalEntityIdValidationMessage = "Paye or Email or AccountLegalEntityId is required.";
     public LookupRequestsQueryValidator(IProviderReadRepository providerReadRepository)
     {
         RuleFor(x => x.Ukprn)
@@ -14,15 +14,15 @@ public class LookupRequestsQueryValidator : AbstractValidator<LookupRequestsQuer
             .WithMessage(UkprnValidator.UkprnValidationMessage);
 
         RuleFor(x => x.Paye)
-            .Must(HasPayeOrEmail)
-            .WithMessage(PayeOrEmailValidationMessage);
+            .Must(HasPayeOrEmailOrAccountLegalEntityId)
+            .WithMessage(PayeOrEmailOrAccountLegalEntityIdValidationMessage);
 
         RuleFor(x => x.Ukprn)
             .IsValidUkprn(providerReadRepository);
     }
 
-    private static bool HasPayeOrEmail(LookupRequestsQuery model, string? paye)
+    private static bool HasPayeOrEmailOrAccountLegalEntityId(LookupRequestsQuery model, string? paye)
     {
-        return !(string.IsNullOrEmpty(paye) && string.IsNullOrEmpty(model.Email));
+        return !(string.IsNullOrEmpty(paye) && string.IsNullOrEmpty(model.Email) && model.AccountLegalEntityId == null);
     }
 }

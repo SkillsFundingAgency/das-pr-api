@@ -25,7 +25,7 @@ public class RequestReadRepository(IProviderRelationshipsDataContext providerRel
         return await requestQuery.OrderByDescending(a => a.RequestedDate).FirstOrDefaultAsync(cancellationToken);
     }
 
-    public async Task<Request?> GetRequest(long Ukprn, string? paye, string? email, RequestStatus[] requestStatuses, CancellationToken cancellationToken)
+    public async Task<Request?> GetRequest(long Ukprn, string? paye, string? email, long? accountLegalEntityId, RequestStatus[] requestStatuses, CancellationToken cancellationToken)
     {
         return await providerRelationshipsDataContext.Requests
             .Include(a => a.PermissionRequests)
@@ -33,9 +33,13 @@ public class RequestReadRepository(IProviderRelationshipsDataContext providerRel
         .AsNoTracking()
         .FirstOrDefaultAsync(a =>
             a.Ukprn == Ukprn &&
-            ((a.EmployerPAYE == paye && a.EmployerContactEmail == email)
-            || (a.EmployerPAYE == paye && email == null)
-            || (paye == null && a.EmployerContactEmail == email)
+            ((a.EmployerPAYE == paye && email == a.EmployerContactEmail && accountLegalEntityId == a.AccountLegalEntityId)
+            || (paye == a.EmployerPAYE && email == null && accountLegalEntityId == null)
+            || (paye == null && email == a.EmployerContactEmail && accountLegalEntityId == null)
+            || (paye == null && email == null && accountLegalEntityId == a.AccountLegalEntityId)
+            || (paye == null && email == a.EmployerContactEmail && accountLegalEntityId == a.AccountLegalEntityId)
+            || (paye == a.EmployerPAYE && email == null && accountLegalEntityId == a.AccountLegalEntityId)
+            || (paye == a.EmployerPAYE && email == a.EmployerContactEmail && accountLegalEntityId == null)
             )
             &&
             (requestStatuses.Count() == 0 || requestStatuses.Contains(a.Status)),
