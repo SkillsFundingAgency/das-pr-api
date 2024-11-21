@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using SFA.DAS.PR.Api.Common;
 using SFA.DAS.PR.Api.Controllers;
+using SFA.DAS.PR.Application.Common.Commands;
 using SFA.DAS.PR.Application.Mediatr.Responses;
 using SFA.DAS.PR.Application.Permissions.Commands.PostPermissions;
 using SFA.DAS.Testing.AutoFixture;
@@ -27,7 +28,7 @@ public class PermissionsControllerPostTests
 
         mediatorMock.Verify(m =>
             m.Send(It.Is<PostPermissionsCommand>(q =>
-                q.AccountLegalEntityId == command.AccountLegalEntityId && 
+                q.AccountLegalEntityId == command.AccountLegalEntityId &&
                 q.Ukprn == command.Ukprn &&
                 q.Operations == command.Operations &&
                 q.UserRef == command.UserRef
@@ -37,15 +38,14 @@ public class PermissionsControllerPostTests
     }
 
     [Test, MoqAutoData]
-    public async Task PostPermission_HandlerReturnsData_ReturnsOkResponse(
+    public async Task PostPermission_HandlerReturnsData_ReturnsNoContentResponse(
         [Frozen] Mock<IMediator> mediatorMock,
         [Greedy] PermissionsController sut,
         PostPermissionsCommand command,
-        PostPermissionsCommandResult postPermissionsCommandResult,
         CancellationToken cancellationToken
     )
     {
-        var response = new ValidatedResponse<PostPermissionsCommandResult>(postPermissionsCommandResult);
+        var response = new ValidatedResponse<SuccessCommandResult>();
 
         mediatorMock.Setup(m => m.Send(
             It.Is<PostPermissionsCommand>(q =>
@@ -58,8 +58,7 @@ public class PermissionsControllerPostTests
         ).ReturnsAsync(response);
 
         var result = await sut.PostPermission(command, cancellationToken);
-        result.As<OkObjectResult>().Should().NotBeNull();
-        result.As<OkObjectResult>().Value.Should().Be(postPermissionsCommandResult);
+        result.As<NoContentResult>().Should().NotBeNull();
     }
 
     [Test, MoqAutoData]
@@ -71,7 +70,7 @@ public class PermissionsControllerPostTests
         CancellationToken cancellationToken
     )
     {
-        var response = new ValidatedResponse<PostPermissionsCommandResult>(validationErrors);
+        var response = new ValidatedResponse<SuccessCommandResult>(validationErrors);
 
         mediatorMock.Setup(m => m.Send(
             It.Is<PostPermissionsCommand>(q =>
