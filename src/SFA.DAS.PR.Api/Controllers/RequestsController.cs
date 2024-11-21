@@ -69,9 +69,9 @@ public class RequestsController(IMediator _mediator) : ActionResponseControllerB
     [ProducesResponseType(typeof(RequestModel), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(List<ValidationError>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> LookupRequests([FromQuery] long ukprn, [FromQuery] string? paye, [FromQuery] string? email, CancellationToken cancellationToken)
+    public async Task<IActionResult> LookupRequests([FromQuery] long ukprn, [FromQuery] string? paye, [FromQuery] string? email, [FromQuery] long? accountLegalEntityId, CancellationToken cancellationToken)
     {
-        LookupRequestsQuery query = new(ukprn, paye, email);
+        LookupRequestsQuery query = new(ukprn, paye, email, accountLegalEntityId);
         var result = await _mediator.Send(query, cancellationToken);
         return GetResponse(result);
     }
