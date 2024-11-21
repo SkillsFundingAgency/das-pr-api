@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using MediatR;
+using SFA.DAS.PR.Application.Common.Commands;
 using SFA.DAS.PR.Application.Mediatr.Responses;
 using SFA.DAS.PR.Data;
 using SFA.DAS.PR.Domain.Entities;
@@ -18,9 +19,9 @@ public class PostPermissionsCommandHandler(
     IPermissionsAuditWriteRepository _permissionsAuditWriteRepository,
     IProviderRelationshipsDataContext _providerRelationshipsDataContext,
     IMessageSession _messageSession)
-    : IRequestHandler<PostPermissionsCommand, ValidatedResponse<PostPermissionsCommandResult>>
+    : IRequestHandler<PostPermissionsCommand, ValidatedResponse<SuccessCommandResult>>
 {
-    public async Task<ValidatedResponse<PostPermissionsCommandResult>> Handle(PostPermissionsCommand command, CancellationToken cancellationToken)
+    public async Task<ValidatedResponse<SuccessCommandResult>> Handle(PostPermissionsCommand command, CancellationToken cancellationToken)
     {
         AccountProviderLegalEntity? accountProviderLegalEntity = await _accountProviderLegalEntitiesReadRepository.GetAccountProviderLegalEntity(
             command.Ukprn,
@@ -39,7 +40,7 @@ public class PostPermissionsCommandHandler(
         return await CreateAccountProviderAndAddPermissions(command, accountLegalEntity!.AccountId, cancellationToken);
     }
 
-    private async Task<ValidatedResponse<PostPermissionsCommandResult>> CreateAccountProviderAndAddPermissions(PostPermissionsCommand command, long accountId, CancellationToken cancellationToken)
+    private async Task<ValidatedResponse<SuccessCommandResult>> CreateAccountProviderAndAddPermissions(PostPermissionsCommand command, long accountId, CancellationToken cancellationToken)
     {
         var hasAddedAccountProvider = false;
         AccountProvider? accountProvider = await _accountProviderWriteRepository.GetAccountProvider(command.Ukprn, accountId, cancellationToken);
@@ -71,7 +72,7 @@ public class PostPermissionsCommandHandler(
 
         await PublishEvent(accountProviderLegalEntity, command, Enumerable.Empty<Operation>(), cancellationToken);
 
-        return new ValidatedResponse<PostPermissionsCommandResult>(new PostPermissionsCommandResult());
+        return new ValidatedResponse<SuccessCommandResult>();
     }
 
     private async Task<AccountProviderLegalEntity> CreateAccountProviderLegalEntity(AccountProvider accountProvider, long accountLegalEntityId, List<Operation> operations, CancellationToken cancellationToken)
@@ -93,14 +94,14 @@ public class PostPermissionsCommandHandler(
 
         return accountProviderLegalEntity;
     }
-    private async Task<ValidatedResponse<PostPermissionsCommandResult>> UpdatePermissions(AccountProviderLegalEntity accountProviderLegalEntity, PostPermissionsCommand command, CancellationToken cancellationToken)
+    private async Task<ValidatedResponse<SuccessCommandResult>> UpdatePermissions(AccountProviderLegalEntity accountProviderLegalEntity, PostPermissionsCommand command, CancellationToken cancellationToken)
     {
         Operation[] existingOperations = accountProviderLegalEntity.Permissions.Select(po => po.Operation).OrderBy(po => po).ToArray();
         Operation[] commandOperations = command.Operations.OrderBy(co => co).ToArray();
 
         if (existingOperations.SequenceEqual(commandOperations))
         {
-            return new ValidatedResponse<PostPermissionsCommandResult>(new PostPermissionsCommandResult());
+            return new ValidatedResponse<SuccessCommandResult>();
         }
         RemovePermissions(accountProviderLegalEntity.Permissions);
         AddPermissions(accountProviderLegalEntity.Id, command.Operations);
@@ -110,7 +111,7 @@ public class PostPermissionsCommandHandler(
 
         await PublishEvent(accountProviderLegalEntity, command, existingOperations, cancellationToken);
 
-        return new ValidatedResponse<PostPermissionsCommandResult>(new PostPermissionsCommandResult());
+        return new ValidatedResponse<SuccessCommandResult>();
     }
 
     private async Task PublishEvent(AccountProviderLegalEntity accountProviderLegalEntity, PostPermissionsCommand command, IEnumerable<Operation> existingPermissions, CancellationToken cancellationToken)
