@@ -1,5 +1,4 @@
-﻿using AutoFixture.NUnit3;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using SFA.DAS.PR.Data.Repositories;
 using SFA.DAS.PR.Data.UnitTests.InMemoryDatabases;
 using SFA.DAS.PR.Data.UnitTests.Setup;
@@ -50,29 +49,5 @@ public class EmployerRelationshipsReadRepositoryTests
                            .ToList(),
                         Has.Count.EqualTo(1), "Requests count should be 1");
         });
-    }
-
-    [Test]
-    [InlineAutoData(123456, 123456, true)]
-    [InlineAutoData(654321, 1234567, false)]
-    public async Task AccountIdExists_Returns_Expected(long accountIdToCheck, long accountIdExisting, bool expected)
-    {
-        Account account = AccountTestData.CreateAccount(accountIdExisting);
-
-        bool result;
-
-        await using (var context = InMemoryProviderRelationshipsDataContext.CreateInMemoryContext(
-                   $"{nameof(InMemoryProviderRelationshipsDataContext)}_{nameof(AccountIdExists_Returns_Expected)}")
-              )
-        {
-            await context.AddAsync(account);
-            await context.SaveChangesAsync(cancellationToken);
-
-            EmployerRelationshipsReadRepository sut = new(context);
-
-            result = await sut.AccountIdExists(accountIdToCheck, cancellationToken);
-        }
-
-        Assert.That(result, Is.EqualTo(expected));
     }
 }

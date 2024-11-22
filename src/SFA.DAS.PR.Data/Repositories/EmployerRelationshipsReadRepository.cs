@@ -24,11 +24,4 @@ public class EmployerRelationshipsReadRepository(IProviderRelationshipsDataConte
                     .ThenInclude(r => r.Provider)
         .FirstOrDefaultAsync(a => a.Id == accountId, cancellationToken);
     }
-
-    public async Task<bool> AccountIdExists(long accountId, CancellationToken cancellationToken)
-    {
-        return await providerRelationshipsDataContext.Accounts
-            .AsNoTracking()
-            .AnyAsync(a => a.Id == accountId, cancellationToken);
-    }
 }

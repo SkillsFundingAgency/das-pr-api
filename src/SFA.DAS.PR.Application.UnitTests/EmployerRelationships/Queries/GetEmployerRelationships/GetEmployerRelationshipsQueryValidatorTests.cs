@@ -10,13 +10,15 @@ public class GetEmployerRelationshipsQueryValidatorTests
     [Test]
     [MoqAutoData]
     public async Task ValidateAccountHashedId_Valid(
-        Mock<IEmployerRelationshipsReadRepository> employerRelationshipsReadRepository, long accountId)
+        Mock<IEmployerRelationshipsReadRepository> employerRelationshipsReadRepository,
+        Mock<IAccountReadRepository> accountReadRepository,
+        long accountId)
     {
-        employerRelationshipsReadRepository
+        accountReadRepository
             .Setup(a =>
                 a.AccountIdExists(It.IsAny<long>(), It.IsAny<CancellationToken>())).ReturnsAsync(true);
 
-        var sut = new GetEmployerRelationshipsQueryValidator(employerRelationshipsReadRepository.Object);
+        var sut = new GetEmployerRelationshipsQueryValidator(employerRelationshipsReadRepository.Object, accountReadRepository.Object);
         var result = await sut.TestValidateAsync(new GetEmployerRelationshipsQuery(accountId));
         result.ShouldNotHaveValidationErrorFor(query => query.AccountId);
     }
@@ -24,15 +26,16 @@ public class GetEmployerRelationshipsQueryValidatorTests
     [Test]
     [MoqAutoData]
     public async Task ValidateAccountHashedId_Empty_Invalid(
-        Mock<IEmployerRelationshipsReadRepository> employerRelationshipsReadRepository)
+        Mock<IEmployerRelationshipsReadRepository> employerRelationshipsReadRepository,
+        Mock<IAccountReadRepository> accountReadRepository)
     {
         long accountId = 0;
 
-        employerRelationshipsReadRepository
+        accountReadRepository
             .Setup(a =>
                 a.AccountIdExists(It.IsAny<long>(), It.IsAny<CancellationToken>())).ReturnsAsync(true);
 
-        var sut = new GetEmployerRelationshipsQueryValidator(employerRelationshipsReadRepository.Object);
+        var sut = new GetEmployerRelationshipsQueryValidator(employerRelationshipsReadRepository.Object, accountReadRepository.Object);
         var result = await sut.TestValidateAsync(new GetEmployerRelationshipsQuery(accountId));
         result.ShouldHaveValidationErrorFor(q => q.AccountId)
                     .WithErrorMessage(GetEmployerRelationshipsQueryValidator.AccountHashedIdValidationMessage);
@@ -41,13 +44,15 @@ public class GetEmployerRelationshipsQueryValidatorTests
     [Test]
     [MoqAutoData]
     public async Task ValidateAccountId_NotFound_Invalid(
-        Mock<IEmployerRelationshipsReadRepository> employerRelationshipsReadRepository, long accountId)
+        Mock<IEmployerRelationshipsReadRepository> employerRelationshipsReadRepository,
+        Mock<IAccountReadRepository> accountReadRepository,
+        long accountId)
     {
-        employerRelationshipsReadRepository
+        accountReadRepository
             .Setup(a =>
                 a.AccountIdExists(It.IsAny<long>(), It.IsAny<CancellationToken>())).ReturnsAsync(false);
 
-        var sut = new GetEmployerRelationshipsQueryValidator(employerRelationshipsReadRepository.Object);
+        var sut = new GetEmployerRelationshipsQueryValidator(employerRelationshipsReadRepository.Object, accountReadRepository.Object);
         var result = await sut.TestValidateAsync(new GetEmployerRelationshipsQuery(accountId));
         result.ShouldHaveValidationErrorFor(q => q.AccountId)
             .WithErrorMessage(GetEmployerRelationshipsQueryValidator.AccountIdDoesNotExistValidationMessage);
