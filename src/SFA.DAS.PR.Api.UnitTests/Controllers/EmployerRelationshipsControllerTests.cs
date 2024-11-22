@@ -77,8 +77,8 @@ public class EmployerRelationshipsControllerTests
         [Frozen] Mock<IMediator> mediatorMock,
         [Greedy] EmployerRelationshipsController sut,
         GetEmployerRelationshipsQuery query,
-        CancellationToken cancellationToken,
-        List<ValidationFailure> errors)
+        List<ValidationFailure> errors,
+        CancellationToken cancellationToken)
     {
         mediatorMock.Setup(m => m.Send(It.IsAny<GetEmployerRelationshipsQuery>(), cancellationToken)).ReturnsAsync(new ValidatedResponse<GetEmployerRelationshipsQueryResult>(errors));
 
