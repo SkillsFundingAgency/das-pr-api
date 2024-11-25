@@ -20,7 +20,7 @@ public class EmployerRelationshipsReadRepositoryTests
 
         Account? result = new();
 
-        using (var context = InMemoryProviderRelationshipsDataContext.CreateInMemoryContext(
+        await using (var context = InMemoryProviderRelationshipsDataContext.CreateInMemoryContext(
             $"{nameof(InMemoryProviderRelationshipsDataContext)}_{nameof(GetRelationships_Returns_Permissions)}")
         )
         {

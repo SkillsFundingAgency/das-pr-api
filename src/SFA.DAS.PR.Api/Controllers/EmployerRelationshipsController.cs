@@ -17,6 +17,7 @@ public class EmployerRelationshipsController(IMediator _mediator) : ActionRespon
     [Authorize(Policy = Policies.Management)]
     [HttpGet("employers/{accountId:long}/relationships")]
     [ProducesResponseType(typeof(GetEmployerRelationshipsQueryResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(List<ValidationError>), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> GetEmployerRelationships([FromRoute] long accountId, CancellationToken cancellationToken)
     {
         GetEmployerRelationshipsQuery query = new(accountId);

@@ -1,9 +1,11 @@
 ﻿using AutoFixture;
 using AutoFixture.NUnit3;
 using FluentAssertions;
+using FluentValidation.Results;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using SFA.DAS.PR.Api.Common;
 using SFA.DAS.PR.Api.Controllers;
 using SFA.DAS.PR.Application.Mediatr.Responses;
 using SFA.DAS.PR.Application.Permissions.Queries.GetEmployerRelationships;
@@ -67,5 +69,21 @@ public class EmployerRelationshipsControllerTests
 
         result.As<OkObjectResult>().Should().NotBeNull();
         result.As<OkObjectResult>().Value.Should().Be(response.Result);
+    }
+
+    [Test]
+    [MoqAutoData]
+    public async Task GetAllPermissionsForAccount_ReturnsBadRequestResponse(
+        [Frozen] Mock<IMediator> mediatorMock,
+        [Greedy] EmployerRelationshipsController sut,
+        GetEmployerRelationshipsQuery query,
+        List<ValidationFailure> errors,
+        CancellationToken cancellationToken)
+    {
+        mediatorMock.Setup(m => m.Send(It.IsAny<GetEmployerRelationshipsQuery>(), cancellationToken)).ReturnsAsync(new ValidatedResponse<GetEmployerRelationshipsQueryResult>(errors));
+
+        var result = await sut.GetEmployerRelationships(query.AccountId, cancellationToken);
+
+        result.As<BadRequestObjectResult>().Value.As<List<ValidationError>>().Count.Should().Be(errors.Count);
     }
 }

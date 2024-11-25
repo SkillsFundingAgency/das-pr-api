@@ -10,4 +10,11 @@ public class AccountReadRepository(IProviderRelationshipsDataContext _providerRe
     {
         return await _providerRelationshipsDataContext.Accounts.FirstOrDefaultAsync(a => a.Id == id, cancellationToken);
     }
+
+    public async Task<bool> AccountIdExists(long accountId, CancellationToken cancellationToken)
+    {
+        return await _providerRelationshipsDataContext.Accounts
+            .AsNoTracking()
+            .AnyAsync(a => a.Id == accountId, cancellationToken);
+    }
 }
