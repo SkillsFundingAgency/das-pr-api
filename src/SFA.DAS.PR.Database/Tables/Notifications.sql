@@ -13,7 +13,10 @@
     [CreatedBy] VARCHAR(255) NOT NULL,
     [CreatedDate] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
     [SentTime] DATETIME2 NULL,
-    CONSTRAINT [PK_Notifications] PRIMARY KEY ([Id])
+    CONSTRAINT [PK_Notifications] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_Notifications_Ukprn] FOREIGN KEY (Ukprn) REFERENCES [Providers] ([Ukprn]),
+    CONSTRAINT [FK_Notifications_AccountLegalEntityId] FOREIGN KEY (AccountLegalEntityId) REFERENCES [AccountLegalEntities] ([Id])
+
 );
 GO
 

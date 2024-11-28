@@ -15,7 +15,10 @@
     [Status] VARCHAR(10) NOT NULL DEFAULT 'New',
     [ActionedBy] varchar(255) null,
     [UpdatedDate] DATETIME2 NULL,
-    CONSTRAINT [PK_Requests] PRIMARY KEY ([Id])
+    CONSTRAINT [PK_Requests] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_Requests_Ukprn] FOREIGN KEY (Ukprn) REFERENCES [Providers] ([Ukprn]),
+    CONSTRAINT [FK_Requests_AccountLegalEntityId] FOREIGN KEY (AccountLegalEntityId) REFERENCES [AccountLegalEntities] ([Id])
+
 );
 GO
 

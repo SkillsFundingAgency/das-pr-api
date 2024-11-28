@@ -6,7 +6,9 @@ CREATE TABLE [dbo].[PermissionsAudit]
     [Ukprn] BIGINT NOT NULL, 
     [AccountLegalEntityId] BIGINT NOT NULL, 
     [EmployerUserRef] UNIQUEIDENTIFIER NULL,
-    [Operations] VARCHAR(MAX) NOT NULL
+    [Operations] VARCHAR(MAX) NOT NULL,
+    CONSTRAINT [FK_PermissionsAudit_Ukprn] FOREIGN KEY (Ukprn) REFERENCES [Providers] ([Ukprn]),
+    CONSTRAINT [FK_PermissionsAudit_AccountLegalEntityId] FOREIGN KEY (AccountLegalEntityId) REFERENCES [AccountLegalEntities] ([Id])
 );
 GO
 
