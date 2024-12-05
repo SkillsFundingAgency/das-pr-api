@@ -20,7 +20,7 @@ public class CreateAddAccountRequestCommandHandler(
 
         await _providerRelationshipsDataContext.SaveChangesAsync(cancellationToken);
 
-        return new (new CreateAddAccountRequestCommandResult(request.Id));
+        return new(new CreateAddAccountRequestCommandResult(request.Id));
     }
 
     private static Request BuildRequest(CreateAddAccountRequestCommand command, AccountLegalEntity accountLegalEntity)
@@ -35,6 +35,7 @@ public class CreateAddAccountRequestCommandHandler(
             Status = RequestStatus.New,
             EmployerOrganisationName = accountLegalEntity.Name,
             EmployerContactEmail = command.EmployerContactEmail,
+            EmployerPAYE = command.Paye,
             PermissionRequests = command.Operations.Select(a => new PermissionRequest()
             {
                 Operation = (short)a
