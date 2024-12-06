@@ -12,9 +12,9 @@ public class CreateAddAccountRequestCommand : IRequest<ValidatedResponse<CreateA
     public required string RequestedBy { get; set; }
 
     public required long AccountLegalEntityId { get; set; }
+    public required string? Paye { get; set; }
 
     public string? EmployerContactEmail { get; set; }
-    public string? Paye { get; set; }
 
     public required List<Operation> Operations { get; set; } = [];
 }
