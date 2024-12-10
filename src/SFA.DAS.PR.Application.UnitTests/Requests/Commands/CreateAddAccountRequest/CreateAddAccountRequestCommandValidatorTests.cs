@@ -2,6 +2,7 @@
 using Moq;
 using SFA.DAS.PR.Application.Common.Validators;
 using SFA.DAS.PR.Application.Requests.Commands.CreateAddAccountRequest;
+using SFA.DAS.PR.Application.UnitTests.TestFixtures;
 using SFA.DAS.PR.Domain.Entities;
 using SFA.DAS.PR.Domain.Interfaces;
 using SFA.DAS.ProviderRelationships.Types.Models;
@@ -97,28 +98,8 @@ public class CreateAddAccountRequestCommandValidatorTests
             .WithErrorMessage(CreateAddAccountRequestCommandValidator.NoPayeMessage);
     }
 
-    [TestCase("1/1")]
-    [TestCase("11/1")]
-    [TestCase("11A/1")]
-    [TestCase("A11/1")]
-    [TestCase("1AA/1")]
-    [TestCase("11A/1")]
-    [TestCase("A1A1")]
-    [TestCase("1")]
-    [TestCase("12")]
-    [TestCase("123/")]
-    [TestCase("11A/1234567")]
-    [TestCase("1A1/1234567")]
-    [TestCase("A11/12345678")]
-    [TestCase("AAA")]
-    [TestCase("AAA/")]
-    [TestCase("AAA/1")]
-    [TestCase("AAA/12")]
-    [TestCase("A1A/1234567")]
-    [TestCase("A11/12345678")]
-    [TestCase("A11/123456789")]
-    [TestCase("A11/1234567890")]
-    public async Task CreateAddAccountRequestCommand_Invalid_Paye(string? paye)
+    [TestCaseSource(typeof(PayeTestFixtures), nameof(PayeTestFixtures.InvalidPayeCases))]
+    public async Task CreateAddAccountRequestCommand_Invalid_Paye(string paye)
     {
         var sut = new CreateAddAccountRequestCommandValidator(
             _requestReadRepositoryValidMock.Object,
