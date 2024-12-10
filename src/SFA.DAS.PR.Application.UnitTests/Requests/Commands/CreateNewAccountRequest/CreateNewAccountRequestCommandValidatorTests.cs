@@ -3,6 +3,7 @@ using Moq;
 using SFA.DAS.PR.Application.Common.Validators;
 using SFA.DAS.PR.Application.Requests.Commands.CreateAddAccountRequest;
 using SFA.DAS.PR.Application.Requests.Commands.CreateNewAccountRequest;
+using SFA.DAS.PR.Application.UnitTests.TestFixtures;
 using SFA.DAS.PR.Domain.Entities;
 using SFA.DAS.PR.Domain.Interfaces;
 using SFA.DAS.ProviderRelationships.Types.Models;
@@ -13,6 +14,8 @@ public class CreateNewAccountRequestCommandValidatorTests
 {
     private readonly Mock<IProviderReadRepository> _providersReadRepositoryValidMock = new Mock<IProviderReadRepository>();
     private readonly Mock<IRequestReadRepository> _requestReadRepositoryValidMock = new Mock<IRequestReadRepository>();
+
+    private const string Paye = "222/AAA";
 
     [SetUp]
     public void SetUp()
@@ -30,11 +33,12 @@ public class CreateNewAccountRequestCommandValidatorTests
         );
 
         var result = await sut.TestValidateAsync(
-            new CreateNewAccountRequestCommand { 
-                Ukprn = 10000003, 
-                EmployerPAYE = "EmployerPAYE", 
-                RequestedBy = Guid.NewGuid().ToString(), 
-                EmployerContactEmail = "test@email.com", 
+            new CreateNewAccountRequestCommand
+            {
+                Ukprn = 10000003,
+                EmployerPAYE = Paye,
+                RequestedBy = Guid.NewGuid().ToString(),
+                EmployerContactEmail = "test@email.com",
                 Operations = [Operation.CreateCohort],
                 EmployerOrganisationName = "EmployerOrganisationName",
                 EmployerContactFirstName = "EmployerContactFirstName",
@@ -42,7 +46,7 @@ public class CreateNewAccountRequestCommandValidatorTests
                 EmployerAORN = "EmployerAORN"
             }
         );
-        
+
         result.ShouldNotHaveAnyValidationErrors();
     }
 
@@ -55,17 +59,17 @@ public class CreateNewAccountRequestCommandValidatorTests
         );
 
         var result = await sut.TestValidateAsync(new CreateNewAccountRequestCommand
-            {
-                Ukprn = 1000003,
-                EmployerPAYE = "EmployerPAYE",
-                RequestedBy = Guid.NewGuid().ToString(),
-                EmployerContactEmail = "test@email.com",
-                Operations = [Operation.CreateCohort],
-                EmployerOrganisationName = "EmployerOrganisationName",
-                EmployerContactFirstName = "EmployerContactFirstName",
-                EmployerContactLastName = "EmployerContactLastName",
-                EmployerAORN = "EmployerAORN"
-            }
+        {
+            Ukprn = 1000003,
+            EmployerPAYE = Paye,
+            RequestedBy = Guid.NewGuid().ToString(),
+            EmployerContactEmail = "test@email.com",
+            Operations = [Operation.CreateCohort],
+            EmployerOrganisationName = "EmployerOrganisationName",
+            EmployerContactFirstName = "EmployerContactFirstName",
+            EmployerContactLastName = "EmployerContactLastName",
+            EmployerAORN = "EmployerAORN"
+        }
         );
 
         result.ShouldHaveValidationErrorFor(q => q.Ukprn)
@@ -81,20 +85,72 @@ public class CreateNewAccountRequestCommandValidatorTests
         );
 
         var result = await sut.TestValidateAsync(new CreateNewAccountRequestCommand
-            {
-                Ukprn = 10000003,
-                EmployerPAYE = "EmployerPAYE",
-                RequestedBy = Guid.NewGuid().ToString(),
-                EmployerContactEmail = "invalid_email",
-                Operations = [Operation.CreateCohort],
-                EmployerOrganisationName = "EmployerOrganisationName",
-                EmployerContactFirstName = "EmployerContactFirstName",
-                EmployerContactLastName = "EmployerContactLastName",
-                EmployerAORN = "EmployerAORN"
-            }
+        {
+            Ukprn = 10000003,
+            EmployerPAYE = Paye,
+            RequestedBy = Guid.NewGuid().ToString(),
+            EmployerContactEmail = "invalid_email",
+            Operations = [Operation.CreateCohort],
+            EmployerOrganisationName = "EmployerOrganisationName",
+            EmployerContactFirstName = "EmployerContactFirstName",
+            EmployerContactLastName = "EmployerContactLastName",
+            EmployerAORN = "EmployerAORN"
+        }
         );
 
         result.ShouldHaveValidationErrorFor(q => q.EmployerContactEmail)
             .WithErrorMessage(CreateAddAccountRequestCommandValidator.EmployerContactEmailValidationMessage);
+    }
+
+    [TestCase("")]
+    [TestCase(null)]
+    public async Task CreateAddAccountRequestCommand_No_Paye(string? paye)
+    {
+        var sut = new CreateNewAccountRequestCommandValidator(
+            _requestReadRepositoryValidMock.Object,
+            _providersReadRepositoryValidMock.Object
+        );
+        var result = await sut.TestValidateAsync(new CreateNewAccountRequestCommand
+        {
+            Ukprn = 10000003,
+            EmployerPAYE = paye,
+            RequestedBy = Guid.NewGuid().ToString(),
+            EmployerContactEmail = "test@test.com",
+            Operations = [Operation.CreateCohort],
+            EmployerOrganisationName = "EmployerOrganisationName",
+            EmployerContactFirstName = "EmployerContactFirstName",
+            EmployerContactLastName = "EmployerContactLastName",
+            EmployerAORN = "EmployerAORN"
+        }
+        );
+
+        result.ShouldHaveValidationErrorFor(q => q.EmployerPAYE)
+            .WithErrorMessage(CreateNewAccountRequestCommandValidator.NoPayeMessage);
+    }
+
+    [TestCaseSource(typeof(PayeTestFixtures), nameof(PayeTestFixtures.InvalidPayeCases))]
+    public async Task CreateAddAccountRequestCommand_Invalid_Paye(string paye)
+    {
+        var sut = new CreateNewAccountRequestCommandValidator(
+            _requestReadRepositoryValidMock.Object,
+            _providersReadRepositoryValidMock.Object
+        );
+
+        var result = await sut.TestValidateAsync(new CreateNewAccountRequestCommand
+        {
+            Ukprn = 10000003,
+            EmployerPAYE = paye,
+            RequestedBy = Guid.NewGuid().ToString(),
+            EmployerContactEmail = "test@test.com",
+            Operations = [Operation.CreateCohort],
+            EmployerOrganisationName = "EmployerOrganisationName",
+            EmployerContactFirstName = "EmployerContactFirstName",
+            EmployerContactLastName = "EmployerContactLastName",
+            EmployerAORN = "EmployerAORN"
+        }
+        );
+
+        result.ShouldHaveValidationErrorFor(q => q.EmployerPAYE)
+            .WithErrorMessage(CreateNewAccountRequestCommandValidator.InvalidPayeErrorMessage);
     }
 }

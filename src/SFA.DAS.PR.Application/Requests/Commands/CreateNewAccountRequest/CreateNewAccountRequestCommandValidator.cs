@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using SFA.DAS.PR.Application.Common.Validators;
+using SFA.DAS.PR.Application.Constants;
 using SFA.DAS.PR.Domain.Entities;
 using SFA.DAS.PR.Domain.Interfaces;
 
@@ -9,6 +10,8 @@ public class CreateNewAccountRequestCommandValidator : AbstractValidator<CreateN
 {
     public static readonly string UkprnValidationMessage = "A Ukprn must be provided.";
     public static readonly string EmployerContactEmailValidationMessage = "EmployerContactEmail must be in the correct email format.";
+    public static readonly string NoPayeMessage = "An EmployerPAYE must be provided.";
+    public static readonly string InvalidPayeErrorMessage = "An EmployerPAYE must be provided in the correct format.";
 
     public CreateNewAccountRequestCommandValidator(
         IRequestReadRepository requestReadRepository,
@@ -18,6 +21,13 @@ public class CreateNewAccountRequestCommandValidator : AbstractValidator<CreateN
         RuleFor(x => x.Ukprn)
             .NotEmpty()
             .WithMessage(UkprnValidationMessage);
+
+        RuleFor(s => s.EmployerPAYE)
+            .Cascade(CascadeMode.Stop)
+            .NotEmpty()
+            .WithMessage(NoPayeMessage)
+            .Matches(RegularExpressions.PayeRegex)
+            .WithMessage(InvalidPayeErrorMessage);
 
         RuleFor(x => x.Ukprn)
             .IsValidUkprn(providerReadRepository);
