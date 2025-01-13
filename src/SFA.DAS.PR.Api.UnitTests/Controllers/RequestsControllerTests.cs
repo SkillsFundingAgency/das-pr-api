@@ -26,6 +26,7 @@ namespace SFA.DAS.PR.Api.UnitTests.Controllers;
 public class RequestsControllerTests
 {
     private Fixture _fixture = null!;
+    private const string Paye = "AAA/222";
 
     [SetUp]
     public void Setup()
@@ -75,6 +76,7 @@ public class RequestsControllerTests
                 AccountLegalEntityId = 1,
                 Ukprn = 1,
                 Operations = [],
+                Paye = Paye,
                 RequestedBy = Guid.NewGuid().ToString()
             },
             cancellationToken

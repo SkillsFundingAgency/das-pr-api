@@ -2,6 +2,7 @@
 using Moq;
 using SFA.DAS.PR.Application.Common.Validators;
 using SFA.DAS.PR.Application.Requests.Commands.CreateAddAccountRequest;
+using SFA.DAS.PR.Application.UnitTests.TestFixtures;
 using SFA.DAS.PR.Domain.Entities;
 using SFA.DAS.PR.Domain.Interfaces;
 using SFA.DAS.ProviderRelationships.Types.Models;
@@ -15,6 +16,8 @@ public class CreateAddAccountRequestCommandValidatorTests
     private readonly Mock<IRequestReadRepository> _requestReadRepositoryValidMock = new Mock<IRequestReadRepository>();
 
     private readonly Mock<IAccountLegalEntityReadRepository> _accountLegalEntityReadRepositoryInvalidMock = new Mock<IAccountLegalEntityReadRepository>();
+
+    private const string Paye = "222/AAA";
 
     [SetUp]
     public void SetUp()
@@ -34,11 +37,12 @@ public class CreateAddAccountRequestCommandValidatorTests
             _providersReadRepositoryValidMock.Object,
             _accountLegalEntityReadRepositoryValidMock.Object
         );
-        var result = await sut.TestValidateAsync(new CreateAddAccountRequestCommand { Ukprn = 10000003, AccountLegalEntityId = 1, RequestedBy = Guid.NewGuid().ToString(), EmployerContactEmail = "test@email.com", Operations = [Operation.CreateCohort] });
+        var result = await sut.TestValidateAsync(new CreateAddAccountRequestCommand { Ukprn = 10000003, AccountLegalEntityId = 1, RequestedBy = Guid.NewGuid().ToString(), EmployerContactEmail = "test@email.com", Paye = Paye, Operations = [Operation.CreateCohort] });
         result.ShouldNotHaveValidationErrorFor(query => query.Ukprn);
         result.ShouldNotHaveValidationErrorFor(query => query.AccountLegalEntityId);
         result.ShouldNotHaveValidationErrorFor(query => query.EmployerContactEmail);
         result.ShouldNotHaveValidationErrorFor(query => query.Ukprn);
+        result.ShouldNotHaveValidationErrorFor(query => query.Paye);
     }
 
     [Test]
@@ -49,7 +53,7 @@ public class CreateAddAccountRequestCommandValidatorTests
             _providersReadRepositoryValidMock.Object,
             _accountLegalEntityReadRepositoryValidMock.Object
         );
-        var result = await sut.TestValidateAsync(new CreateAddAccountRequestCommand { Ukprn = 1000000, AccountLegalEntityId = 1, RequestedBy = Guid.NewGuid().ToString(), EmployerContactEmail = "test@email.com", Operations = [Operation.CreateCohort] });
+        var result = await sut.TestValidateAsync(new CreateAddAccountRequestCommand { Ukprn = 1000000, AccountLegalEntityId = 1, RequestedBy = Guid.NewGuid().ToString(), EmployerContactEmail = "test@email.com", Paye = Paye, Operations = [Operation.CreateCohort] });
         result.ShouldHaveValidationErrorFor(q => q.Ukprn)
             .WithErrorMessage(UkprnValidator.UkprnFormatValidationMessage);
     }
@@ -62,7 +66,7 @@ public class CreateAddAccountRequestCommandValidatorTests
             _providersReadRepositoryValidMock.Object,
             _accountLegalEntityReadRepositoryInvalidMock.Object
         );
-        var result = await sut.TestValidateAsync(new CreateAddAccountRequestCommand { Ukprn = 10000002, AccountLegalEntityId = 0, RequestedBy = Guid.NewGuid().ToString(), EmployerContactEmail = "test@email.com", Operations = [Operation.CreateCohort] });
+        var result = await sut.TestValidateAsync(new CreateAddAccountRequestCommand { Ukprn = 10000002, AccountLegalEntityId = 0, RequestedBy = Guid.NewGuid().ToString(), EmployerContactEmail = "test@email.com", Paye = Paye, Operations = [Operation.CreateCohort] });
         result.ShouldHaveValidationErrorFor(q => q.AccountLegalEntityId)
             .WithErrorMessage(AccountLegalEntityValidator.AccountLegalEntityIdValidationMessage);
     }
@@ -75,8 +79,35 @@ public class CreateAddAccountRequestCommandValidatorTests
             _providersReadRepositoryValidMock.Object,
             _accountLegalEntityReadRepositoryValidMock.Object
         );
-        var result = await sut.TestValidateAsync(new CreateAddAccountRequestCommand { Ukprn = 10000002, AccountLegalEntityId = 1, RequestedBy = Guid.NewGuid().ToString(), EmployerContactEmail = "testemail.com", Operations = [Operation.CreateCohort] });
+        var result = await sut.TestValidateAsync(new CreateAddAccountRequestCommand { Ukprn = 10000002, AccountLegalEntityId = 1, RequestedBy = Guid.NewGuid().ToString(), EmployerContactEmail = "testemail.com", Paye = Paye, Operations = [Operation.CreateCohort] });
         result.ShouldHaveValidationErrorFor(q => q.EmployerContactEmail)
             .WithErrorMessage(CreateAddAccountRequestCommandValidator.EmployerContactEmailValidationMessage);
+    }
+
+    [TestCase("")]
+    [TestCase(null)]
+    public async Task CreateAddAccountRequestCommand_No_Paye(string? paye)
+    {
+        var sut = new CreateAddAccountRequestCommandValidator(
+            _requestReadRepositoryValidMock.Object,
+            _providersReadRepositoryValidMock.Object,
+            _accountLegalEntityReadRepositoryValidMock.Object
+        );
+        var result = await sut.TestValidateAsync(new CreateAddAccountRequestCommand { Ukprn = 10000002, AccountLegalEntityId = 1, RequestedBy = Guid.NewGuid().ToString(), EmployerContactEmail = "test@email.com", Paye = paye, Operations = [Operation.CreateCohort] });
+        result.ShouldHaveValidationErrorFor(q => q.Paye)
+            .WithErrorMessage(CreateAddAccountRequestCommandValidator.NoPayeMessage);
+    }
+
+    [TestCaseSource(typeof(PayeTestFixtures), nameof(PayeTestFixtures.InvalidPayeCases))]
+    public async Task CreateAddAccountRequestCommand_Invalid_Paye(string paye)
+    {
+        var sut = new CreateAddAccountRequestCommandValidator(
+            _requestReadRepositoryValidMock.Object,
+            _providersReadRepositoryValidMock.Object,
+            _accountLegalEntityReadRepositoryValidMock.Object
+        );
+        var result = await sut.TestValidateAsync(new CreateAddAccountRequestCommand { Ukprn = 10000002, AccountLegalEntityId = 1, RequestedBy = Guid.NewGuid().ToString(), EmployerContactEmail = "test@email.com", Paye = paye, Operations = [Operation.CreateCohort] });
+        result.ShouldHaveValidationErrorFor(q => q.Paye)
+            .WithErrorMessage(CreateAddAccountRequestCommandValidator.InvalidPayeErrorMessage);
     }
 }
