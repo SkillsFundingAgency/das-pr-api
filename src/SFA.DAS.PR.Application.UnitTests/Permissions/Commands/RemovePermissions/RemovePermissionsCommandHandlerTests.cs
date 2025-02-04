@@ -1,5 +1,7 @@
-﻿using AutoFixture.NUnit3;
+﻿using System.Text.Json;
+using AutoFixture.NUnit3;
 using FluentAssertions;
+using FluentAssertions.Execution;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using SFA.DAS.PR.Application.Common.Commands;
@@ -10,9 +12,8 @@ using SFA.DAS.PR.Data.Repositories;
 using SFA.DAS.PR.Data.UnitTests.InMemoryDatabases;
 using SFA.DAS.PR.Domain.Entities;
 using SFA.DAS.PR.Domain.Interfaces;
-using SFA.DAS.ProviderRelationships.Types.Models;
+using SFA.DAS.ProviderRelationships.Messages.Events;
 using SFA.DAS.Testing.AutoFixture;
-using System.Text.Json;
 
 namespace SFA.DAS.PR.Application.UnitTests.Permissions.Commands.RemovePermissions;
 public class RemovePermissionsCommandHandlerTests
@@ -20,15 +21,16 @@ public class RemovePermissionsCommandHandlerTests
     private readonly CancellationToken _cancellationToken = CancellationToken.None;
 
     [Test, RecursiveMoqAutoData]
-    public async Task Handle_RemovePermissions_Null_Entities_Returns_Null(
-        [Frozen] Mock<IAccountProviderLegalEntitiesReadRepository> accountProviderLegalEntitiesReadRepository,
-        [Frozen] Mock<IAccountLegalEntityReadRepository> accountLegalEntityReadRepository,
+    public async Task Handle_PermissionsDoNotExist_ReturnsWithoutEffect(
+        [Frozen] Mock<IAccountProviderLegalEntitiesReadRepository> accountProviderLegalEntitiesReadRepositoryMock,
+        [Frozen] Mock<IPermissionsWriteRepository> _permissionsWriteRepositoryMock,
+        [Frozen] Mock<IMessageSession> _messageSessionMock,
         RemovePermissionsCommandHandler sut,
         RemovePermissionsCommand command,
         CancellationToken cancelToken
     )
     {
-        accountProviderLegalEntitiesReadRepository.Setup(a =>
+        accountProviderLegalEntitiesReadRepositoryMock.Setup(a =>
             a.GetAccountProviderLegalEntity(
                 command.Ukprn,
                 command.AccountLegalEntityId,
@@ -36,23 +38,22 @@ public class RemovePermissionsCommandHandlerTests
             )
         ).ReturnsAsync((AccountProviderLegalEntity?)null);
 
-        accountLegalEntityReadRepository.Setup(a =>
-            a.GetAccountLegalEntity(command.AccountLegalEntityId, cancelToken)
-        ).ReturnsAsync((AccountLegalEntity?)null);
+        /// Act
+        await sut.Handle(command, cancelToken);
 
-        ValidatedResponse<SuccessCommandResult> result = await sut.Handle(command, cancelToken);
-        result.Result.Should().BeNull();
+        _permissionsWriteRepositoryMock.Verify(r => r.DeletePermissions(It.IsAny<IEnumerable<Permission>>()), Times.Never);
+        _messageSessionMock.Verify(m => m.Publish(It.IsAny<object>(), It.IsAny<CancellationToken>()), Times.Never);
     }
 
     [Test]
     [RecursiveMoqAutoData]
-    public async Task Handle_RemovePermissions_Remove_Permissions_Adds_Audit_Trail(
-        [Frozen] Mock<IAccountProviderLegalEntitiesReadRepository> accountProviderLegalEntitiesReadRepository,
+    public async Task Handle_PermissionsExists_RemovesPermissions(
         AccountProviderLegalEntity accountProviderLegalEntity,
         RemovePermissionsCommand command
     )
     {
-        accountProviderLegalEntitiesReadRepository.Setup(a =>
+        Mock<IAccountProviderLegalEntitiesReadRepository> accountProviderLegalEntitiesReadRepositoryMock = new();
+        accountProviderLegalEntitiesReadRepositoryMock.Setup(a =>
             a.GetAccountProviderLegalEntity(
                 command.Ukprn,
                 command.AccountLegalEntityId,
@@ -60,55 +61,57 @@ public class RemovePermissionsCommandHandlerTests
             )
         ).ReturnsAsync(accountProviderLegalEntity);
 
-        ValidatedResponse<SuccessCommandResult> result = null!;
+        Mock<IMessageSession> _messageSessionMock = new();
 
+
+        ValidatedResponse<SuccessCommandResult> result = null!;
 
         PermissionsAudit? audit = null;
 
         var permissionsBeforeRemovalCount = 0;
         var permissionsAfterRemovalCount = -1;
-        var operationsRemoved = new List<Operation>();
         var operationsRemovedAsValue = string.Empty;
 
+        var operationsRemoved = accountProviderLegalEntity.Permissions.Select(permission => permission.Operation);
+        operationsRemovedAsValue = JsonSerializer.Serialize(operationsRemoved);
+
         using (var context = InMemoryProviderRelationshipsDataContext.CreateInMemoryContext(
-            $"{nameof(InMemoryProviderRelationshipsDataContext)}_{nameof(Handle_RemovePermissions_Remove_Permissions_Adds_Audit_Trail)}")
+            $"{nameof(InMemoryProviderRelationshipsDataContext)}_{nameof(Handle_PermissionsExists_RemovesPermissions)}")
         )
         {
             await context.AccountProviderLegalEntities.AddAsync(accountProviderLegalEntity, _cancellationToken);
             await context.SaveChangesAsync(_cancellationToken);
 
-            RemovePermissionsCommandHandler sut = CreateRemovePermissionsCommandHandler(
-               accountProviderLegalEntitiesReadRepository.Object,
-               context
-            );
             permissionsBeforeRemovalCount = await context.Permissions.CountAsync(a => a.AccountProviderLegalEntityId == accountProviderLegalEntity.Id, cancellationToken: _cancellationToken);
 
-            operationsRemoved = accountProviderLegalEntity.Permissions.Select(permission => permission.Operation).ToList();
+            RemovePermissionsCommandHandler sut = CreateRemovePermissionsCommandHandler(
+                accountProviderLegalEntitiesReadRepositoryMock.Object,
+                context,
+                _messageSessionMock.Object);
 
-            operationsRemovedAsValue = JsonSerializer.Serialize(operationsRemoved);
 
-            result = await sut.Handle(command, _cancellationToken);
+            await sut.Handle(command, _cancellationToken);
 
             permissionsAfterRemovalCount = await context.Permissions.CountAsync(a => a.AccountProviderLegalEntityId == accountProviderLegalEntity.Id, cancellationToken: _cancellationToken);
             audit = await context.PermissionsAudit.FirstOrDefaultAsync(a => a.AccountLegalEntityId == command.AccountLegalEntityId && a.Ukprn == command.Ukprn!.Value, cancellationToken: _cancellationToken);
         }
 
-        result.Result.Should().BeNull();
-
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
-            Assert.That(audit, Is.Not.Null, "Audit must have been recorded.");
-            Assert.That(audit?.Action, Is.EqualTo(PermissionAction.PermissionDeleted.ToString()), "Audit action must equal PermissionDeleted.");
-            Assert.That(audit?.Operations, Is.EqualTo(operationsRemovedAsValue), "Operations removed audit does not match operations removed");
-            Assert.That(permissionsBeforeRemovalCount, Is.GreaterThan(0), "Permissions before removal should be greater than 0");
-            Assert.That(permissionsAfterRemovalCount, Is.EqualTo(0), "Permissions after removal should be 0");
-        });
+            audit.Should().NotBeNull("Audit must have been recorded.");
+            audit?.Action.Should().Be(PermissionAction.PermissionDeleted.ToString(), "Audit action must equal PermissionDeleted.");
+            audit?.Operations.Should().Be(operationsRemovedAsValue, "Operations removed audit does not match operations removed");
+            permissionsBeforeRemovalCount.Should().BeGreaterThan(0, "Permissions before removal should be greater than 0");
+            permissionsAfterRemovalCount.Should().Be(0, "Permissions after removal should be 0");
+        }
+
+        _messageSessionMock.Verify(m => m.Publish(It.Is<object>(o => o.GetType() == typeof(UpdatedPermissionsEvent)), It.IsAny<PublishOptions>(), It.IsAny<CancellationToken>()));
     }
 
     private static RemovePermissionsCommandHandler CreateRemovePermissionsCommandHandler(
         IAccountProviderLegalEntitiesReadRepository accountProviderLegalEntitiesReadRepository,
-        ProviderRelationshipsDataContext context
-    )
+        ProviderRelationshipsDataContext context,
+        IMessageSession messageSession)
     {
         PermissionsWriteRepository permissionsWriteRepository = new(context);
         PermissionsAuditWriteRepository permissionsAuditWriteRepository = new(context);
@@ -116,6 +119,8 @@ public class RemovePermissionsCommandHandlerTests
         return new RemovePermissionsCommandHandler(
             accountProviderLegalEntitiesReadRepository,
             permissionsWriteRepository,
-            permissionsAuditWriteRepository, context);
+            permissionsAuditWriteRepository,
+            context,
+            messageSession);
     }
 }
