@@ -4,8 +4,6 @@ using FluentAssertions;
 using FluentAssertions.Execution;
 using Microsoft.EntityFrameworkCore;
 using Moq;
-using SFA.DAS.PR.Application.Common.Commands;
-using SFA.DAS.PR.Application.Mediatr.Responses;
 using SFA.DAS.PR.Application.Permissions.Commands.RemovePermissions;
 using SFA.DAS.PR.Data;
 using SFA.DAS.PR.Data.Repositories;
@@ -42,7 +40,7 @@ public class RemovePermissionsCommandHandlerTests
         await sut.Handle(command, cancelToken);
 
         _permissionsWriteRepositoryMock.Verify(r => r.DeletePermissions(It.IsAny<IEnumerable<Permission>>()), Times.Never);
-        _messageSessionMock.Verify(m => m.Publish(It.IsAny<object>(), It.IsAny<CancellationToken>()), Times.Never);
+        _messageSessionMock.Verify(m => m.Publish(It.IsAny<object>(), It.IsAny<PublishOptions>(), It.IsAny<CancellationToken>()), Times.Never);
     }
 
     [Test]
@@ -62,9 +60,6 @@ public class RemovePermissionsCommandHandlerTests
         ).ReturnsAsync(accountProviderLegalEntity);
 
         Mock<IMessageSession> _messageSessionMock = new();
-
-
-        ValidatedResponse<SuccessCommandResult> result = null!;
 
         PermissionsAudit? audit = null;
 
@@ -88,7 +83,6 @@ public class RemovePermissionsCommandHandlerTests
                 accountProviderLegalEntitiesReadRepositoryMock.Object,
                 context,
                 _messageSessionMock.Object);
-
 
             await sut.Handle(command, _cancellationToken);
 
