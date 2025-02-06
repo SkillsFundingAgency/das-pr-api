@@ -70,7 +70,7 @@ public class PostPermissionsCommandHandler(
             await _messageSession.Publish(new AddedAccountProviderEvent(accountProvider.Id, accountId, accountProvider.ProviderUkprn, command.UserRef, DateTime.UtcNow, null), cancellationToken);
         }
 
-        await PublishEvent(accountProviderLegalEntity, command, Enumerable.Empty<Operation>(), cancellationToken);
+        await PublishEvent(accountProviderLegalEntity, command, [], cancellationToken);
 
         return new ValidatedResponse<SuccessCommandResult>();
     }
@@ -96,13 +96,14 @@ public class PostPermissionsCommandHandler(
     }
     private async Task<ValidatedResponse<SuccessCommandResult>> UpdatePermissions(AccountProviderLegalEntity accountProviderLegalEntity, PostPermissionsCommand command, CancellationToken cancellationToken)
     {
-        Operation[] existingOperations = accountProviderLegalEntity.Permissions.Select(po => po.Operation).OrderBy(po => po).ToArray();
-        Operation[] commandOperations = command.Operations.OrderBy(co => co).ToArray();
+        HashSet<Operation> existingOperations = accountProviderLegalEntity.Permissions.Select(po => po.Operation).OrderBy(po => po).ToHashSet();
+        HashSet<Operation> commandOperations = command.Operations.OrderBy(co => co).ToHashSet();
 
         if (existingOperations.SequenceEqual(commandOperations))
         {
             return new ValidatedResponse<SuccessCommandResult>();
         }
+
         RemovePermissions(accountProviderLegalEntity.Permissions);
         AddPermissions(accountProviderLegalEntity.Id, command.Operations);
 
@@ -114,7 +115,7 @@ public class PostPermissionsCommandHandler(
         return new ValidatedResponse<SuccessCommandResult>();
     }
 
-    private async Task PublishEvent(AccountProviderLegalEntity accountProviderLegalEntity, PostPermissionsCommand command, IEnumerable<Operation> existingPermissions, CancellationToken cancellationToken)
+    private async Task PublishEvent(AccountProviderLegalEntity accountProviderLegalEntity, PostPermissionsCommand command, HashSet<Operation> existingPermissions, CancellationToken cancellationToken)
     {
         await _messageSession.Publish(
             new UpdatedPermissionsEvent(
@@ -128,7 +129,7 @@ public class PostPermissionsCommandHandler(
                 string.Empty,
                 string.Empty,
                 command.Operations.ToHashSet(),
-                existingPermissions.ToHashSet(),
+                existingPermissions,
                 DateTime.UtcNow)
             , cancellationToken);
     }
