@@ -1,6 +1,4 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using Azure.Core;
-using Azure.Identity;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,33 +10,14 @@ namespace SFA.DAS.PR.Data.Extensions;
 [ExcludeFromCodeCoverage]
 public static class AddPrDataContextExtension
 {
-    private static readonly string AzureResource = "https://database.windows.net/";
-
-    private static readonly ChainedTokenCredential AzureTokenProvider = new(
-        new ManagedIdentityCredential(),
-        new AzureCliCredential(),
-        new VisualStudioCodeCredential(),
-        new VisualStudioCredential()
-    );
-
     public static IServiceCollection AddPrDataContext(this IServiceCollection services, string connectionString, string environmentName)
     {
         services.AddDbContext<ProviderRelationshipsDataContext>((serviceProvider, options) =>
         {
-            SqlConnection connection = null!;
-
-            if (!environmentName.Equals("LOCAL", StringComparison.CurrentCultureIgnoreCase))
+            SqlConnection connection = new()
             {
-                connection = new SqlConnection
-                {
-                    ConnectionString = connectionString,
-                    AccessToken = AzureTokenProvider.GetToken(new TokenRequestContext(scopes: [AzureResource])).Token
-                };
-            }
-            else
-            {
-                connection = new SqlConnection(connectionString);
-            }
+                ConnectionString = connectionString,
+            };
 
             options.UseSqlServer(
                 connection,
