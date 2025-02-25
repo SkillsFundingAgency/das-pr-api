@@ -44,7 +44,8 @@ This API encapsulates provider relationships with employers and their permission
   "ConfigNames": "SFA.DAS.PR.Api,SFA.DAS.Encoding",
   "EnvironmentName": "LOCAL",
   "Version": "1.0",
-  "APPINSIGHTS_INSTRUMENTATIONKEY": ""
+  "APPINSIGHTS_INSTRUMENTATIONKEY": "",
+  "AzureWebJobsServiceBus": "<ServiceBus connection string>"
 }
 ```
 
