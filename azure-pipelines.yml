@@ -96,6 +96,7 @@ stages:
   variables:
   - group: DevTest Management Resources
   - group: TEST2 DevTest Shared Resources
+  - group: TEST2 das-pr-api
   jobs:
   - template: pipeline-templates/job/deploy.yml
     parameters:
