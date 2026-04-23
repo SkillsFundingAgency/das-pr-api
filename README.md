@@ -51,7 +51,7 @@ This API encapsulates provider relationships with employers and their permission
 
 ## Technologies
 
-* .NetCore 8.0
+* .Net 10.0
 * Azure Table Storage
 * NUnit
 * Moq
