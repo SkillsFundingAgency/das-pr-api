@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Mvc.Versioning;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using SFA.DAS.Api.Common.AppStart;
 using SFA.DAS.Api.Common.Infrastructure;
 using SFA.DAS.PR.Api;

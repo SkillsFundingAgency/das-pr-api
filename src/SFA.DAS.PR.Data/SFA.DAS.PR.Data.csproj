@@ -1,11 +1,9 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.7" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.7" />
@@ -13,18 +11,15 @@
     <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks" Version="10.0.7" />
     <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="10.0.7" />
   </ItemGroup>
-
   <!--Transitive Packages-->
   <ItemGroup>
-    <PackageReference Include="Azure.Identity" Version="1.14.2" />
+    <PackageReference Include="Azure.Identity" Version="1.21.0" />
     <PackageReference Include="System.Text.Json" Version="10.0.7" />
     <PackageReference Include="System.Formats.Asn1" Version="10.0.7" />
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="10.0.7" />
   </ItemGroup>
   <!--Transitive Packages-->
-
   <ItemGroup>
     <ProjectReference Include="..\SFA.DAS.PR.Domain\SFA.DAS.PR.Domain.csproj" />
   </ItemGroup>
-
 </Project>
