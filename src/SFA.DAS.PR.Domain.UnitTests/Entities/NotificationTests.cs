@@ -1,4 +1,4 @@
-﻿using AutoFixture.NUnit3;
+﻿using AutoFixture.NUnit4;
 using FluentAssertions;
 using SFA.DAS.PR.Domain.Entities;
 using SFA.DAS.PR.Domain.Models;

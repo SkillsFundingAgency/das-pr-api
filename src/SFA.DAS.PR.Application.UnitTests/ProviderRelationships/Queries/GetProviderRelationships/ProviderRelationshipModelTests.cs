@@ -1,4 +1,4 @@
-﻿using AutoFixture.NUnit3;
+﻿using AutoFixture.NUnit4;
 using FluentAssertions;
 using SFA.DAS.PR.Application.ProviderRelationships.Queries.GetProviderRelationships;
 using SFA.DAS.PR.Domain.Entities;

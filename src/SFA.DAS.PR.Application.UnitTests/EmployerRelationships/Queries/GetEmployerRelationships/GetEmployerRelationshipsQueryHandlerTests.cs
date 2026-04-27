@@ -1,4 +1,4 @@
-﻿using AutoFixture.NUnit3;
+﻿using AutoFixture.NUnit4;
 using Moq;
 using SFA.DAS.PR.Application.Mediatr.Responses;
 using SFA.DAS.PR.Application.Permissions.Queries.GetEmployerRelationships;
