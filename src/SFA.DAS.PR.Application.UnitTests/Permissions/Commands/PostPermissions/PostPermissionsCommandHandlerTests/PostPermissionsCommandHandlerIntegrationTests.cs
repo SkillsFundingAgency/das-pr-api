@@ -102,12 +102,12 @@ public class PostPermissionsCommandHandlerIntegrationTests
         result.Should().NotBeNull();
         result.Should().BeOfType<ValidatedResponse<SuccessCommandResult>>();
 
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(audit, Is.Not.Null, "Audit must have been recorded.");
             Assert.That(audit?.Action, Is.EqualTo(nameof(PermissionAction.PermissionUpdated)), "Audit action must equal updated.");
             Assert.That(command.Operations, Has.Count.EqualTo(permissionCount), "Permissions after removal should be equal to the passed permissions count.");
-        });
+        }
     }
 
     [Test]
@@ -164,12 +164,12 @@ public class PostPermissionsCommandHandlerIntegrationTests
         result.Should().NotBeNull();
         result.Should().BeOfType<ValidatedResponse<SuccessCommandResult>>();
 
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(audit, Is.Not.Null, "Audit must have been recorded.");
             Assert.That(audit?.Action, Is.EqualTo(nameof(PermissionAction.PermissionUpdated)), "Audit action must equal updated.");
             Assert.That(command.Operations, Has.Count.EqualTo(permissionCount), "Added permissions should be equal to the passed permissions count.");
-        });
+        }
     }
 
     [Test]
@@ -225,12 +225,12 @@ public class PostPermissionsCommandHandlerIntegrationTests
         result.Should().NotBeNull();
         result.Should().BeOfType<ValidatedResponse<SuccessCommandResult>>();
 
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(audit, Is.Not.Null, "Audit must have been recorded.");
             Assert.That(audit?.Action, Is.EqualTo(nameof(PermissionAction.PermissionCreated)), "Audit action must equal created.");
             Assert.That(command.Operations, Has.Count.EqualTo(permissionCount), "Added permissions should be equal to the passed permissions count.");
-        });
+        }
     }
 
     private static PostPermissionsCommandHandler CreatePostPermissionsCommandHandler(

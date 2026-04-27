@@ -41,11 +41,11 @@ public class RequestsValidatorTests
 
         var validationResult = await validator.ValidateAsync(entity);
 
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(validationResult.IsValid, Is.False);
             Assert.That(validationResult.Errors[0].ErrorMessage, Is.EqualTo(RequestsValidator.RequestValidationMessage));
-        });
+        }
     }
 
     [Test]
@@ -82,10 +82,10 @@ public class RequestsValidatorTests
 
         var validationResult = await validator.ValidateAsync(entity);
 
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(validationResult.IsValid, Is.False);
             Assert.That(validationResult.Errors[0].ErrorMessage, Is.EqualTo(RequestsValidator.RequestEmployerPAYEValidationMessage));
-        });
+        }
     }
 }

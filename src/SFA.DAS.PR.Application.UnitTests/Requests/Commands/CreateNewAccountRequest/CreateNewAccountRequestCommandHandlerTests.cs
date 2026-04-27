@@ -41,7 +41,7 @@ public class CreateNewAccountRequestCommandHandlerTests
 
         result.Result.Should().NotBeNull();
 
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(persistedRequest, Is.Not.Null, "Request must not be null.");
             Assert.That(result.Result!.RequestId, Is.EqualTo(persistedRequest!.Id), "Result RequestId must match persisted request id.");
@@ -49,6 +49,6 @@ public class CreateNewAccountRequestCommandHandlerTests
             Assert.That(persistedRequest.EmployerOrganisationName, Is.EqualTo(command.EmployerOrganisationName), $"Requests EmployerOrganisationName ({persistedRequest.EmployerOrganisationName}) must match the commands EmployerOrganisationName ({command.EmployerOrganisationName})");
             Assert.That(persistedRequest.EmployerContactFirstName, Is.EqualTo(command.EmployerContactFirstName), $"Requests EmployerContactFirstName ({persistedRequest.EmployerContactFirstName}) must match the commands EmployerContactFirstName ({command.EmployerContactFirstName})");
             Assert.That(persistedRequest.EmployerContactLastName, Is.EqualTo(command.EmployerContactLastName), $"Requests EmployerContactLastName ({persistedRequest.EmployerContactLastName}) must match the commands EmployerContactLastName ({command.EmployerContactLastName})");
-        });
+        }
     }
 }

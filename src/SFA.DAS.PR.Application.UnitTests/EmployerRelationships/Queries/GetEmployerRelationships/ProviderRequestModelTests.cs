@@ -15,13 +15,13 @@ public sealed class ProviderRequestModelTests
 
         ProviderRequestModel providerRequestModel = request;
 
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(providerRequestModel.RequestId, Is.EqualTo(request.Id));
             Assert.That(providerRequestModel.Ukprn, Is.EqualTo(request.Ukprn));
             Assert.That(providerRequestModel.ProviderName, Is.EqualTo(request.Provider.Name));
             Assert.That(providerRequestModel.Operations.Count(), Is.EqualTo(request.PermissionRequests.Count));
             Assert.That(providerRequestModel.RequestType, Is.EqualTo(request.RequestType));
-        });
+        }
     }
 }

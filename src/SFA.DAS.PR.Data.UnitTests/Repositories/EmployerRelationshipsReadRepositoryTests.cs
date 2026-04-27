@@ -33,7 +33,7 @@ public class EmployerRelationshipsReadRepositoryTests
             result = await sut.GetRelationships(account.Id, cancellationToken);
         }
 
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(result, Is.Not.Null, "result should not be null");
             Assert.That(result?.AccountLegalEntities, Has.Count.EqualTo(1), "AccountLegalEntities count should be 1");
@@ -48,6 +48,6 @@ public class EmployerRelationshipsReadRepositoryTests
                            .Select(a => a.Requests)
                            .ToList(),
                         Has.Count.EqualTo(1), "Requests count should be 1");
-        });
+        }
     }
 }

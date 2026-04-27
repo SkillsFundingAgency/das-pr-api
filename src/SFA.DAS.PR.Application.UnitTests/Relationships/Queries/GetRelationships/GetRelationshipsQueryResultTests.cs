@@ -16,7 +16,7 @@ public class GetRelationshipsQueryResultTests
 
         GetRelationshipsQueryResult sut = accountProviderLegalEntity;
 
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(accountProviderLegalEntity.AccountLegalEntityId, Is.EqualTo(sut.AccountLegalEntityId));
             Assert.That(accountProviderLegalEntity.AccountLegalEntity.PublicHashedId, Is.EqualTo(sut.AccountLegalEntitypublicHashedId));
@@ -24,6 +24,6 @@ public class GetRelationshipsQueryResultTests
             Assert.That(accountProviderLegalEntity.AccountLegalEntity.AccountId, Is.EqualTo(sut.AccountId));
             Assert.That(accountProviderLegalEntity.AccountProvider.ProviderUkprn, Is.EqualTo(sut.Ukprn));
             Assert.That(accountProviderLegalEntity.Permissions.Select(a => a.Operation).ToArray(), Is.EqualTo(sut.Operations));
-        });
+        }
     }
 }

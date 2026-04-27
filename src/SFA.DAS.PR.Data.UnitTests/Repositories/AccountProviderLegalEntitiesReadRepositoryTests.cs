@@ -51,7 +51,7 @@ public class AccountProviderLegalEntitiesReadRepositoryTests
 
         var resultEntity = result.FirstOrDefault();
 
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(resultEntity, Is.Not.Null);
             Assert.That(result, Has.Count.EqualTo(accountProvidersCount));
@@ -59,7 +59,7 @@ public class AccountProviderLegalEntitiesReadRepositoryTests
             Assert.That(resultEntity?.AccountProvider.Account, Is.Not.Null);
             Assert.That(resultEntity?.AccountLegalEntity, Is.Not.Null);
             Assert.That(resultEntity?.Permissions, Has.Exactly(1).Items);
-        });
+        }
     }
 
     [Test]
@@ -89,12 +89,12 @@ public class AccountProviderLegalEntitiesReadRepositoryTests
            );
         }
 
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(result, Is.Not.Null);
             Assert.That(result?.AccountProvider, Is.Not.Null);
             Assert.That(result?.Permissions, Has.Exactly(1).Items);
-        });
+        }
     }
 
     [Test]
@@ -124,14 +124,14 @@ public class AccountProviderLegalEntitiesReadRepositoryTests
            );
         }
 
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(result, Is.Not.Null);
             Assert.That(result?.AccountProvider, Is.Not.Null);
             Assert.That(result?.AccountProvider.Provider, Is.Not.Null);
             Assert.That(result?.AccountLegalEntity, Is.Not.Null);
             Assert.That(result?.Permissions, Has.Exactly(1).Items);
-        });
+        }
     }
 
     [Test]

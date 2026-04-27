@@ -46,7 +46,7 @@ public class AccountLegalEntityReadRepositoryTests
 
         var resultEntity = result.FirstOrDefault();
 
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(resultEntity, Is.Not.Null);
             Assert.That(result, Has.Count.EqualTo(accountProvidersCount));
@@ -55,7 +55,7 @@ public class AccountLegalEntityReadRepositoryTests
             Assert.That(resultEntity?.AccountProviderLegalEntities, Has.Exactly(1).Items);
             Assert.That(resultEntity?.AccountProviderLegalEntities.First().AccountLegalEntity, Is.Not.Null);
             Assert.That(resultEntity?.AccountProviderLegalEntities.First().Permissions, Has.Exactly(1).Items);
-        });
+        }
     }
 
     [Test]

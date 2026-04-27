@@ -42,11 +42,11 @@ public class UkprnFormatValidatorTests
 
         var validationResult = await validator.ValidateAsync(entity);
 
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(validationResult.IsValid, Is.False);
             Assert.That(validationResult.Errors[0].ErrorMessage, Is.EqualTo(UkprnValidator.UkprnFormatValidationMessage));
-        });        
+        }
     }
 
     [Test]
@@ -63,10 +63,10 @@ public class UkprnFormatValidatorTests
 
         var validationResult = await validator.ValidateAsync(entity);
 
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(validationResult.IsValid, Is.False);
             Assert.That(validationResult.Errors[0].ErrorMessage, Is.EqualTo(UkprnValidator.ProviderEntityExistValidationMessage));
-        });
+        }
     }
 }

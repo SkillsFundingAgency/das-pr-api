@@ -58,7 +58,7 @@ public class GetRelationshipsQueryHandlerTests
 
         result.Result.Should().BeOfType<GetRelationshipsQueryResult>();
 
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(result.Result, Is.Not.Null, "Result should not be null.");
             Assert.That(result.Result!.AccountLegalEntityId, Is.EqualTo(accountProviderLegalEntity.AccountLegalEntityId), $"{result.Result!.AccountLegalEntityId} should be equal to {accountProviderLegalEntity.AccountLegalEntityId}.");
@@ -76,7 +76,7 @@ public class GetRelationshipsQueryHandlerTests
             Assert.That(result.Result!.LastRequestTime, Is.EqualTo(request!.UpdatedDate));
             Assert.That(result.Result!.LastRequestStatus, Is.EqualTo(request.Status!.ToString()));
             Assert.That(result.Result!.LastRequestOperations, Is.EquivalentTo(request.PermissionRequests.Select(a => (Operation)a.Operation).ToArray()));
-        });
+        }
     }
 
     [Test]
@@ -122,7 +122,7 @@ public class GetRelationshipsQueryHandlerTests
 
         result.Result.Should().BeOfType<GetRelationshipsQueryResult>();
 
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(result.Result, Is.Not.Null, "Result should not be null.");
             Assert.That(result.Result!.AccountLegalEntityId, Is.EqualTo(accountProviderLegalEntity.AccountLegalEntityId), $"{result.Result!.AccountLegalEntityId} should be equal to {accountProviderLegalEntity.AccountLegalEntityId}.");
@@ -140,7 +140,7 @@ public class GetRelationshipsQueryHandlerTests
             Assert.That(result.Result!.LastRequestTime, Is.Null);
             Assert.That(result.Result!.LastRequestStatus, Is.Null);
             Assert.That(result.Result!.LastRequestOperations, Is.Null);
-        });
+        }
     }
 
     [Test]

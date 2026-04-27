@@ -53,11 +53,11 @@ public class CreatePermissionRequestCommandHandlerTests
 
         result.Result.Should().NotBeNull();
 
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(persistedRequest, Is.Not.Null, "Request must be created.");
             Assert.That(result.Result!.RequestId, Is.EqualTo(persistedRequest!.Id), "Result RequestId must match persisted request id.");
             Assert.That(persistedRequest!.PermissionRequests, Has.Exactly(command.Operations.Count).Items, $"Request must have {command.Operations.Count} permission requests created.");
-        });
+        }
     }
 }

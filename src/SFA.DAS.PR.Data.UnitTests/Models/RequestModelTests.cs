@@ -30,13 +30,13 @@ public class RequestModelTests
                 .Excluding(model => model.AccountLegalEntity)
         );
 
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(requestModel.RequestType, Is.EqualTo(request.RequestType.ToString()));
             Assert.That(requestModel.ProviderName, Is.EqualTo(request.Provider.Name));
             Assert.That(requestModel.RequestId, Is.EqualTo(request.Id));
             Assert.That(requestModel.Operations, Is.EqualTo(request.PermissionRequests.Select(a => (Operation)a.Operation).ToArray()));
             Assert.That(requestModel.Status, Is.EqualTo(request.Status.ToString()));
-        });
+        }
     }
 }

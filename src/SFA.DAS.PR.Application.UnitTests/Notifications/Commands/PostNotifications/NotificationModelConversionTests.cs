@@ -12,7 +12,7 @@ public class NotificationModelConversionTests
     {
         Notification sut = source;
 
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(sut.TemplateName, Is.EqualTo(source.TemplateName));
             Assert.That(sut.NotificationType, Is.EqualTo(source.NotificationType));
@@ -24,6 +24,6 @@ public class NotificationModelConversionTests
             Assert.That(sut.PermitApprovals, Is.EqualTo(source.PermitApprovals));
             Assert.That(sut.PermitRecruit, Is.EqualTo(source.PermitRecruit));
             Assert.That(sut.CreatedBy, Is.EqualTo(source.CreatedBy));
-        });
+        }
     }
 }
