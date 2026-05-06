@@ -51,7 +51,7 @@ This API encapsulates provider relationships with employers and their permission
 
 ## Technologies
 
-* .Net 10.0
+* .Net 10
 * Azure Table Storage
 * NUnit
 * Moq
