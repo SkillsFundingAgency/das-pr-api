@@ -50,11 +50,11 @@ public class AccountLegalEntityValidatorTests
 
         var validationResult = await validator.ValidateAsync(entity);
 
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(validationResult.IsValid, Is.False);
             Assert.That(validationResult.Errors[0].ErrorMessage, Is.EqualTo(AccountLegalEntityValidator.AccountLegalEntityIdValidationMessage));
-        });
+        }
     }
 
     [Test]
@@ -72,11 +72,11 @@ public class AccountLegalEntityValidatorTests
 
         var validationResult = await validator.ValidateAsync(entity);
 
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(validationResult.IsValid, Is.False);
             Assert.That(validationResult.Errors[0].ErrorMessage, Is.EqualTo(AccountLegalEntityValidator.AccountLegalEntityExistValidationMessage));
-        });
+        }
     }
 
     [Test]
@@ -112,11 +112,11 @@ public class AccountLegalEntityValidatorTests
 
         var validationResult = await validator.ValidateAsync(entity);
 
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(validationResult.IsValid, Is.False);
             Assert.That(validationResult.Errors[0].ErrorMessage, Is.EqualTo(AccountLegalEntityValidator.AccountLegalEntityIdValidationMessage));
-        });
+        }
     }
 
     [Test]
@@ -134,10 +134,10 @@ public class AccountLegalEntityValidatorTests
 
         var validationResult = await validator.ValidateAsync(entity);
 
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(validationResult.IsValid, Is.False);
             Assert.That(validationResult.Errors[0].ErrorMessage, Is.EqualTo(AccountLegalEntityValidator.AccountLegalEntityExistValidationMessage));
-        });
+        }
     }
 }

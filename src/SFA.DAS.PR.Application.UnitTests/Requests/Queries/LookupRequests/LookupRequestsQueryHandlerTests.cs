@@ -1,4 +1,4 @@
-﻿using AutoFixture.NUnit3;
+﻿using AutoFixture.NUnit4;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Moq;
@@ -51,14 +51,14 @@ public class LookupRequestsQueryHandlerTests
                 .Excluding(model => model.AccountLegalEntity)
         );
 
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(requestModel.Result!.RequestId, Is.EqualTo(persistedRequest.Id));
             Assert.That(requestModel.Result!.RequestType, Is.EqualTo(persistedRequest.RequestType.ToString()));
             Assert.That(requestModel.Result!.ProviderName, Is.EqualTo(persistedRequest.Provider.Name));
             Assert.That(requestModel.Result!.Operations, Is.EqualTo(persistedRequest.PermissionRequests.Select(a => (Operation)a.Operation).ToArray()));
             Assert.That(requestModel.Result!.Status, Is.EqualTo(persistedRequest.Status.ToString()));
-        });
+        }
     }
 
     [Test]

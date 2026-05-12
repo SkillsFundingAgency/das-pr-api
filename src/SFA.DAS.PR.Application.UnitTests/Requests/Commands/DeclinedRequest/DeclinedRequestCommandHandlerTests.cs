@@ -46,11 +46,11 @@ public sealed class DeclinedRequestCommandHandlerTests
 
         result.IsValidResponse.Should().BeTrue();
 
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(updatedRequest, Is.Not.Null, "Request must be not be null.");
             Assert.That(updatedRequest!.Status, Is.EqualTo(RequestStatus.Declined), $"Request status must be {nameof(RequestStatus.Declined)}.");
             Assert.That(updatedRequest!.ActionedBy, Is.EqualTo(command.ActionedBy), $"Request actioned by must be {command.ActionedBy}.");
-        });
+        }
     }
 }

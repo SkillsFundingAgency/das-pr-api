@@ -1,7 +1,6 @@
+using Asp.Versioning;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
-using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.OpenApi.Models;
 using SFA.DAS.Api.Common.AppStart;
 using SFA.DAS.Api.Common.Infrastructure;
@@ -44,15 +43,16 @@ builder.Services
     {
         opt.ApiVersionReader = new HeaderApiVersionReader("X-Version");
         opt.DefaultApiVersion = new ApiVersion(1, 0);
-    })
-    .AddControllers(options =>
-    {
-        if (IsEnvironmentLocalOrDev)
-        {
-            options.Filters.Add(new AllowAnonymousFilter());
-        }
-        options.Conventions.Add(new ApiExplorerGroupingByAuthorizeAttributeConvention());
     });
+
+builder.Services.AddControllers(options =>
+{
+    if (IsEnvironmentLocalOrDev)
+    {
+        options.Filters.Add(new AllowAnonymousFilter());
+    }
+    options.Conventions.Add(new ApiExplorerGroupingByAuthorizeAttributeConvention());
+});
 
 builder.Services.AddSwaggerGen(options =>
 {

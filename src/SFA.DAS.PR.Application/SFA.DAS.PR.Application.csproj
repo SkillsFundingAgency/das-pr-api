@@ -1,31 +1,19 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="FluentValidation" Version="11.9.2" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.9.2" />
-    <PackageReference Include="MediatR" Version="12.3.0" />
-  </ItemGroup>
-
-  <!--Transitive Packages-->
-  <ItemGroup>
-    <PackageReference Include="Azure.Identity" Version="1.12.0" />
-    <PackageReference Include="Microsoft.Identity.Client" Version="4.61.3" />
+    <PackageReference Include="MediatR" Version="12.5.0" />
     <PackageReference Include="NServiceBus" Version="9.0.0" />
-    <PackageReference Include="SFA.DAS.Encoding" Version="1.1.76" />
-    <PackageReference Include="System.Net.Http" Version="4.3.4" />
-    <PackageReference Include="System.Formats.Asn1" Version="8.0.1" />
+    <PackageReference Include="SFA.DAS.Encoding" Version="1.1.93" />
+    <PackageReference Include="System.Security.Cryptography.Xml" Version="10.0.7" />
   </ItemGroup>
-  <!--Transitive Packages-->
-
-	<ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\SFA.DAS.PR.Data\SFA.DAS.PR.Data.csproj" />
     <ProjectReference Include="..\SFA.DAS.ProviderRelationships.Messages\SFA.DAS.ProviderRelationships.Messages.csproj" />
   </ItemGroup>
-
 </Project>

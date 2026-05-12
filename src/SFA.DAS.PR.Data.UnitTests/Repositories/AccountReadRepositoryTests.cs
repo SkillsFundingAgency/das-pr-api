@@ -1,5 +1,5 @@
 ﻿using AutoFixture;
-using AutoFixture.NUnit3;
+using AutoFixture.NUnit4;
 using NUnit.Framework;
 using SFA.DAS.PR.Data.Repositories;
 using SFA.DAS.PR.Data.UnitTests.InMemoryDatabases;
