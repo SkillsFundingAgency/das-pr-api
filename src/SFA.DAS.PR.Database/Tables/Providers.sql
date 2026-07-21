@@ -4,5 +4,6 @@
     [Name] NVARCHAR(100) NOT NULL,
     [Created] DATETIME2 NOT NULL,
     [Updated] DATETIME2 NULL,
+    [Status] NVARCHAR(50) NULL
     CONSTRAINT [PK_Providers] PRIMARY KEY CLUSTERED ([Ukprn] ASC)
 )
