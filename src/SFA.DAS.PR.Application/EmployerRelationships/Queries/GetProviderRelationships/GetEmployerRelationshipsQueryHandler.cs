@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using SFA.DAS.PR.Application.Mediatr.Responses;
+using SFA.DAS.PR.Domain.Common;
 using SFA.DAS.PR.Domain.Entities;
 using SFA.DAS.PR.Domain.Interfaces;
 
@@ -11,7 +12,7 @@ public class GetEmployerRelationshipsQueryHandler(IEmployerRelationshipsReadRepo
     {
         Account? account = await employerRelationshipsReadRepository.GetRelationships(query.AccountId, cancellationToken);
 
-        if(account is null)
+        if (account is null || account.AccountProviders.Any(p => p.Provider.Status == ProviderStatus.Removed))
         {
             return new ValidatedResponse<GetEmployerRelationshipsQueryResult>(new GetEmployerRelationshipsQueryResult());
         }
