@@ -51,7 +51,7 @@ public class ProviderReadRepositoryTests
     }
 
     [Test]
-    public async Task ProviderRemoved_Returns_True_When_Provider_Is_Removed()
+    public async Task WhenProviderIsRemoved_ThenReturnsTrue()
     {
         bool result = false;
 
@@ -59,7 +59,7 @@ public class ProviderReadRepositoryTests
         provider.Status = ProviderStatus.Removed;
 
         using (var context = InMemoryProviderRelationshipsDataContext.CreateInMemoryContext(
-            $"{nameof(InMemoryProviderRelationshipsDataContext)}_{nameof(ProviderRemoved_Returns_True_When_Provider_Is_Removed)}"))
+            $"{nameof(InMemoryProviderRelationshipsDataContext)}_{nameof(WhenProviderIsRemoved_ThenReturnsTrue)}"))
         {
             await context.AddAsync(provider);
             await context.SaveChangesAsync(cancellationToken);
@@ -73,7 +73,7 @@ public class ProviderReadRepositoryTests
     }
 
     [Test]
-    public async Task ProviderRemoved_Returns_False_When_Provider_Is_Not_Removed()
+    public async Task WhenProviderIsNotRemoved_ThenReturnsFalse()
     {
         bool result = true;
 
@@ -81,7 +81,7 @@ public class ProviderReadRepositoryTests
         provider.Status = null;
 
         using (var context = InMemoryProviderRelationshipsDataContext.CreateInMemoryContext(
-            $"{nameof(InMemoryProviderRelationshipsDataContext)}_{nameof(ProviderRemoved_Returns_False_When_Provider_Is_Not_Removed)}"))
+            $"{nameof(InMemoryProviderRelationshipsDataContext)}_{nameof(WhenProviderIsNotRemoved_ThenReturnsFalse)}"))
         {
             await context.AddAsync(provider);
             await context.SaveChangesAsync(cancellationToken);
