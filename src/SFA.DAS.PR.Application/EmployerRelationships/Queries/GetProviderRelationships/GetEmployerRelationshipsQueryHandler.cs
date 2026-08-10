@@ -12,12 +12,14 @@ public class GetEmployerRelationshipsQueryHandler(IEmployerRelationshipsReadRepo
     {
         Account? account = await employerRelationshipsReadRepository.GetRelationships(query.AccountId, cancellationToken);
 
-        if (account is null || account.AccountProviders.Any(p => p.Provider.Status == ProviderStatus.Removed))
+        if (account is null)
         {
             return new ValidatedResponse<GetEmployerRelationshipsQueryResult>(new GetEmployerRelationshipsQueryResult());
         }
 
-        GetEmployerRelationshipsQueryResult queryResult = new GetEmployerRelationshipsQueryResult(account.AccountLegalEntities.Select(a => (AccountLegalEntityPermissionsModel)a).ToList());
+        GetEmployerRelationshipsQueryResult queryResult = new GetEmployerRelationshipsQueryResult(account.AccountLegalEntities
+            .Where(a => a.AccountProviderLegalEntities.Any(aple => aple.AccountProvider.Provider.Status != ProviderStatus.Removed))
+            .Select(a => (AccountLegalEntityPermissionsModel)a).ToList());
 
         return new ValidatedResponse<GetEmployerRelationshipsQueryResult>(queryResult);
     }

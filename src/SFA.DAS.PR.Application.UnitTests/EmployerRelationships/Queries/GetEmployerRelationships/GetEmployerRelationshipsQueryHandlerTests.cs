@@ -32,24 +32,31 @@ public class GetEmployerRelationshipsQueryHandlerTests
                     Id = 1,
                     PublicHashedId = "ABC123",
                     AccountId = accountId,
-                    Name = "Test Legal Entity"
+                    Name = "Test Legal Entity",
+                    AccountProviderLegalEntities = new List<AccountProviderLegalEntity>
+                    {
+                        new AccountProviderLegalEntity
+                        {
+                            Id = 1,
+                            AccountLegalEntityId = 1,
+                            AccountProviderId = 1,
+                            Created = DateTime.UtcNow,
+                            AccountProvider = new AccountProvider
+                            {
+                                Id = 1,
+                                AccountId = accountId,
+                                ProviderUkprn = ukprn,
+                                Provider = new Provider
+                                {
+                                    Ukprn = ukprn,
+                                    Name = "Test Provider",
+                                    Status = null
+                                },
+                            }
+                        }
+                    }
                 }
             },
-            AccountProviders = new List<AccountProvider>
-            {
-                new AccountProvider
-                {
-                    Id = 1,
-                    AccountId = accountId,
-                    ProviderUkprn = ukprn,
-                    Provider = new Provider
-                    {
-                        Ukprn = ukprn,
-                        Name = "Test Provider",
-                        Status = null
-                    },
-                }
-            }
         };
 
         GetEmployerRelationshipsQuery query = new(account.Id);
@@ -104,24 +111,31 @@ public class GetEmployerRelationshipsQueryHandlerTests
                     Id = 1,
                     PublicHashedId = "ABC123",
                     AccountId = accountId,
-                    Name = "Test Legal Entity"
+                    Name = "Test Legal Entity",
+                    AccountProviderLegalEntities = new List<AccountProviderLegalEntity>
+                    {
+                        new AccountProviderLegalEntity
+                        {
+                            Id = 1,
+                            AccountLegalEntityId = 1,
+                            AccountProviderId = 1,
+                            Created = DateTime.UtcNow,
+                            AccountProvider = new AccountProvider
+                            {
+                                Id = 1,
+                                AccountId = accountId,
+                                ProviderUkprn = ukprn,
+                                Provider = new Provider
+                                {
+                                    Ukprn = ukprn,
+                                    Name = "Test Provider",
+                                    Status = ProviderStatus.Removed
+                                },
+                            }
+                        }
+                    }
                 }
             },
-            AccountProviders = new List<AccountProvider>
-            {
-                new AccountProvider
-                {
-                    Id = 1,
-                    AccountId = accountId,
-                    ProviderUkprn = ukprn,
-                    Provider = new Provider
-                    {
-                        Ukprn = ukprn,
-                        Name = "Test Provider",
-                        Status = ProviderStatus.Removed
-                    },
-                }
-            }
         };
 
         GetEmployerRelationshipsQuery query = new(account.Id);
