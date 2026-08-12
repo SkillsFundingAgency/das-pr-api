@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using SFA.DAS.PR.Application.Mediatr.Responses;
-using SFA.DAS.PR.Domain.Common;
 using SFA.DAS.PR.Domain.Entities;
 using SFA.DAS.PR.Domain.Interfaces;
 
@@ -17,9 +16,7 @@ public class GetEmployerRelationshipsQueryHandler(IEmployerRelationshipsReadRepo
             return new ValidatedResponse<GetEmployerRelationshipsQueryResult>(new GetEmployerRelationshipsQueryResult());
         }
 
-        GetEmployerRelationshipsQueryResult queryResult = new GetEmployerRelationshipsQueryResult(account.AccountLegalEntities
-            .Where(a => a.AccountProviderLegalEntities.Any(aple => aple.AccountProvider.Provider.Status != ProviderStatus.Removed))
-            .Select(a => (AccountLegalEntityPermissionsModel)a).ToList());
+        GetEmployerRelationshipsQueryResult queryResult = new GetEmployerRelationshipsQueryResult(account.AccountLegalEntities.Select(a => (AccountLegalEntityPermissionsModel)a).ToList());
 
         return new ValidatedResponse<GetEmployerRelationshipsQueryResult>(queryResult);
     }
