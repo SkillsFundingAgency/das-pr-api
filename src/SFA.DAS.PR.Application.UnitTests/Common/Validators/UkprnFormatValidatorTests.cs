@@ -6,7 +6,7 @@ using SFA.DAS.PR.Domain.Interfaces;
 namespace SFA.DAS.PR.Application.UnitTests.Common.Validators;
 
 public class UkprnFormatValidatorTests
-{ 
+{
     public class TestUkprnEntity : IUkprnEntity
     {
         public long? Ukprn { get; set; }
@@ -17,6 +17,7 @@ public class UkprnFormatValidatorTests
     {
         var providerReadRepositoryMock = new Mock<IProviderReadRepository>();
         providerReadRepositoryMock.Setup(a => a.ProviderExists(It.IsAny<long>(), CancellationToken.None)).ReturnsAsync(true);
+        providerReadRepositoryMock.Setup(a => a.ProviderRemoved(It.IsAny<long>(), CancellationToken.None)).ReturnsAsync(false);
 
         var entity = new TestUkprnEntity { Ukprn = 10000003 };
 
@@ -67,6 +68,28 @@ public class UkprnFormatValidatorTests
         {
             Assert.That(validationResult.IsValid, Is.False);
             Assert.That(validationResult.Errors[0].ErrorMessage, Is.EqualTo(UkprnValidator.ProviderEntityExistValidationMessage));
+        }
+    }
+
+    [Test]
+    public async Task ValidateProviderRemoved_ReturnsInvalid()
+    {
+        var providerReadRepositoryMock = new Mock<IProviderReadRepository>();
+        providerReadRepositoryMock.Setup(a => a.ProviderExists(It.IsAny<long>(), CancellationToken.None)).ReturnsAsync(true);
+        providerReadRepositoryMock.Setup(a => a.ProviderRemoved(It.IsAny<long>(), CancellationToken.None)).ReturnsAsync(true);
+
+        var entity = new TestUkprnEntity { Ukprn = 10000001 };
+
+        var validator = new InlineValidator<TestUkprnEntity>();
+        validator.RuleFor(x => x.Ukprn)
+                 .IsValidUkprn(providerReadRepositoryMock.Object);
+
+        var validationResult = await validator.ValidateAsync(entity);
+
+        using (Assert.EnterMultipleScope())
+        {
+            Assert.That(validationResult.IsValid, Is.False);
+            Assert.That(validationResult.Errors[0].ErrorMessage, Is.EqualTo(UkprnValidator.ProviderRemovedValidationMessage));
         }
     }
 }

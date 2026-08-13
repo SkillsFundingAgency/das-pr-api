@@ -7,6 +7,7 @@ using SFA.DAS.PR.Domain.Interfaces;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.PR.Application.UnitTests.Permissions.Queries.GetEmployerRelationships;
+
 public class GetEmployerRelationshipsQueryHandlerTests
 {
     [Test]

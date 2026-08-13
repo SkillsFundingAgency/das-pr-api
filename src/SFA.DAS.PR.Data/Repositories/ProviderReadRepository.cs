@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SFA.DAS.PR.Domain.Common;
 using SFA.DAS.PR.Domain.Interfaces;
 
 namespace SFA.DAS.PR.Data.Repositories;
@@ -10,5 +11,12 @@ public class ProviderReadRepository(IProviderRelationshipsDataContext _providerR
         return await _providerRelationshipsDataContext.Providers
             .AsNoTracking()
             .AnyAsync(a => a.Ukprn == ukprn, cancellationToken);
+    }
+
+    public async Task<bool> ProviderRemoved(long ukprn, CancellationToken cancellationToken)
+    {
+        return await _providerRelationshipsDataContext.Providers
+            .AsNoTracking()
+            .AnyAsync(a => a.Ukprn == ukprn && a.Status == ProviderStatus.Removed, cancellationToken);
     }
 }

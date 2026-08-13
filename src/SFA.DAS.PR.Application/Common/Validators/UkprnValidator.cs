@@ -11,6 +11,8 @@ public static class UkprnValidator
 
     public const string ProviderEntityExistValidationMessage = "Provider must exist.";
 
+    public const string ProviderRemovedValidationMessage = "Provider has been removed.";
+
     private static IRuleBuilderOptions<T, long?> IsValidUkprnFormat<T>(this IRuleBuilder<T, long?> ruleBuilder) where T : IUkprnEntity
     {
         return ruleBuilder
@@ -28,6 +30,11 @@ public static class UkprnValidator
                 return await providerReadRepository.ProviderExists(ukprn!.Value, cancellationToken);
             })
             .WithMessage(ProviderEntityExistValidationMessage)
+            .MustAsync(async (ukprn, cancellationToken) =>
+            {
+                return !await providerReadRepository.ProviderRemoved(ukprn!.Value, cancellationToken);
+            })
+            .WithMessage(ProviderRemovedValidationMessage)
         .When(model => model.Ukprn.HasValue);
     }
 }

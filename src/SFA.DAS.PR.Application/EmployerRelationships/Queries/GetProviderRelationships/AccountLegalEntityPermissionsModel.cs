@@ -1,4 +1,5 @@
 ﻿using SFA.DAS.PR.Application.EmployerRelationships.Queries.GetProviderRelationships;
+using SFA.DAS.PR.Domain.Common;
 using SFA.DAS.PR.Domain.Entities;
 
 namespace SFA.DAS.PR.Application.Permissions.Queries.GetEmployerRelationships;
@@ -20,7 +21,7 @@ public class AccountLegalEntityPermissionsModel
         PublicHashedId = source.PublicHashedId,
         Name = source.Name,
         AccountId = source.AccountId,
-        Permissions = source.AccountProviderLegalEntities.Select(a => (ProviderPermissionsModel)a).ToList(),
+        Permissions = source.AccountProviderLegalEntities.Where(a => a.AccountProvider.Provider.Status != ProviderStatus.Removed).Select(a => (ProviderPermissionsModel)a).ToList(),
         Requests = GetRequests(source)
     };
 

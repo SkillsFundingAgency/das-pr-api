@@ -11,7 +11,7 @@ public class GetEmployerRelationshipsQueryHandler(IEmployerRelationshipsReadRepo
     {
         Account? account = await employerRelationshipsReadRepository.GetRelationships(query.AccountId, cancellationToken);
 
-        if(account is null)
+        if (account is null)
         {
             return new ValidatedResponse<GetEmployerRelationshipsQueryResult>(new GetEmployerRelationshipsQueryResult());
         }

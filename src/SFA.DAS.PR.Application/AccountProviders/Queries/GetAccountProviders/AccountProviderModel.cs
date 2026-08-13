@@ -1,4 +1,5 @@
-﻿using SFA.DAS.PR.Domain.Entities;
+﻿using SFA.DAS.PR.Domain.Common;
+using SFA.DAS.PR.Domain.Entities;
 
 namespace SFA.DAS.PR.Application.AccountProviders.Queries.GetAccountProviders;
 
@@ -19,6 +20,7 @@ public class AccountProviderModel
     {
         IEnumerable<AccountProvider> accountProviders = legalEntities.Select(a => a.Account)
                                                                      .SelectMany(a => a.AccountProviders)
+                                                                     .Where(p => p.Provider.Status != ProviderStatus.Removed)
                                                                      .Distinct();
 
         List<AccountProviderModel> providerModels = new();
