@@ -10,7 +10,7 @@
     <PackageReference Include="MediatR" Version="12.5.0" />
     <PackageReference Include="NServiceBus" Version="9.0.0" />
     <PackageReference Include="SFA.DAS.Encoding" Version="1.1.93" />
-    <PackageReference Include="System.Security.Cryptography.Xml" Version="10.0.7" />
+    <PackageReference Include="System.Security.Cryptography.Xml" Version="10.0.10" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SFA.DAS.PR.Data\SFA.DAS.PR.Data.csproj" />
