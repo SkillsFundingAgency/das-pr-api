@@ -32,7 +32,7 @@ public class RemovePermissionsCommandHandler(
 
             await RemoveAndAuditPermissions(accountProviderLegalEntity, command, cancellationToken);
 
-            await PublishEvent(accountProviderLegalEntity, command.UserRef, existingPermissions, cancellationToken);
+            await PublishEvent(accountProviderLegalEntity, command.UserRef, existingPermissions, command.Email, cancellationToken);
         }
 
         return new ValidatedResponse<SuccessCommandResult>();
@@ -72,7 +72,7 @@ public class RemovePermissionsCommandHandler(
         await _permissionsAuditWriteRepository.RecordPermissionsAudit(permissionsAudit, cancellationToken);
     }
 
-    private async Task PublishEvent(AccountProviderLegalEntity accountProviderLegalEntity, Guid userRef, HashSet<Operation> existingPermissions, CancellationToken cancellationToken)
+    private async Task PublishEvent(AccountProviderLegalEntity accountProviderLegalEntity, Guid userRef, HashSet<Operation> existingPermissions, string email, CancellationToken cancellationToken)
     {
         await _messageSession.Publish(
             new UpdatedPermissionsEvent(
@@ -82,7 +82,7 @@ public class RemovePermissionsCommandHandler(
                 accountProviderLegalEntity.Id,
                 accountProviderLegalEntity.AccountProvider.ProviderUkprn,
                 userRef,
-                string.Empty,
+                email,
                 string.Empty,
                 string.Empty,
                 [],
