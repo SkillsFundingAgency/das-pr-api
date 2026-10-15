@@ -72,7 +72,7 @@ public class RemovePermissionsCommandHandler(
         await _permissionsAuditWriteRepository.RecordPermissionsAudit(permissionsAudit, cancellationToken);
     }
 
-    private async Task PublishEvent(AccountProviderLegalEntity accountProviderLegalEntity, Guid userRef, HashSet<Operation> existingPermissions, string email, CancellationToken cancellationToken)
+    private async Task PublishEvent(AccountProviderLegalEntity accountProviderLegalEntity, Guid userRef, HashSet<Operation> existingPermissions, string? email, CancellationToken cancellationToken)
     {
         await _messageSession.Publish(
             new UpdatedPermissionsEvent(
