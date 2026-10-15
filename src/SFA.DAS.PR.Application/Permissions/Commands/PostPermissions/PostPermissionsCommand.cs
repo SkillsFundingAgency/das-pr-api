@@ -15,5 +15,5 @@ public class PostPermissionsCommand : IRequest<ValidatedResponse<SuccessCommandR
     public long AccountLegalEntityId { get; set; }
 
     public List<Operation> Operations { get; set; } = [];
-    public string Email { get; set; }
+    public string? Email { get; set; }
 }
