@@ -97,7 +97,7 @@ public class WhenAccountLegalEntityDoesNotExist
     [Test]
     public void ThenRaisesUpdatedPermissionsEvent()
     {
-        _messageSessionMock.Verify(m => m.Publish(It.IsAny<UpdatedPermissionsEvent>(), It.IsAny<PublishOptions>(), _cancellationToken), Times.Once);
+        _messageSessionMock.Verify(m => m.Publish(It.Is<UpdatedPermissionsEvent>(e => e.UserRef == _command.UserRef && e.UserEmailAddress == _command.Email), It.IsAny<PublishOptions>(), _cancellationToken), Times.Once);
     }
 
     [Test]

@@ -12,4 +12,5 @@ public class RemovePermissionsCommand : IRequest<ValidatedResponse<SuccessComman
     public long? Ukprn { get; set; }
 
     public long AccountLegalEntityId { get; set; }
+    public string? Email { get; set; }
 }
