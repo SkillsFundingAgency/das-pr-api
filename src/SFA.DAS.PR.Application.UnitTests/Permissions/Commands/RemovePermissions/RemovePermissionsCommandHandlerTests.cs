@@ -99,7 +99,12 @@ public class RemovePermissionsCommandHandlerTests
             permissionsAfterRemovalCount.Should().Be(0, "Permissions after removal should be 0");
         }
 
-        _messageSessionMock.Verify(m => m.Publish(It.Is<object>(o => o.GetType() == typeof(UpdatedPermissionsEvent)), It.IsAny<PublishOptions>(), It.IsAny<CancellationToken>()));
+        _messageSessionMock.Verify(m => m.Publish(
+            It.Is<object>(o => o is UpdatedPermissionsEvent &&
+                ((UpdatedPermissionsEvent)o).UserRef == command.UserRef &&
+                ((UpdatedPermissionsEvent)o).UserEmailAddress == command.Email),
+            It.IsAny<PublishOptions>(),
+            It.IsAny<CancellationToken>()));
     }
 
     private static RemovePermissionsCommandHandler CreateRemovePermissionsCommandHandler(

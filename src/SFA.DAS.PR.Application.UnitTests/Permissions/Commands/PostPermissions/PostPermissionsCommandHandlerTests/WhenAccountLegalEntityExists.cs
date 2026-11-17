@@ -47,7 +47,7 @@ public class WhenAccountLegalEntityExists
 
         providerRelationshipsDataContextMock.Verify(d => d.SaveChangesAsync(cancellationToken), Times.Once);
 
-        messageSessionMock.Verify(m => m.Publish(It.IsAny<UpdatedPermissionsEvent>(), It.IsAny<PublishOptions>(), cancellationToken), Times.Once);
+        messageSessionMock.Verify(m => m.Publish(It.Is<UpdatedPermissionsEvent>(e => e.UserRef == command.UserRef && e.UserEmailAddress == command.Email), It.IsAny<PublishOptions>(), cancellationToken), Times.Once);
     }
 
     [Test, RecursiveMoqAutoData]

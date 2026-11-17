@@ -125,7 +125,7 @@ public class PostPermissionsCommandHandler(
                 accountProviderLegalEntity.Id,
                 accountProviderLegalEntity.AccountProvider.ProviderUkprn,
                 command.UserRef,
-                string.Empty,
+                command.Email,
                 string.Empty,
                 string.Empty,
                 command.Operations.ToHashSet(),
